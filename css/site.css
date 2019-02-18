@@ -1,3 +1,7 @@
+p, li {
+  font-size: 1.2em;
+}
+
 .tint {
   background-image: linear-gradient(
     135deg,
@@ -12,4 +16,8 @@
 
 .text-green {
   color: #558b2f;
+}
+
+.rounded-xl {
+  border-radius: 1rem;
 }
