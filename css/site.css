@@ -14,10 +14,21 @@ p, li {
   padding-top: 30px;
 }
 
+.bottom-buffer {
+  padding-bottom: 30px;
+}
+
 .text-green {
   color: #558b2f;
 }
 
 .rounded-xl {
   border-radius: 1rem;
+}
+
+.essay-text {
+  font-family: Garamond, Times, serif;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+  font-size: 1.5em;
 }
