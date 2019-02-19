@@ -1,13 +1,6 @@
-p, li {
+p,
+li {
   font-size: 1.2em;
-}
-
-.tint {
-  background-image: linear-gradient(
-    135deg,
-    rgb(200, 169, 255) 0%,
-    rgb(150, 158, 252) 100%
-  );
 }
 
 .top-buffer {
@@ -29,6 +22,6 @@ p, li {
 .essay-text {
   font-family: Garamond, Times, serif;
   -webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;
   font-size: 1.5em;
 }
