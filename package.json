@@ -1,0 +1,24 @@
+{
+  "name": "samuelstevens.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "browser-sync start --server --watch --files '*.css *.html'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelstevens/samuelstevens.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelstevens/samuelstevens.github.io/issues"
+  },
+  "homepage": "https://github.com/samuelstevens/samuelstevens.github.io#readme",
+  "dependencies": {
+    "browser-sync": "^2.26.3"
+  },
+  "devDependencies": {}
+}
