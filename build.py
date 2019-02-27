@@ -17,7 +17,7 @@ def build():
         html_file = template_file.replace('.j2', '')
 
         path = os.path.normpath(html_file)
-        path.split(os.sep)
+        path = path.split(os.sep)
 
         print(path)
 
