@@ -9,7 +9,7 @@ def build():
     )
 
     # TODO: this is bad f[:5]
-    pages = [f[6:] for f in glob.glob('pages/**/*.html', recursive=True)]
+    pages = [f[6:] for f in glob.glob('pages/**/*.h2', recursive=True)]
 
     print(pages)
 
@@ -26,8 +26,6 @@ def main():
 
     # TODO
     build()
-
-
 
 
     # throws error if nothing has been updated
