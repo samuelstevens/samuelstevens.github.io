@@ -21,6 +21,8 @@ def build():
 
         print(path)
 
+        print(os.sep.join(path))
+
         # template = env.get_template(template_file)
         #
         # with open('./%s' % (html_file), 'w') as f:
