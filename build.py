@@ -16,19 +16,21 @@ def build():
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
 
-        template = env.get_template(template_file)
+        path, file = os.path.split(html_file)
 
-        with open('./%s' % (html_file), 'w') as f:
-            f.write(template.render())
+        print(path, file)
+
+        # template = env.get_template(template_file)
+        #
+        # with open('./%s' % (html_file), 'w') as f:
+        #     f.write(template.render())
 
 
 # make it run
 def main():
     git('checkout', 'master')
 
-    # TODO
     build()
-
 
     # throws error if nothing has been updated
     p = git('add', '.')
