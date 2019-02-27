@@ -14,7 +14,7 @@ def build():
     print(template_page_list)
 
     for template in template_page_list:
-        html_file_name = template
+        html_file_name = template.replace('.j2', '')
         print(html_file_name)
         # template = env.get_template(page)
         #
