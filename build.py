@@ -13,13 +13,13 @@ def build():
 
     print(template_page_list)
 
-    for template in template_page_list:
-        html_file_name = template.replace('.j2', '')
-        print(html_file_name)
-        # template = env.get_template(page)
-        #
-        # with open('./%s' % (page), 'w') as f:
-        #     f.write(template.render())
+    for template_file in template_page_list:
+        html_file = template_file.replace('.j2', '')
+
+        template = env.get_template(template_file)
+
+        with open('./%s' % (html_file), 'w') as f:
+            f.write(template.render())
 
 
 # make it run
