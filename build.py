@@ -9,15 +9,17 @@ def build():
     )
 
     # TODO: this is bad f[:5]
-    pages = [f[6:] for f in glob.glob('pages/**/*.j2', recursive=True)]
+    template_page_list = [f[6:] for f in glob.glob('pages/**/*.j2.html', recursive=True)]
 
-    print(pages)
+    print(template_page_list)
 
-    # for page in pages:
-    #     template = env.get_template(page)
-    #
-    #     with open('./%s' % (page), 'w') as f:
-    #         f.write(template.render())
+    for template in template_page_list:
+        html_file_name = template
+        print(html_file_name)
+        # template = env.get_template(page)
+        #
+        # with open('./%s' % (page), 'w') as f:
+        #     f.write(template.render())
 
 
 # make it run
