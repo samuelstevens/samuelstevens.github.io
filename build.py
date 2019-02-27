@@ -1,4 +1,4 @@
-import shutil, os, glob, sys
+import shutil, os, glob, sys, datetime
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sh import git
 
@@ -8,19 +8,21 @@ def build():
         autoescape=select_autoescape(['html', 'xml'])
     )
 
+    updated_files_list = []
+
     # TODO: this is bad f[:5]
     template_page_list = [f[6:] for f in glob.glob('pages/**/*.j2.html', recursive=True)]
 
 
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
+        updated_files_list.append(html_file)
 
+        # normalize the path and split it by the os separator
         path = os.path.normpath(html_file).split(os.sep)
-        # path = path
 
         file = path[-1]
         path = path[:-1]
-
 
         # make folders that don't exist currently
         for i in range(len(path)):
@@ -35,16 +37,18 @@ def build():
         with open('./%s' % (html_file), 'w') as f:
             f.write(template.render())
 
+    return updated_files_list
 
 # make it run
 def main():
     git('checkout', 'master')
 
-    build()
+    updated_files = build()
 
-    # throws error if nothing has been updated
-    p = git('add', '.')
-    p = git('commit', '-m', '"Updated pages via build.py"')
+    if 'commit' in sys.argv:
+        for file in updated_files:
+            p = git('add', file)
+        p = git('commit', '-m', '"Updated pages via build.py on %s"' % datetime.date.today())
 
     if 'push' in sys.argv:
         p = git('push')
