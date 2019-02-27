@@ -11,7 +11,7 @@ def build():
     # TODO: this is bad f[:5]
     template_page_list = [f[6:] for f in glob.glob('pages/**/*.j2.html', recursive=True)]
 
-    print(template_page_list)
+    # print(template_page_list)
 
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
