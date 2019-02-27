@@ -12,6 +12,8 @@ def build():
     template_page_list = [f[6:] for f in glob.glob('pages/**/*.j2.html', recursive=True)]
 
 
+    print(len(template_page_list))
+
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
 
