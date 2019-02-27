@@ -11,7 +11,6 @@ def build():
     # TODO: this is bad f[:5]
     template_page_list = [f[6:] for f in glob.glob('pages/**/*.j2.html', recursive=True)]
 
-    # print(template_page_list)
 
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
@@ -22,17 +21,18 @@ def build():
         file = path[-1]
         path = path[:-1]
 
-        print(path, file)
 
-        # print(os.sep.join(path))
-
+        # make folders that don't exist currently
         for i in range(len(path)):
             folder = os.sep.join(path[:i+1])
             if not os.path.isdir(folder):
                 os.mkdir(folder)
 
-        # template = env.get_template(template_file)
-        #
+
+        template = env.get_template(template_file)
+
+        print(html_file)
+
         # with open('./%s' % (html_file), 'w') as f:
         #     f.write(template.render())
 
