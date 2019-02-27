@@ -16,37 +16,26 @@ def build():
     for page in pages:
         template = env.get_template(page)
 
-        with open('../dist/%s' % (page), 'w') as f:
+        with open('./%s' % (page), 'w') as f:
             f.write(template.render())
 
 
 # make it run
 def main():
-    my_git = git.bake('-C', '../dist')
-    my_git('checkout', 'master')
-
-    # delete the folder
-    if os.path.isdir('../dist/'):
-        shutil.rmtree('../dist')
-
-
-    # copy the static folders over again
-    shutil.copytree('./css', '../dist/css')
-    shutil.copytree('./img', '../dist/img')
+    git('checkout', 'master')
 
     # TODO
-    os.mkdir('../dist/essays')
     build()
 
 
 
 
     # throws error if nothing has been updated
-    p = my_git('add', '.')
-    p = my_git('commit', '-m', '"Updated pages via build.py"')
+    p = git('add', '.')
+    p = git('commit', '-m', '"Updated pages via build.py"')
 
     if 'push' in sys.argv:
-        p = my_git('push')
+        p = git('push')
 
 if __name__ == '__main__':
     main()
