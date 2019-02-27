@@ -19,9 +19,12 @@ def build():
         path = os.path.normpath(html_file)
         path = path.split(os.sep)
 
-        print(path)
+        file = path[-1]
+        path = path[:-1]
 
-        print(os.sep.join(path))
+        print(path, file)
+
+        # print(os.sep.join(path))
 
         # template = env.get_template(template_file)
         #
