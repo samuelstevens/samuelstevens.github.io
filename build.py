@@ -15,8 +15,8 @@ def build():
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
 
-        path = os.path.normpath(html_file)
-        path = path.split(os.sep)
+        path = os.path.normpath(html_file).split(os.sep)
+        # path = path
 
         file = path[-1]
         path = path[:-1]
@@ -28,9 +28,10 @@ def build():
             if not os.path.isdir(folder):
                 os.mkdir(folder)
 
-
+        # get the template for the existing file
         template = env.get_template(template_file)
 
+        # write the finished template to the file
         with open('./%s' % (html_file), 'w') as f:
             f.write(template.render())
 

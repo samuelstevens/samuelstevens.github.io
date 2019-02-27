@@ -15,7 +15,8 @@ python build.py # expects a sibling directory called 'dist'
 
 I've written this script in a very, _very_ hacky fashion, so there are some improvements I would like to make so that I can use it in other applications (namely [Salty Software's website](https://www.salty.software)).
 
-- remove hardcoded `/essays` directory.
+- [ x ] remove hardcoded `/essays` directory.
+  - Now works with any subdirectory combination
 - use path separators to strip the `pages/` from the page directories instead of subindexes.
 - use python's `os` package for more checks when writing files.
 - compare existing files vs the new files to see what needs to be written again.
