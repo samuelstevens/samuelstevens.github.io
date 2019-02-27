@@ -16,9 +16,10 @@ def build():
     for template_file in template_page_list:
         html_file = template_file.replace('.j2', '')
 
-        path, file = os.path.split(html_file)
+        path = os.path.normpath(html_file)
+        path.split(os.sep)
 
-        print(path, file)
+        print(path)
 
         # template = env.get_template(template_file)
         #
