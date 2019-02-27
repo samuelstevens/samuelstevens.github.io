@@ -1,14 +1,16 @@
-# samuelstevens.github.io-src
+# samuelstevens.github.io
 
 This is the repo that stores the source code and build process for https://samuelstevens.me, which is also hosted at https://samuelstevens.github.io.
 
-[Jinja](http://jinja.pocoo.org/) is used as a templating engine, and the `build.py` file translates the templates to static html, in a neighboring `dist` directory that is connected to the ["prod" repo](https://github.com/samuelstevens/samuelstevens.github.io).
+[Jinja](http://jinja.pocoo.org/) is used as a templating engine, and the `build.py` file translates the templates to static html.
 
 ## Usage
 ```bash
 pip install -R requirements.txt # preferably in a virtualenv
 
-python build.py # expects a sibling directory called 'dist'
+python build.py
+
+python build.py commit build # commits and builds
 ```
 
 ## To Do
