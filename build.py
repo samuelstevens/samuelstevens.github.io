@@ -26,6 +26,11 @@ def build():
 
         # print(os.sep.join(path))
 
+        for i in range(len(path)):
+            print(os.sep.join(path[:i]))
+            if os.path.isdir(os.sep.join(path[:i])):
+                pass
+                
         # template = env.get_template(template_file)
         #
         # with open('./%s' % (html_file), 'w') as f:
