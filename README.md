@@ -20,7 +20,7 @@ I've written this script in a very, _very_ hacky fashion, so there are some impr
 - [x] remove hardcoded `/essays` directory.
   - Now works with any subdirectory combination
 - use path separators to strip the `pages/` from the page directories instead of subindexes.
-- use python's `os` package for more checks when writing files.
 - compare existing files vs the new files to see what needs to be written again.
 - add a 'watch' functionality, such that I can use this as a development server.
 - package this as a pip package.
+- find some way to prevent `*.j2.html` files from showing up on the deployed site.
