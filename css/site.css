@@ -3,20 +3,13 @@ li {
   font-size: 1.2em;
 }
 
-.top-buffer {
-  padding-top: 30px;
+html {
+  box-sizing: border-box;
 }
-
-.bottom-buffer {
-  padding-bottom: 30px;
-}
-
-.text-green {
-  color: #558b2f;
-}
-
-.rounded-xl {
-  border-radius: 1rem;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 .essay-text {
