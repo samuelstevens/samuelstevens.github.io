@@ -34,6 +34,7 @@
         </aside>
         <article class="column content">
           <h1 id="hardest-bug-ive-ever-dealt-with">Hardest Bug I&rsquo;ve Ever Dealt With</h1>
+          <p><strong>You want your writing to communicate with maximum effectiveness to its reader, not reveal the exact route you took to reach your conclusions.</strong></p>
           <p>The Hardest Bug I&rsquo;ve Ever Dealt With&TRADE; was actually not a bug in the sense of code not doing what I wanted. It was <em>email</em> not doing what I wanted, and then the challenges that came with bending the code to meet the email standards.</p>
           <p>For <a href="https://salty.software/ticketbay">TicketBay</a>, we sent confirmation emails to new users so that only Ohio State students could use the app. These emails included a link with a big hash as a query param so that we could be sure it was unique, only they could click on it, and we could be sure it was their account. Pretty standard stuff, I&rsquo;m sure everyone has gotten dozens of these emails.</p>
           <p>Except nearly <em>all of our emails went to junk or spam</em>. And we could not figure out why. We had added rDNS, DKIM, TXT records, all this stuff that was recommended.</p>
@@ -77,5 +78,9 @@
         </article>
       </section>
     </main>
+    <script src="/js/instantclick.min.js" data-no-instant></script>
+    <script data-no-instant>
+      InstantClick.init();
+    </script>
   </body>
 </html>
