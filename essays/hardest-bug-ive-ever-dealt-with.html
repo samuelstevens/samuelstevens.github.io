@@ -28,7 +28,7 @@
       <p>Except nearly <em>all of our emails went to junk or spam</em>. And we could not figure out why. We had added rDNS, DKIM, TXT records, all this stuff that was recommended.</p>
       <p><em>(I&rsquo;ll be honest; we did not do as much as a deep dive into mail as I wish we had. Setting up email was a low priority for us, and when I couldn&rsquo;t get postfix working on a EC2 box in under two days, I called it quits and went with Zoho mail.)</em></p>
       <p>Eventually I started looking for why email clients would mark emails as spam, and <code>a</code> tags (links) were one of the reasons. So I removed all the links from the email, <strong>including the all-important confirmation link</strong>. Still went to spam. Removed the image which was hosted at <a href="https://salty.software">salty.software</a></p>
-      <p><strong>DID NOT GO TO SPAM!</strong></p>
+      <p><strong>Did not go to spam.</strong></p>
       <p>That completed finding the cause of the bug. I had sent myself hundreds of emails over 4 hours, and despite the fact that I basically deleted every email as soon as it delivered to my inbox, I could still send an automated email to myself with no links and it would not go to spam.</p>
       <p>Actually <em>fixing</em> the bug required building a system where we could send confirmation emails without a link (and eventually &lsquo;I forgot my password&rsquo; emails as well). We had been talking about Slack&rsquo;s magic link login, and all thought that was better than passwords, but we couldn&rsquo;t send links.</p>
       <p>This led us to sending a passcode confirmation email, with some randomly generated passcode of numbers and letters that users could copy-paste into TicketBay when signing up for the first time.</p>
