@@ -1,1 +1,1 @@
-html { box-sizing: border-box;}* { box-sizing: inherit;}.nav li { list-style: none;}blockquote { font-style: italic; margin-left: 1em;}img { max-width: 100%; height: auto;}
+blockquote { font-style: italic; margin-left: 1em;}img { max-width: 100%; height: auto;}main { margin: 0 auto; padding: 1.5em; max-width: 1000px; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: Athelas, serif; font-size: 1.4em; line-height: 1.7em;}article { max-width: 80ch;}a { color: #91710a;}a:visited { color: #4f4f4f;}
