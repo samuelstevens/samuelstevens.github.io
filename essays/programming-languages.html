@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Programming Languages</title>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      [<a href="/">Home</a>]
+      [<a href="/essays">Essays</a>]
+      [<a href="/projects">Projects</a>]
+      [<a href="/resume.pdf">Resume</a>]
+      [<a href="mailto:samuel.robert.stevens@gmail.com">Contact</a>]
+
+    </header>
+    <article class="column content">
+      <h1 id="programming-languages">Programming Languages</h1>
+      <p>Alternatively, <em>am I a <a href="http://www.paulgraham.com/avg.html">Blub</a> programmer</em>?</p>
+      <p>I&rsquo;ve been reading about programming languages a lot. For a while I thought a new language would solve all of my problems. If I just learn Lisp like Paul Graham <a href="http://www.paulgraham.com/iflisp.html">says</a>, I&rsquo;ll never need another language. If I just learn Haskell, everything will work accordingly. If I just learn <a href="https://elm-lang.org/">elm</a>, web apps will just work. And so on. My friends got tired of me saying I was going to learn a new language. I would get halfway through a beginner tutorial, need to write some real code for a problem, and turn back to Python or JavaScript.</p>
+      <p>Then I read a lot of articles that said that programming languages and new technology really don&rsquo;t matter: Dan McKinley&rsquo;s <a href="https://mcfunley.com/choose-boring-technology">Choose Boring Technology</a> is one of the best examples of this. But even looking at languages like Go, where they left features like generics out, I can see that sometimes a language just needs to work well enough to be useful. So I stopped trying to learn Lisp and Haskell and Elm and focused on old tech that was proven to work in production (Lisp technically is old tech).</p>
+      <p>So where does that leave me? With my personal ranking of languages, of course.</p>
+      <p>Why is this useful? The next time I tell myself that I&rsquo;m going to learn a language, I&rsquo;ll need to convince myself that it&rsquo;s more important than writing code to real problems in one of these languages I can already use.</p>
+      <h2 id="the-list">The List</h2>
+      <p>When learning a new language, where does it fit? If it&rsquo;s above everything else in <em>your</em> list, it&rsquo;s probably worth learning.</p>
+      <ol type="1">
+      <li><p>Go - strongly typed, garbage collector, cooler than Java, minimal syntax to learn</p></li>
+      <li><p>TypeScript - strongly typed, works for web apps, easy to pick up if you understand JavaScript</p></li>
+      <li><p>Python - ubiquitous, powerful, strong ecosystem</p></li>
+      <li><p>JavaScript - amazing package options, enormous ecosystem, functional programming concepts.</p></li>
+      <li><p>C - have to think about every line forces efficient code</p></li>
+      <li><p>Java - it works everywhere.</p></li>
+      </ol>
+      <h2 id="go">1. Go</h2>
+      <p><a href="https://golang.org/">Go</a> has been really, really cool so far. It&rsquo;s one of the languages that isn&rsquo;t taught at my university, making it more appealing it me for being cool and hip. It&rsquo;s strongly typed, which I&rsquo;ve realized is very important for writing readable, maintainable code. It has a garbage collector, so I can write code without having to think about memory all the time. It has an autoformatter, the compiler is aggressive in not letting me compile until I have really good code (can&rsquo;t compile with an unused variable? c&rsquo;mon), and the standard library is <em>thicc</em>. Like, makes Python seem like it has a mediocre standard library thick. It treats errors as values, with no exceptions.</p>
+      <p>It&rsquo;s missing native GUI support, and the packages for making a web app are limited, but for building an API server, or a CLI, it is really powerful and easy to write. I like Go, and am excited to continue writing in it.</p>
+      <h2 id="typescript">2. TypeScript</h2>
+      <p><a href="https://www.typescriptlang.org/">TypeScript</a> &ldquo;is a typed superset of JavaScript that compiles to plain JavaScript.&rdquo; Basically, you add types to JavaScript so everyone knows what&rsquo;s going on, and so you remove <code>"TypeError: Cannot read property 'greeting' of undefined"</code> errors right off the bat.</p>
+      <p>In addition to helping with type errors, TypeScript is amazingly well-integrated with <a href="https://code.visualstudio.com/">VS Code</a>, which is a text editor built on Electron that manages to perform well and provide pseudo-IDE features that never feel overbearing.</p>
+      <p>If you use VS Code already with JavaScript, give TypeScript a shot. It&rsquo;s amazing how much of the code just falls in place without me reading any API docs.</p>
+      <p>Anytime I start a project in JavaScript that&rsquo;s non trivial, I always start in TypeScript. It&rsquo;s just that good.</p>
+      <h2 id="python-3">3. Python 3</h2>
+      <p>Python is so useful for scripts. So so useful. And then the script has a bigger use case, and you start writing some error handling code, and your old script is now an automated piece in production, and it&rsquo;s ok, because it&rsquo;s Python, and you have <code>pylint</code> and <code>mypy</code> and virtual environments. Treat Python right, and it will amazingly useful. The only issue is when you don&rsquo;t treat Python right.</p>
+      <p>What does treating Python right look like?</p>
+      <ol type="1">
+      <li><p>Using Python 3. <a href="https://pythonclock.org/">Please</a>. It&rsquo;s so useful to not worry about Unicode in Python.</p></li>
+      <li><p>Using virtual environments. Since you use Python 3, virtual environments work in one step: <code>python3 -m venv &lt;virtualenv_name&gt; &amp;&amp; . &lt;virtualenv_name&gt;/bin/activate</code>. Just do it already.</p></li>
+      <li><p>Using <a href="https://docs.python.org/3/library/typing.html">type annotations</a> and <code>mypy</code>. This turns Python into a pseudo-strongly typed (mediocrely-typed? sometimes-typed?) language.</p></li>
+      <li><p>Using <code>pylint</code> on your code. Yes, <code>pylint</code> complains about stuff like documentation and unused variables and unnecessary imports. Wait until you&rsquo;ve finished the logic and the testing to check pylint. Commit the code before you fix the errors, in case something breaks. But when you defeat pylint, your code is readable and documented. Amazing stuff.</p></li>
+      </ol>
+      <h2 id="javascript">4. JavaScript</h2>
+      <p>JavaScript lets you write code that runs in the browser. There are other options (TypeScript, ClojureScript, WebAssembly), but for the most part, you&rsquo;re just writing JavaScript.</p>
+      <p>Yeah it sucks. Yeah nothing makes sense. But ESLint and npm go the distance when you have no other alternatives, and there are thousands of tutorials and resources out there.</p>
+      <h2 id="c">5. C</h2>
+      <p>C is fun for me as a webapps guy because I understand what every line is doing on a much lower level. It&rsquo;s very easy to reason about what is happening on the machine, in a not-so-abstract realization. Compared to JavaScript, I could tell you what every line is doing in terms of the heap and stack. Sometimes that&rsquo;s really fun. Other times I need to get work done and C isn&rsquo;t the solution. When it is, or when I have to use it for school, I like it.</p>
+      <h2 id="java">6. Java</h2>
+      <p>Java works everywhere. Everyone I know can read and write some Java. It&rsquo;s strongly typed, compiled, not that slow now that the JVM is optimized, yadda yadda.</p>
+      <p>It&rsquo;s a shame I have only memories of writing shitty Java for early software classes, because I never want to do that again.</p>
+      <p>But it&rsquo;s on my resume, cause, you know. It&rsquo;s Java. I can fumble my way through it.</p>
+      <h2 id="languages-im-missing-that-i-wish-i-wasnt">Languages I&rsquo;m Missing That I Wish I Wasn&rsquo;t</h2>
+      <ul>
+      <li><p>Lisp: I keep hearing that Lisp is the one true way. I just couldn&rsquo;t figure it out fast enough to be useful.</p></li>
+      <li><p>Haskell: apparently a cool language that you don&rsquo;t need to know entirely to be useful, but I don&rsquo;t think I write complicated enough systems to need Haskell. Would it help me with smaller systems?</p></li>
+      <li><p>Erlang/Elixir: writing extremely fault-tolerant concurrent systems sounds really cool, but I have no need for one.</p></li>
+      <li><p>Ruby: also apparently really easy to learn, but I have Python and JavaScript. Where does Ruby fit in?</p></li>
+      <li><p>Elm: Haskell for webapps. Same reasoning as Haskell, but for webapps.</p></li>
+      </ul>
+      <p>You&rsquo;ll notice that most of the time I think I don&rsquo;t need any of these languages because I don&rsquo;t have large enough problems to make it worth it. <em>That scares me</em>, because I bet people who write in those languages can&rsquo;t imagine a small enough project for it not to be worth using, i.e., I should just learn those languages and use them for everything already.</p>
+      <p>*terror that I&rsquo;m an average programmer increases*</p>
+      <hr />
+      [<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]
+      <p>Sam Stevens, 2019</p>
+      <p>
+        <a href="https://github.com/samuelstevens/personal-website">Source</a>
+      </p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+</body>
+
+</html>
