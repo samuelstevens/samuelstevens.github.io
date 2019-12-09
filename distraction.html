@@ -3,20 +3,30 @@
 <head>
   <link rel="stylesheet" href="/css/site.css" />
   <title>Do something to make you proud.</title>
+  <style>
+    #quote {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+  </style>
 </head>
 
 <body>
   <main>
-    <p>
-      Instead of wasting time, use this time to work on something that will make you happier in the future.
+
+    <p style="text-align: center;">
+      Instead of wasting this moment, use it to make you happier in the future.
     </p>
+
+    <p id="quote"></p>
 
 
     <h2>Research</h2>
     <p>
       <code>
-            cd ~/Documents/Subjects/research/xu/arxiv/arxivedits && venv && code .
-          </code>
+        cd ~/Documents/Subjects/research/xu/arxiv/arxivedits && venv && code .
+      </code>
     </p>
 
     <h2>This Page</h2>
@@ -24,6 +34,8 @@
       <code>cd ~/Development/personal-website && code . && ./serve.sh
       </code>
     </p>
+
+
 
     <h2>Learn how Vimium <a href="moz-extension://d168c3aa-db00-8842-a9b8-3ad75099d487/pages/options.html">works</a>.
     </h2>
@@ -51,6 +63,12 @@
       <li>Even just styling this page is better than watching another video on YouTube.</li>
     </ul>
   </main>
+  <script>
+    quotes = ["I'm tryna be better than good enough."];
+
+    quote = document.getElementById('quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+  </script>
 </body>
 
 </html>
