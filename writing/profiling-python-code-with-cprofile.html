@@ -49,7 +49,7 @@
 <p>Additionally, <code>cProfile</code> can be used from inside your source code like so:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>cProfile.run(<span class="st">&quot;eval(arg1, arg2)&quot;</span>, sort<span class="op">=</span><span class="st">&#39;tottime&#39;</span>, filename<span class="op">=</span><span class="st">&#39;eval.prof&#39;</span>)</span></code></pre></div>
 <p>The only downside of this is that the first argument is a string that is evaluated by <code>cProfile</code> instead of passing a function and some arguments. Other than that, it works in exactly the same manner.</p>
-<p>Regardless of how you use it, the output from these <code>cProfile</code> tools is <em>loooong</em>. It can be read, but its often easier to use it in another tool. Python has support for this with the <a href="https://docs.python.org/3/library/profile.html#pstats.Stats"><code>pstats.Stats</code></a> class.</p>
+<p>Regardless of how you use it, the output from these <code>cProfile</code> tools is <em>loooong</em>. It can be read, but it&#x2019;s often easier to use it in another tool. Python has support for this with the <a href="https://docs.python.org/3/library/profile.html#pstats.Stats"><code>pstats.Stats</code></a> class.</p>
 <h2 id="visualizing-profiling-data-with-snakeviz">Visualizing Profiling Data with SnakeViz</h2>
 <p><a href="https://jiffyclub.github.io/snakeviz/">SnakeViz</a> is a small open-source tool that was recently very valuable to visualizing profiling data. It presents a graph that shows a breakdown by time per function, and allows you to drill down into what causes the length of each function:</p>
 <figure>
