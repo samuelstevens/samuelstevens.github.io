@@ -17,16 +17,18 @@
   <main>
     <header>
       <h1>Behold, My Stuff</h1>
-      [<a href="/">Home</a>]
-      <!-- [<a href="/blog">Blog</a>] -->
-      [<a href="/writing">Writing</a>]
-      [<a href="/resume.pdf">Resume</a>]
-      [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
-      [<a href="https://github.com/samuelstevens">GitHub</a>]
+      <p>
+        [<a href="/">Home</a>]
+        <!-- [<a href="/blog">Blog</a>] -->
+        [<a href="/writing">Writing</a>]
+        [<a href="/resume.pdf">Resume</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+      </p>
 
     </header>
     <article class="column content">
-<!-- Must be unindented to prevent code indentation being broken -->
+      <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="guide-optimizing-python-code-with-ctypes">Guide: Optimizing Python Code with <code>ctypes</code></h1>
 <!-- Once you've [profiled your Python](/writing/profiling-python-code-with-cprofile) to highlight bottlenecks, one way to optimize Python is to rewrite slow Python functions in C and call them with `ctypes`. -->
 <blockquote>
@@ -152,7 +154,7 @@
 <li><code>lcs.c</code> has a function <code>lcs()</code> with the signature: <code>struct Sequence *lcs(struct Sequence *s1, struct Sequence *s2)</code>. To get the return type set up, I use <code>lcsmodule.lcs.restype = ctypes.POINTER(SEQUENCE)</code>.</li>
 <li>To make a call with the reference to the <code>struct Sequence</code>, I use <code>ctypes.byref()</code> which returns a &#x201C;light-weight pointer&#x201D; to your object (faster than <code>ctypes.POINTER()</code>).</li>
 <li><code>common.items</code> is a list of bytes, so they are decoded to get <code>ret</code> to be a list of <code>str</code>.</li>
-<li><code>lcsmodule.freeSequence(common)</code> simply frees the memory associated with <code>common</code>. This is <strong>critical</strong>, because it will not be collect by the garbage collector (AFAIK).</li>
+<li><code>lcsmodule.freeSequence(common)</code> simply frees the memory associated with <code>common</code>. This is <strong>critical</strong>, because it will not be automatically collected by the garbage collector (AFAIK).</li>
 </ul>
 <p>Optimized Python code: code that you wrote in C and wrote a wrapper for in Python.</p>
 <h2 id="extra-credit-pypy">Extra Credit: PyPy</h2>
@@ -162,7 +164,7 @@
 <p>One simple optimization is simply to run your programs in the <a href="https://www.pypy.org/">PyPy</a> runtime, which includes a just-in-time (JIT) compiler which will speed your loops by compiling them into native code when they run many times.</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
       <hr />
-      [<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]
+      <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2019</p>
       <p>
         <a href="https://github.com/samuelstevens/personal-website">Source</a>
