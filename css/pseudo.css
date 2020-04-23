@@ -1,1 +1,0 @@
-a { color: var(--secondary-color); position: relative; display: inline-block; transition: all ease 0.2s;}a:hover { color: white;}a::after { content: ""; background-color: var(--secondary-color); position: absolute; bottom: 0; height: 0%; right: -2px; left: -2px; transition: all ease 0.2s; z-index: -1; border-radius: 3px;}a:hover::after { height: 95%;}
