@@ -3,18 +3,11 @@
 <head>
   <link rel="stylesheet" href="/css/site.css" />
   <title>Do something to make you proud.</title>
-  <style>
-    #quote {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.4em;
-    }
-  </style>
 </head>
 
 <body>
   <main>
-    <p style="text-align: center;">
+    <p id="quote" style="text-align: center;">
       Think about being Spider-Man.
     </p>
     <!-- 
@@ -38,15 +31,26 @@
     </p>-->
   </main>
 
-  <!-- <script>
-    quotes = [
-      "I'm tryna be better than good enough.",
-      "Being irritated 'cause you gotta count a million.",
-      "I gave my blood, sweat, tears."
+  <script>
+    function choice(list) {
+      return list[Math.floor(Math.random() * list.length)]
+    }
+
+    const superheros = [
+      "Tony Stark",
+      "Iron Man",
+      "Spider-Man",
+      "Peter Parker",
+      "Steve Rogers"
     ];
 
-    quote = document.getElementById('quote').innerText = '"' + quotes[Math.floor(Math.random() * quotes.length)] + '"';
-  </script> -->
+    const poisons = [
+      "YouTube",
+      "Reddit"
+    ]
+
+    quote = document.getElementById('quote').innerText = choice(superheros) + " doesn't need " + choice(poisons) + ". Do you?";
+  </script>
 
 </body>
 
