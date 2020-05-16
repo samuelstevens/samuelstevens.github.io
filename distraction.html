@@ -7,33 +7,28 @@
 
 <body>
   <main>
-    <p id="quote" style="text-align: center;">
-      Think about being Spider-Man.
-    </p>
-    <!-- 
-    <p id="quote"></p>
-    <p>
-      "What’s the next action – a simple next step – I would take on this task if I were to get started on it now?"
-    </p>
-    <hr />
-    <h2>1. Research</h2>
-    <p>
-      Open your notebook and think about the next problem to work on.
-    </p>
-    <h2>2. Journal</h2>
-    <p>
-      Reflect on the actions you want to take and do what will make you happier.
-    </p>
-    <h2>3. This Page</h2>
-    <p>
-      <code>cd ~/Development/personal-website && code . && ./serve.sh
-      </code>
-    </p>-->
+    <p id="quote" style="text-align: center;"></p>
   </main>
 
   <script>
     function choice(list) {
-      return list[Math.floor(Math.random() * list.length)]
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function getPoison() {
+      const poisonMap = {
+        "youtube": "YouTube",
+        "reddit": "Reddit",
+        "ycombinator": "Hacker News",
+      };
+
+      const poison = new URL(window.location.href).searchParams.get("site").toLowerCase();
+
+      if (poison in poisonMap) {
+        return poisonMap[poison];
+      }
+
+      return "it";
     }
 
     const superheros = [
@@ -44,12 +39,7 @@
       "Steve Rogers"
     ];
 
-    const poisons = [
-      "YouTube",
-      "Reddit"
-    ]
-
-    quote = document.getElementById('quote').innerText = choice(superheros) + " doesn't need " + choice(poisons) + ". Do you?";
+    quote = document.getElementById('quote').innerText = choice(superheros) + " doesn't need " + getPoison() + ". Do you?";
   </script>
 
 </body>
