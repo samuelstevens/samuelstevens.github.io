@@ -25,12 +25,14 @@
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="programming-languages">Programming Languages</h1>
+<p><strong>Update Jun 3, 2020</strong></p>
+<p>After spending more time with Go, it feels too general. <a href="#go">More</a>.</p>
 <p><strong>Update April 21, 2020</strong></p>
 <p>I&#x2019;ve worked a lot with Python.</p>
 <p><strong>Update Januuary 21, 2020</strong></p>
 <p>Added Rust.</p>
 <p><strong>Original Post</strong></p>
-<p>Alternatively, <em>am I a <a href="http://www.paulgraham.com/avg.html">Blub</a> programmer</em>?</p>
+<p><em>Alternatively, am I a <a href="http://www.paulgraham.com/avg.html">Blub</a> programmer?</em></p>
 <p>I&#x2019;ve been reading about programming languages a lot. For a while I thought a new language would solve all of my problems. If I just learn Lisp like Paul Graham <a href="http://www.paulgraham.com/iflisp.html">says</a>, I&#x2019;ll never need another language. If I just learn Haskell, everything will work accordingly. If I just learn <a href="https://elm-lang.org/">elm</a>, web apps will just work. And so on. My friends got tired of me saying I was going to learn a new language. I would get halfway through a beginner tutorial, need to write some real code for a problem, and turn back to Python or JavaScript.</p>
 <p>Then I read a lot of articles that said that programming languages and new technology really don&#x2019;t matter: Dan McKinley&#x2019;s <a href="https://mcfunley.com/choose-boring-technology">Choose Boring Technology</a> is one of the best examples of this. But even looking at languages like Go, where they left features like generics out, I can see that sometimes a language just needs to work well enough to be useful. So I stopped trying to learn Lisp and Haskell and Elm and focused on old tech that was proven to work in production (Lisp technically is old tech).</p>
 <p>So where does that leave me? With my personal ranking of languages, of course.</p>
@@ -46,8 +48,12 @@
 <li><p><a href="#java">Java</a> - it works everywhere.</p></li>
 </ol>
 <h2 id="go">1. Go</h2>
-<p><a href="https://golang.org/">Go</a> has been really, really cool so far. It&#x2019;s one of the languages that isn&#x2019;t taught at my university, making it more appealing it me for being cool and hip. It&#x2019;s strongly typed, which I&#x2019;ve realized is very important for writing readable, maintainable code. It has a garbage collector, so I can write code without having to think about memory all the time. It has an autoformatter, the compiler is aggressive in not letting me compile until I have really good code (cant compile with an unused variable? c&#x2019;mon), and the standard library is <em>thicc</em>. Like, makes Python seem like it has a mediocre standard library thick. It treats errors as values, with no exceptions.</p>
+<p><a href="https://golang.org/">Go</a> is cool. It&#x2019;s one of the languages that isn&#x2019;t taught at my university, making it more appealing it to me for being cool and hip. It&#x2019;s strongly typed, which I&#x2019;ve realized is very important for writing <a href="/writing/abstractions-and-types">readable, maintainable code</a>. It has a garbage collector, so I can write code without having to think about memory all the time. It has an autoformatter, the compiler is aggressive in not letting me compile until I have higher quality code (can&#x2019;t compile with an unused variable). It treats errors as values, with no exceptions (technically, there&#x2019;s <code>panic()</code>).</p>
 <p>It&#x2019;s missing native GUI support, and the packages for making a web app are limited, but for building an API server, or a CLI, it is really powerful and easy to write. I like Go, and am excited to continue writing in it.</p>
+<p><strong>Update June 3, 2020</strong></p>
+<p>After building <a href="/projects/img-alter"><code>img-alter</code></a> in Go, I think Go is almost <em>too general</em> a language. If I want to make a webapp, I&#x2019;d use static HTML with Typescript/React. If I wanted to make a mobile app, I&#x2019;d use Typescript/React Native. If I wanted to do some data analysis, I&#x2019;d use Python. If I wanted to do real low-level work (for fun, I guess?), I&#x2019;d use C.</p>
+<p>If I was building a large project, something the size of TicketBay (at least), then I would consider Go for the backend. Since so much of Go is included, I feel that using external packages isn&#x2019;t encouraged, and so I build a lot of little primitives myself (<code>func fileExists(path string) bool</code>, for example). If I was working on a huge project, the control and ability to build the application logic in a strongly typed language with builtin testing primitives would be very useful. I just don&#x2019;t really do that.</p>
+<p>Probably the same reason I don&#x2019;t use Java.</p>
 <h2 id="python-3">2. Python 3</h2>
 <p>Python is so useful for scripts. So so useful. And then the script has a bigger use case, and you start writing some error handling code, and your old script is now an automated piece in production, and it&#x2019;s OK, because it&#x2019;s Python, and you have <code>pylint</code> and <code>mypy</code> and virtual environments. Treat Python right, and it will amazingly useful. The only issue is when you don&#x2019;t treat Python right.</p>
 <p>What does treating Python right look like?</p>
