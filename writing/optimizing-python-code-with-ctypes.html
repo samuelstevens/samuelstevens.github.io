@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="/css/site.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta charset="utf-8" />
-  <meta name="description" content="How to connect C and Python code with <code>ctypes</code>" />
-  <meta name="keywords" content="python, optimization, optimizing, ctypes, cpython, fast, faster" />
+  <link rel="stylesheet" href="/css/site.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta charset="utf-8"/>
+  <meta name="description" content="How to connect C and Python code with &lt;code&gt;ctypes&lt;/code&gt;"/>
+  <meta name="keywords" content="python, optimization, optimizing, ctypes, cpython, fast, faster"/>
   <title>Behold: Optimizing Python Code with ctypes</title>
   
 </head>
@@ -23,13 +23,13 @@
     </header>
 
     <article>
-      <!-- Must be unindented to prevent code indentation being broken -->
+      
 <h1 id="guide-optimizing-python-code-with-ctypes">Guide: Optimizing Python Code with <code>ctypes</code></h1>
-<!-- Once you've [profiled your Python](/writing/profiling-python-code-with-cprofile) to highlight bottlenecks, one way to optimize Python is to rewrite slow Python functions in C and call them with `ctypes`. -->
+
 <blockquote>
 <p>Note: the code in this post is licensed under <a href="/license-gnu">GNU AGPLv3</a>.</p>
 </blockquote>
-<p>I wrote this guide when I couldn&#x2019;t find one for using <code>ctypes</code> all in one place. Hopefully this makes someone else&#x2019;s life much easier.</p>
+<p>I wrote this guide when I couldn’t find one for using <code>ctypes</code> all in one place. Hopefully this makes someone else’s life much easier.</p>
 <h2 id="table-of-contents">Table of Contents:</h2>
 <ol type="1">
 <li><a href="#basic-optimizations">Basic optimizations</a></li>
@@ -55,7 +55,7 @@
 <h2 id="ctypes"><code>ctypes</code></h2>
 <p><a href="https://docs.python.org/3/library/ctypes.html"><code>ctypes</code></a> is a module that allows you to communicate with C code from your Python code without using <code>subprocess</code> or similar modules to run another process from the CLI.</p>
 <p>There are two parts: compiling your C code to be loaded as a shared object, and setting up the data structures in your Python code to map to C-types.</p>
-<p>In this post, I&#x2019;ll be connecting my Python code to <a href="/lcs-source">lcs.c</a>, which finds the longest common subsequence of two lists of strings. In the Python code, I want this to happen:</p>
+<p>In this post, I’ll be connecting my Python code to <a href="/lcs-source">lcs.c</a>, which finds the longest common subsequence of two lists of strings. In the Python code, I want this to happen:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
 <span id="cb2-2"><a href="#cb2-2"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
@@ -71,7 +71,7 @@
 <ul>
 <li><code>-Wall</code> show all warnings.</li>
 <li><code>-Werrow</code> turns all warnings into errors.</li>
-<li><code>-fpic</code> generates &#x201C;position independent instructions&#x201D;, which is necessary if you want to use this library with Python.</li>
+<li><code>-fpic</code> generates “position independent instructions”, which is necessary if you want to use this library with Python.</li>
 <li><code>-O3</code> maximizes optimizations.</li>
 </ul>
 <p>Next, we begin to write the Python code to use this shared object file.</p>
@@ -107,7 +107,7 @@
 <li><code>ctypes</code> has types like <code>c_char</code> (<code>char</code>), and <code>c_char_p</code> (<code>*char</code>).</li>
 <li><code>ctypes</code> also includes <code>POINTER()</code> which creates a pointer type from any type passed to it.</li>
 <li>If you have a recursive definition like in <code>CELL</code>, you must <code>pass</code> the initial declaration and then add the <code>_fields_</code> fields to reference itself later.</li>
-<li>Since I didn&#x2019;t use <code>CELL</code> in my Python code, I didn&#x2019;t need to write this struct out, but it has a an interesting feature in the recursive field.</li>
+<li>Since I didn’t use <code>CELL</code> in my Python code, I didn’t need to write this struct out, but it has a an interesting feature in the recursive field.</li>
 </ul>
 <h3 id="calling-your-c-code">Calling Your C Code</h3>
 <p>Additionally, I needed some code to convert your Python types to your new C structs. Finally, you can use your new C function to speed up your Python code.</p>
@@ -147,18 +147,18 @@
 <ul>
 <li><code>**char</code> (a list of strings) maps directly to a list of bytes in Python.</li>
 <li><code>lcs.c</code> has a function <code>lcs()</code> with the signature: <code>struct Sequence *lcs(struct Sequence *s1, struct Sequence *s2)</code>. To get the return type set up, I use <code>lcsmodule.lcs.restype = ctypes.POINTER(SEQUENCE)</code>.</li>
-<li>To make a call with the reference to the <code>struct Sequence</code>, I use <code>ctypes.byref()</code> which returns a &#x201C;light-weight pointer&#x201D; to your object (faster than <code>ctypes.POINTER()</code>).</li>
+<li>To make a call with the reference to the <code>struct Sequence</code>, I use <code>ctypes.byref()</code> which returns a “light-weight pointer” to your object (faster than <code>ctypes.POINTER()</code>).</li>
 <li><code>common.items</code> is a list of bytes, so they are decoded to get <code>ret</code> to be a list of <code>str</code>.</li>
 <li><code>lcsmodule.freeSequence(common)</code> simply frees the memory associated with <code>common</code>. This is <strong>critical</strong>, because it will not be automatically collected by the garbage collector (AFAIK).</li>
 </ul>
 <p>Optimized Python code: code that you wrote in C and wrote a wrapper for in Python.</p>
 <h2 id="extra-credit-pypy">Extra Credit: PyPy</h2>
 <blockquote>
-<p>NOTE: I&#x2019;ve never used PyPy personally.</p>
+<p>NOTE: I’ve never used PyPy personally.</p>
 </blockquote>
 <p>One simple optimization is simply to run your programs in the <a href="https://www.pypy.org/">PyPy</a> runtime, which includes a just-in-time (JIT) compiler which will speed your loops by compiling them into native code when they run many times.</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
-      <hr />
+      <hr/>
       <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2020</p>
       <p>
@@ -166,29 +166,29 @@
       </p>
     </article>
   </main>
-  <script src="/js/instantclick.min.js" data-no-instant></script>
-  <script data-no-instant>
+  <script src="/js/instantclick.min.js" data-no-instant=""></script>
+  <script data-no-instant="">
     InstantClick.init();
   </script>
   <style>
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    pre &gt; code.sourceCode { white-space: pre; position: relative; }
+    pre &gt; code.sourceCode &gt; span { display: inline-block; line-height: 1.25; }
+    pre &gt; code.sourceCode &gt; span:empty { height: 1.2em; }
+    code.sourceCode &gt; span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
     @media screen {
     div.sourceCode { overflow: auto; }
     }
     @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre &gt; code.sourceCode { white-space: pre-wrap; }
+    pre &gt; code.sourceCode &gt; span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
-    pre.numberSource code > span
+    pre.numberSource code &gt; span
       { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
+    pre.numberSource code &gt; span &gt; a:first-child::before
       { content: counter(source-line);
         position: relative; left: -1em; text-align: right; vertical-align: baseline;
         border: none; display: inline-block;
@@ -202,7 +202,7 @@
     div.sourceCode
       {   }
     @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    pre &gt; code.sourceCode &gt; span &gt; a:first-child::before { text-decoration: underline; }
     }
     code span.al { color: #ff0000; font-weight: bold; } /* Alert */
     code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
