@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <link rel="stylesheet" href="/css/site.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
   <meta charset="utf-8"/>
@@ -23,7 +20,7 @@
     </header>
 
     <article>
-      
+      <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="pseudo-elements-in-css">Pseudo-elements in CSS</h1>
 <p>Pseudo-elements like <code>::after</code> and <code>::before</code> used to terrify me. Then I used them once and I thought “time to write a blog post”. Given that, there will almost certainly be mistakes or not-best-practices in here. I still want to share what I learned, in case it can help anyone else out.</p>
 <p>I’m going to show some CSS to highlight links (<em>hover over some of the links on this page if you’re on desktop to see it</em>) using the <code>::after</code> element, and then <strong>break down how it works</strong>.</p>
@@ -56,7 +53,7 @@
 <span id="cb1-17"><a href="#cb1-17"></a>  <span class="kw">right</span>: <span class="dv">0</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb1-18"><a href="#cb1-18"></a>  <span class="kw">left</span>: <span class="dv">0</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb1-19"><a href="#cb1-19"></a></span>
-<span id="cb1-20"><a href="#cb1-20"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb1-21"><a href="#cb1-21"></a></span>
 <span id="cb1-22"><a href="#cb1-22"></a>  <span class="kw">transition</span>: <span class="dv">all</span> <span class="dv">ease</span> <span class="dv">0.2</span><span class="dt">s</span><span class="op">;</span></span>
 <span id="cb1-23"><a href="#cb1-23"></a>  </span>
@@ -64,7 +61,7 @@
 <span id="cb1-25"><a href="#cb1-25"></a>}</span>
 <span id="cb1-26"><a href="#cb1-26"></a></span>
 <span id="cb1-27"><a href="#cb1-27"></a>a<span class="in">::after:hover</span> {</span>
-<span id="cb1-28"><a href="#cb1-28"></a>  <span class="kw">height</span>: <span class="dv">100</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>  <span class="kw">height</span>: <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb1-29"><a href="#cb1-29"></a>}</span></code></pre></div>
 <h2 id="what-in-gods-name-is-after">What in God’s Name is <code>::after</code>?</h2>
 <p>If you’ve never seen <code>::after</code> before, like me, this might look like some serious <a href="https://css-tricks.com/the-shapes-of-css/">CSS hacking</a> that is incomprehensible. Let’s break it down into something very understandable.</p>
@@ -120,7 +117,7 @@
 <span id="cb7-5"><a href="#cb7-5"></a>  <span class="kw">position</span>: <span class="dv">absolute</span><span class="op">;</span></span>
 <span id="cb7-6"><a href="#cb7-6"></a>  <span class="kw">bottom</span>: <span class="dv">0</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb7-7"><a href="#cb7-7"></a>  <span class="co">/* when not hovered, it shouldn&#39;t show */</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb7-9"><a href="#cb7-9"></a></span>
 <span id="cb7-10"><a href="#cb7-10"></a>  <span class="kw">right</span>: <span class="dv">0</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb7-11"><a href="#cb7-11"></a>  <span class="kw">left</span>: <span class="dv">0</span><span class="dt">px</span><span class="op">;</span></span>
@@ -133,7 +130,7 @@
 <span id="cb7-18"><a href="#cb7-18"></a></span>
 <span id="cb7-19"><a href="#cb7-19"></a><span class="co">/* make it grow when hovered over */</span></span>
 <span id="cb7-20"><a href="#cb7-20"></a>a<span class="in">::after:hover</span> {</span>
-<span id="cb7-21"><a href="#cb7-21"></a>  <span class="kw">height</span>: <span class="dv">100</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>  <span class="kw">height</span>: <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb7-22"><a href="#cb7-22"></a>}</span></code></pre></div>
 <p>From there, we can adjust some values to make it look a little nicer (seen below).</p>
 <h2 id="final-tweaked-version-used-on-this-page">Final, Tweaked Version Used on This Page</h2>
@@ -161,7 +158,7 @@
 <span id="cb8-22"><a href="#cb8-22"></a>  <span class="kw">right</span>: <span class="dv">-2</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb8-23"><a href="#cb8-23"></a>  <span class="kw">left</span>: <span class="dv">-2</span><span class="dt">px</span><span class="op">;</span></span>
 <span id="cb8-24"><a href="#cb8-24"></a></span>
-<span id="cb8-25"><a href="#cb8-25"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a>  <span class="kw">height</span>: <span class="dv">0</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb8-26"><a href="#cb8-26"></a></span>
 <span id="cb8-27"><a href="#cb8-27"></a>  <span class="kw">transition</span>: <span class="dv">all</span> <span class="dv">ease</span> <span class="dv">0.2</span><span class="dt">s</span><span class="op">;</span></span>
 <span id="cb8-28"><a href="#cb8-28"></a></span>
@@ -169,7 +166,7 @@
 <span id="cb8-30"><a href="#cb8-30"></a>}</span>
 <span id="cb8-31"><a href="#cb8-31"></a></span>
 <span id="cb8-32"><a href="#cb8-32"></a>a<span class="in">::after:hover</span> {</span>
-<span id="cb8-33"><a href="#cb8-33"></a>  <span class="kw">height</span>: <span class="dv">95</span><span class="dt">%!(NOVERB)</span><span class="op">;</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a>  <span class="kw">height</span>: <span class="dv">95</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb8-34"><a href="#cb8-34"></a>}</span></code></pre></div>
 <p>I hope this helped you understand what pseudo-elements are and how useful they can be!</p>
 <blockquote>
@@ -194,11 +191,11 @@ a:hover {
 }
 
 a::after {
-  content: &#34;&#34;;
+  content: "";
   background-color: #c59f3f; 
   position: absolute;
   bottom: 0;
-  height: 0%!;(MISSING)
+  height: 0%;
   right: -2px;
   left: -2px;
   transition: all ease 0.2s;
@@ -207,7 +204,7 @@ a::after {
 }
 
 a:hover::after {
-  height: 95%!;(MISSING)
+  height: 95%;
 }
 </style>
       <hr/>
@@ -223,24 +220,24 @@ a:hover::after {
     InstantClick.init();
   </script>
   <style>
-    pre &gt; code.sourceCode { white-space: pre; position: relative; }
-    pre &gt; code.sourceCode &gt; span { display: inline-block; line-height: 1.25; }
-    pre &gt; code.sourceCode &gt; span:empty { height: 1.2em; }
-    code.sourceCode &gt; span { color: inherit; text-decoration: inherit; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
     @media screen {
     div.sourceCode { overflow: auto; }
     }
     @media print {
-    pre &gt; code.sourceCode { white-space: pre-wrap; }
-    pre &gt; code.sourceCode &gt; span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
-    pre.numberSource code &gt; span
+    pre.numberSource code > span
       { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code &gt; span &gt; a:first-child::before
+    pre.numberSource code > span > a:first-child::before
       { content: counter(source-line);
         position: relative; left: -1em; text-align: right; vertical-align: baseline;
         border: none; display: inline-block;
@@ -254,7 +251,7 @@ a:hover::after {
     div.sourceCode
       {   }
     @media screen {
-    pre &gt; code.sourceCode &gt; span &gt; a:first-child::before { text-decoration: underline; }
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
     }
     code span.al { color: #ff0000; font-weight: bold; } /* Alert */
     code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -286,6 +283,6 @@ a:hover::after {
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-</body>
 
-</html>
+
+</body></html>

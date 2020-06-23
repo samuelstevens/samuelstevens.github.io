@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <link rel="stylesheet" href="/css/site.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
   <meta charset="utf-8"/>
@@ -23,9 +20,9 @@
     </header>
 
     <article>
-      
+      <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="guide-optimizing-python-code-with-ctypes">Guide: Optimizing Python Code with <code>ctypes</code></h1>
-
+<!-- Once you've [profiled your Python](/writing/profiling-python-code-with-cprofile) to highlight bottlenecks, one way to optimize Python is to rewrite slow Python functions in C and call them with `ctypes`. -->
 <blockquote>
 <p>Note: the code in this post is licensed under <a href="/license-gnu">GNU AGPLv3</a>.</p>
 </blockquote>
@@ -171,24 +168,24 @@
     InstantClick.init();
   </script>
   <style>
-    pre &gt; code.sourceCode { white-space: pre; position: relative; }
-    pre &gt; code.sourceCode &gt; span { display: inline-block; line-height: 1.25; }
-    pre &gt; code.sourceCode &gt; span:empty { height: 1.2em; }
-    code.sourceCode &gt; span { color: inherit; text-decoration: inherit; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
     @media screen {
     div.sourceCode { overflow: auto; }
     }
     @media print {
-    pre &gt; code.sourceCode { white-space: pre-wrap; }
-    pre &gt; code.sourceCode &gt; span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
-    pre.numberSource code &gt; span
+    pre.numberSource code > span
       { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code &gt; span &gt; a:first-child::before
+    pre.numberSource code > span > a:first-child::before
       { content: counter(source-line);
         position: relative; left: -1em; text-align: right; vertical-align: baseline;
         border: none; display: inline-block;
@@ -202,7 +199,7 @@
     div.sourceCode
       {   }
     @media screen {
-    pre &gt; code.sourceCode &gt; span &gt; a:first-child::before { text-decoration: underline; }
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
     }
     code span.al { color: #ff0000; font-weight: bold; } /* Alert */
     code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -234,6 +231,6 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-</body>
 
-</html>
+
+</body></html>

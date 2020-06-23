@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <link rel="stylesheet" href="/css/site.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
   <meta charset="utf-8"/>
@@ -23,16 +20,16 @@
     </header>
 
     <article>
-      
+      <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="airpods">Airpods</h1>
 <p>I developed <em>Airpods</em>, a macOS app that is a simple wrapper for lapfelix’s awesome <a href="https://github.com/lapfelix/BluetoothConnector">BluetoothConnector</a>. If you install <em>Airpods</em>, and you use Spotlight Search (like me), then you can go <code>CMD+SPACE Airp...</code> and <em>smash</em> <code>ENTER</code> to disconnect or connect to your airpods (assuming you only have one pair).</p>
 <p>The build process is wildly convoluted and could be fixed with a makefile (I think, I still need to learn how to use makefiles, but I hear amazing things about them. What’s the difference between a makefile and a bash script?), but it works and is documented.</p>
 <p>I’d like to eventually publish this on the App Store, but I also needed to get this off my plate, and it currently works.</p>
 <h2 id="download-here"><a href="/Airpods.dmg">Download Here</a></h2>
 <h2 id="pictures">Pictures</h2>
-<p><img src="/images/airpods/spotlight-compressed.png" alt="a screenshot of a video game in front of a mountain" /></p>
+<p><img alt="a screenshot of a video game in front of a mountain" src="/images/airpods/spotlight-compressed.png"/></p>
 <p><em>Airpods in Spotlight Search</em></p>
-<p><img src="/images/airpods/notification-compressed.png" alt="" /></p>
+<p><img alt="" src="/images/airpods/notification-compressed.png"/></p>
 <p><em>The notification that shows up</em></p>
 <h2 id="code">Code</h2>
 <p>I added a simple <code>print</code> option to BluetoothConnector so that I could use an image of Airpods for the notifications, but other than that, just used the default BluetoothConnnector commands and packaged the binary with my .app/.dmg so that it has no external dependencies.</p>
@@ -51,6 +48,6 @@
   <style>
     
   </style>
-</body>
 
-</html>
+
+</body></html>

@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <link rel="stylesheet" href="/css/site.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
   <meta charset="utf-8"/>
@@ -23,7 +20,7 @@
     </header>
 
     <article>
-      
+      <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="profiling-python-code-with-cprofile">Profiling Python Code with <code>cProfile</code></h1>
 <p>Python is an interpreted language, which typically makes it slower than compiled languages like C/C++, Java, Rust, or Go. In order to <a href="/writing/optimizing-python-code-with-ctypes">optimize Python code</a> for speed, it’s best to know what parts to optimize. That’s where <code>cProfile</code> comes in.</p>
 <h2 id="cprofile">cProfile</h2>
@@ -50,7 +47,7 @@
 <h2 id="visualizing-profiling-data-with-snakeviz">Visualizing Profiling Data with SnakeViz</h2>
 <p><a href="https://jiffyclub.github.io/snakeviz/">SnakeViz</a> is a small open-source tool that was recently very valuable to visualizing profiling data. It presents a graph that shows a breakdown by time per function, and allows you to drill down into what causes the length of each function:</p>
 <figure>
-<img src="/images/python/snakeviz-icicle.png" alt="a screenshot of a cell phone" /><figcaption>Icicle graph from SnakeViz</figcaption>
+<img alt="a screenshot of a cell phone" src="/images/python/snakeviz-icicle.png"/><figcaption>Icicle graph from SnakeViz</figcaption>
 </figure>
 <p>From here, you can see what functions take the most time, and what causes each function to take so long. If you can further optimize from here (removing things from loops, using list comprehensions, etc., do so now).</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
@@ -67,24 +64,24 @@
     InstantClick.init();
   </script>
   <style>
-    pre &gt; code.sourceCode { white-space: pre; position: relative; }
-    pre &gt; code.sourceCode &gt; span { display: inline-block; line-height: 1.25; }
-    pre &gt; code.sourceCode &gt; span:empty { height: 1.2em; }
-    code.sourceCode &gt; span { color: inherit; text-decoration: inherit; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
     @media screen {
     div.sourceCode { overflow: auto; }
     }
     @media print {
-    pre &gt; code.sourceCode { white-space: pre-wrap; }
-    pre &gt; code.sourceCode &gt; span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
-    pre.numberSource code &gt; span
+    pre.numberSource code > span
       { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code &gt; span &gt; a:first-child::before
+    pre.numberSource code > span > a:first-child::before
       { content: counter(source-line);
         position: relative; left: -1em; text-align: right; vertical-align: baseline;
         border: none; display: inline-block;
@@ -98,7 +95,7 @@
     div.sourceCode
       {   }
     @media screen {
-    pre &gt; code.sourceCode &gt; span &gt; a:first-child::before { text-decoration: underline; }
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
     }
     code span.al { color: #ff0000; font-weight: bold; } /* Alert */
     code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -130,6 +127,6 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-</body>
 
-</html>
+
+</body></html>

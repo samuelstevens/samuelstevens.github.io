@@ -1,6 +1,4 @@
-<html>
-
-<head>
+<html><head>
   <link rel="stylesheet" href="/css/site.css"/>
   <title>Do something to make you proud.</title>
 </head>
@@ -17,31 +15,31 @@
 
     function getPoison() {
       const poisonMap = {
-        &#34;youtube&#34;: &#34;YouTube&#34;,
-        &#34;reddit&#34;: &#34;Reddit&#34;,
-        &#34;ycombinator&#34;: &#34;Hacker News&#34;,
+        "youtube": "YouTube",
+        "reddit": "Reddit",
+        "ycombinator": "Hacker News",
       };
 
-      const poison = new URL(window.location.href).searchParams.get(&#34;site&#34;).toLowerCase();
+      const poison = new URL(window.location.href).searchParams.get("site").toLowerCase();
 
       if (poison in poisonMap) {
         return poisonMap[poison];
       }
 
-      return &#34;it&#34;;
+      return "it";
     }
 
     const superheros = [
-      &#34;Tony Stark&#34;,
-      &#34;Iron Man&#34;,
-      &#34;Spider-Man&#34;,
-      &#34;Peter Parker&#34;,
-      &#34;Steve Rogers&#34;
+      "Tony Stark",
+      "Iron Man",
+      "Spider-Man",
+      "Peter Parker",
+      "Steve Rogers"
     ];
 
-    quote = document.getElementById(&#39;quote&#39;).innerText = choice(superheros) + &#34; doesn&#39;t need &#34; + getPoison() + &#34;. Do you?&#34;;
+    quote = document.getElementById('quote').innerText = choice(superheros) + " doesn't need " + getPoison() + ". Do you?";
   </script>
 
-</body>
 
-</html>
+
+</body></html>
