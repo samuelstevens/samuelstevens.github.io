@@ -1,9 +1,12 @@
-<!DOCTYPE html><html lang="en"><head>
-  <link rel="stylesheet" href="/css/site.css"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta charset="utf-8"/>
-  <meta name="description" content="Why pseudo elements aren’t that scary!"/>
-  <meta name="keywords" content="programming, css, html, pseudo-elements, pseudoelements, pseudo, elements, :after, ::after"/>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Why pseudo elements aren&#x2019;t that scary!" />
+  <meta name="keywords" content="programming, css, html, pseudo-elements, pseudoelements, pseudo, elements, :after, ::after" />
   <title>Behold: Pseudo-elements in CSS</title>
   
 </head>
@@ -22,8 +25,8 @@
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="pseudo-elements-in-css">Pseudo-elements in CSS</h1>
-<p>Pseudo-elements like <code>::after</code> and <code>::before</code> used to terrify me. Then I used them once and I thought “time to write a blog post”. Given that, there will almost certainly be mistakes or not-best-practices in here. I still want to share what I learned, in case it can help anyone else out.</p>
-<p>I’m going to show some CSS to highlight links (<em>hover over some of the links on this page if you’re on desktop to see it</em>) using the <code>::after</code> element, and then <strong>break down how it works</strong>.</p>
+<p>Pseudo-elements like <code>::after</code> and <code>::before</code> used to terrify me. Then I used them once and I thought &#x201C;time to write a blog post&#x201D;. Given that, there will almost certainly be mistakes or not-best-practices in here. I still want to share what I learned, in case it can help anyone else out.</p>
+<p>I&#x2019;m going to show some CSS to highlight links (<em>hover over some of the links on this page if you&#x2019;re on desktop to see it</em>) using the <code>::after</code> element, and then <strong>break down how it works</strong>.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
 <li><a href="#complete-css-that-were-going-to-build">Complete CSS for links</a></li>
@@ -33,7 +36,7 @@
 <li><a href="#final-tweaked-version-used-on-this-page">Final version (with tweaks)</a></li>
 <li><a href="#more-resources">Resources</a></li>
 </ol>
-<h2 id="complete-css-that-were-going-to-build">Complete CSS That We’re Going to Build</h2>
+<h2 id="complete-css-that-were-going-to-build">Complete CSS That We&#x2019;re Going to Build</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1"></a>a {</span>
 <span id="cb1-2"><a href="#cb1-2"></a>  <span class="kw">color</span>: <span class="cn">#91710a</span><span class="op">;</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>  <span class="kw">position</span>: <span class="dv">relative</span><span class="op">;</span></span>
@@ -45,7 +48,7 @@
 <span id="cb1-9"><a href="#cb1-9"></a>}</span>
 <span id="cb1-10"><a href="#cb1-10"></a></span>
 <span id="cb1-11"><a href="#cb1-11"></a>a<span class="in">::after</span> {</span>
-<span id="cb1-12"><a href="#cb1-12"></a>  <span class="kw">content</span>: <span class="st">&#34;&#34;</span><span class="op">;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>  <span class="kw">content</span>: <span class="st">&quot;&quot;</span><span class="op">;</span></span>
 <span id="cb1-13"><a href="#cb1-13"></a>  <span class="kw">background-color</span>: <span class="cn">#91710a</span><span class="op">;</span></span>
 <span id="cb1-14"><a href="#cb1-14"></a>  </span>
 <span id="cb1-15"><a href="#cb1-15"></a>  <span class="kw">position</span>: <span class="dv">absolute</span><span class="op">;</span></span>
@@ -63,24 +66,24 @@
 <span id="cb1-27"><a href="#cb1-27"></a>a<span class="in">::after:hover</span> {</span>
 <span id="cb1-28"><a href="#cb1-28"></a>  <span class="kw">height</span>: <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
 <span id="cb1-29"><a href="#cb1-29"></a>}</span></code></pre></div>
-<h2 id="what-in-gods-name-is-after">What in God’s Name is <code>::after</code>?</h2>
-<p>If you’ve never seen <code>::after</code> before, like me, this might look like some serious <a href="https://css-tricks.com/the-shapes-of-css/">CSS hacking</a> that is incomprehensible. Let’s break it down into something very understandable.</p>
-<p>The first thing to know is that <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements">pseudo-elements</a> are like elements that every HTML tag can have. There are currently 14, but I mostly use 2: <code>::before</code> and <code>::after</code>. Since they’re basically the same tag, I’m going to focus on <code>::after</code> in this post.</p>
-<p>Pseudo-elements are just selectors for “imaginary” elements that you can insert content into and modify with CSS.</p>
+<h2 id="what-in-gods-name-is-after">What in God&#x2019;s Name is <code>::after</code>?</h2>
+<p>If you&#x2019;ve never seen <code>::after</code> before, like me, this might look like some serious <a href="https://css-tricks.com/the-shapes-of-css/">CSS hacking</a> that is incomprehensible. Let&#x2019;s break it down into something very understandable.</p>
+<p>The first thing to know is that <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements">pseudo-elements</a> are like elements that every HTML tag can have. There are currently 14, but I mostly use 2: <code>::before</code> and <code>::after</code>. Since they&#x2019;re basically the same tag, I&#x2019;m going to focus on <code>::after</code> in this post.</p>
+<p>Pseudo-elements are just selectors for &#x201C;imaginary&#x201D; elements that you can insert content into and modify with CSS.</p>
 <p>So, for instance, if we wanted to add an smiley face after all of our paragraphs, we would use <code>::after</code> and <code>content</code> to do that:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1"></a>p<span class="in">::after</span> {</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  <span class="kw">content</span>: <span class="st">&#34;😊&#34;</span><span class="op">;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="kw">content</span>: <span class="st">&quot;&#x1F60A;&quot;</span><span class="op">;</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a>}</span></code></pre></div>
 <p>If we wanted that smiley face to be real big, we could as well:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb3-1"><a href="#cb3-1"></a>p<span class="in">::after</span> {</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="kw">content</span>: <span class="st">&#34;😊&#34;</span><span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="kw">content</span>: <span class="st">&quot;&#x1F60A;&quot;</span><span class="op">;</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>  <span class="kw">font-size</span>: <span class="dv">3</span><span class="dt">em</span><span class="op">;</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a>}</span></code></pre></div>
 <blockquote>
-<p>(I should’ve figured a good way for you to turn these styles on and off with some Javascript. Oh well.)</p>
+<p>(I should&#x2019;ve figured a good way for you to turn these styles on and off with some Javascript. Oh well.)</p>
 </blockquote>
 <h2 id="after-with-links"><code>::after</code> with Links</h2>
-<p>So, going back to highlighting links. We’re going to animate the <code>::after</code> element on every <code>&lt;a&gt;</code> tag when someone hovers over it.</p>
+<p>So, going back to highlighting links. We&#x2019;re going to animate the <code>::after</code> element on every <code>&lt;a&gt;</code> tag when someone hovers over it.</p>
 <p>First, we need <code>&lt;a&gt;</code> tags to have <code>position: relative;</code> and <code>display: inline-block;</code> so that we can position our highlight appropriately.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb4-1"><a href="#cb4-1"></a>a {</span>
 <span id="cb4-2"><a href="#cb4-2"></a>  <span class="kw">color</span>: <span class="cn">#91710a</span><span class="op">;</span></span>
@@ -90,7 +93,7 @@
 <p>Then, we style the highlighted rectangle:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1"></a>a<span class="in">::after</span> {</span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="co">/* we want it to be empty */</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="kw">content</span>: <span class="st">&#34;&#34;</span><span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="kw">content</span>: <span class="st">&quot;&quot;</span><span class="op">;</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a>  <span class="kw">background-color</span>: <span class="cn">#91710a</span><span class="op">;</span></span>
 <span id="cb5-5"><a href="#cb5-5"></a>  </span>
 <span id="cb5-6"><a href="#cb5-6"></a>  <span class="co">/* cover the entire &lt;a&gt; tag */</span></span>
@@ -111,7 +114,7 @@
 <p>Just like normal HTML elements, pseudo-elements have pseudo-classes (like <code>:hover</code>, <code>:active</code>, etc.). This is part of what makes pseudo-elements so powerful. They work just like HTML elements (in most cases).</p>
 <p>The final component is animating the growth of the element:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb7-1"><a href="#cb7-1"></a>a<span class="in">::after</span> {</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="kw">content</span>: <span class="st">&#34;&#34;</span><span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="kw">content</span>: <span class="st">&quot;&quot;</span><span class="op">;</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="kw">background-color</span>: <span class="cn">#91710a</span><span class="op">;</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a>  </span>
 <span id="cb7-5"><a href="#cb7-5"></a>  <span class="kw">position</span>: <span class="dv">absolute</span><span class="op">;</span></span>
@@ -148,7 +151,7 @@
 <span id="cb8-12"><a href="#cb8-12"></a>}</span>
 <span id="cb8-13"><a href="#cb8-13"></a></span>
 <span id="cb8-14"><a href="#cb8-14"></a>a<span class="in">::after</span> {</span>
-<span id="cb8-15"><a href="#cb8-15"></a>  <span class="kw">content</span>: <span class="st">&#34;&#34;</span><span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a>  <span class="kw">content</span>: <span class="st">&quot;&quot;</span><span class="op">;</span></span>
 <span id="cb8-16"><a href="#cb8-16"></a></span>
 <span id="cb8-17"><a href="#cb8-17"></a>  <span class="kw">background-color</span>: <span class="cn">#c59f3f</span><span class="op">;</span></span>
 <span id="cb8-18"><a href="#cb8-18"></a>  <span class="kw">border-radius</span>: <span class="dv">3</span><span class="dt">px</span><span class="op">;</span></span>
@@ -207,7 +210,7 @@ a:hover::after {
   height: 95%;
 }
 </style>
-      <hr/>
+      <hr />
       <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2020</p>
       <p>
@@ -215,8 +218,8 @@ a:hover::after {
       </p>
     </article>
   </main>
-  <script src="/js/instantclick.min.js" data-no-instant=""></script>
-  <script data-no-instant="">
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
     InstantClick.init();
   </script>
   <style>
@@ -283,6 +286,6 @@ a:hover::after {
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+</body>
 
-
-</body></html>
+</html>

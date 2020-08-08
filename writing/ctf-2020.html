@@ -1,10 +1,13 @@
-<!DOCTYPE html><html lang="en"><head>
-  <link rel="stylesheet" href="/css/site.css"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta charset="utf-8"/>
-  <meta name="description" content="Thoughts and notes from my first CTF."/>
-  <meta name="keywords" content="ctf, cybersecurity, cyber, security, capture the flag"/>
-  <title>Behold: OSU Cybersecurity Club’s CTF</title>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Thoughts and notes from my first CTF." />
+  <meta name="keywords" content="ctf, cybersecurity, cyber, security, capture the flag" />
+  <title>Behold: OSU Cybersecurity Club&#x2019;s CTF</title>
   
 </head>
 
@@ -21,27 +24,27 @@
 
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="osu-cybersecurity-clubs-ctf-capture-the-flag">OSU Cybersecurity Club’s CTF (Capture the Flag)</h1>
-<p>This weekend I participated in Ohio State’s Cybersecurity Club remote CTF. I was really lucky to work with <a href="https://www.linkedin.com/in/jonzimm/">three</a> <a href="https://www.linkedin.com/in/parshva-s-b7b91a107/">brilliant</a> <a href="https://www.linkedin.com/in/atakiar/">friends</a>, who taught me a lot about CTFs and what kind of skillset I have to offer.</p>
+<h1 id="osu-cybersecurity-clubs-ctf-capture-the-flag">OSU Cybersecurity Club&#x2019;s CTF (Capture the Flag)</h1>
+<p>This weekend I participated in Ohio State&#x2019;s Cybersecurity Club remote CTF. I was really lucky to work with <a href="https://www.linkedin.com/in/jonzimm/">three</a> <a href="https://www.linkedin.com/in/parshva-s-b7b91a107/">brilliant</a> <a href="https://www.linkedin.com/in/atakiar/">friends</a>, who taught me a lot about CTFs and what kind of skillset I have to offer.</p>
 <h2 id="hard-skills">Hard Skills</h2>
 <h3 id="tools-and-resources">0. (Tools and resources)</h3>
-<p>First and foremost, I picked up a lot of tools that I’ve never used before. I want to document them here (mostly for myself). So in no particular order:</p>
+<p>First and foremost, I picked up a lot of tools that I&#x2019;ve never used before. I want to document them here (mostly for myself). So in no particular order:</p>
 <ul>
 <li><a href="https://www.radare.org/r/">Radare2</a> (<code>r2</code>): helps to disassemble binaries.</li>
 <li><a href="https://github.com/RPISEC/MBE">Modern Binary Exploitation by RPISEC</a>: I never used the tools directly, but this material seemed useful if I ever wanted to do a more formal dive into reverse engineering binaries.</li>
 <li><code>objdump -d</code>: a simpler version of Radare that comes installed on macOS with the developer tools.</li>
 <li><a href="https://securitylabs.veracode.com/">veracode.com</a>: Veracode had some free labs that really helped me understand how SQL injections and reverse-engineered session IDs work. Very good for an introduction.</li>
-<li><code>binwalk</code>: checks if a file contains other files, and even extracts them (<code>binwalk --dd=&#39;.*&#39; &lt;filename&gt;</code> [I think]).</li>
+<li><code>binwalk</code>: checks if a file contains other files, and even extracts them (<code>binwalk --dd='.*' &lt;filename&gt;</code> [I think]).</li>
 <li><code>strings</code>: looks for any strings with length &gt;4 in a file. <code>strings</code> and <code>grep</code> are powerful.</li>
 <li>Python: Still the easiest way to write a script. Who needs bash?</li>
 </ul>
 <h3 id="sql-injection">1. SQL Injection</h3>
 <p>This was my first time doing any sort of SQL injection. The big thing for me was thinking about how the query was written, and how I can verify if a query is written a particular way. For example, if the query is written as:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>query <span class="op">=</span> <span class="st">&#34;SELECT * FROM Employee WHERE name LIKE &#39;%&#34;</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">&#34;%&#39;&#34;</span></span></code></pre></div>
-<p>Then I can put <code>&#39;</code> to finish the first <code>&#39;%</code> and then whatever I want afterwards. Somethings I really liked to do:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>query <span class="op">=</span> <span class="st">&quot;SELECT * FROM Employee WHERE name LIKE &#39;%&quot;</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">&quot;%&#39;&quot;</span></span></code></pre></div>
+<p>Then I can put <code>'</code> to finish the first <code>'%</code> and then whatever I want afterwards. Somethings I really liked to do:</p>
 <ol type="1">
-<li><code>&#39; ORDER BY name DESC;--</code>: This query just changes the order of the results. It was an easy way to confirm if comments (<code>--</code>) work, column names (<code>name</code>) and whether the quotes are single or double.</li>
-<li>To find the table names, there’s a different way for MySQL/SQL Server, Oracle databases, and SQLite. For each, you have a specialized table name to ask about:</li>
+<li><code>' ORDER BY name DESC;--</code>: This query just changes the order of the results. It was an easy way to confirm if comments (<code>--</code>) work, column names (<code>name</code>) and whether the quotes are single or double.</li>
+<li>To find the table names, there&#x2019;s a different way for MySQL/SQL Server, Oracle databases, and SQLite. For each, you have a specialized table name to ask about:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">-- Suppose our original query is</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Employee <span class="kw">WHERE</span> name <span class="kw">LIKE</span> %name%;</span>
@@ -56,20 +59,20 @@
 <span id="cb2-11"><a href="#cb2-11"></a></span>
 <span id="cb2-12"><a href="#cb2-12"></a><span class="co">-- SQLite</span></span>
 <span id="cb2-13"><a href="#cb2-13"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> name <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> <span class="kw">type</span> <span class="kw">LIKE</span> <span class="st">&#39;table&#39;</span></span></code></pre></div>
-<p>It’s also important to remember that <code>UNION</code> needs the same number of columns on both sides. Just keep adding columns to the <code>UNION</code> until it works. There might be more columns in the original <code>SELECT</code> than are showing on the webpage.</p>
+<p>It&#x2019;s also important to remember that <code>UNION</code> needs the same number of columns on both sides. Just keep adding columns to the <code>UNION</code> until it works. There might be more columns in the original <code>SELECT</code> than are showing on the webpage.</p>
 <p>Then, because it was a SQLite database, I used the following query to find the SQL commands that created the tables:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> sql <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> name<span class="op">=</span><span class="st">&#39;CLASSES&#39;</span>;</span></code></pre></div>
-<p>(<span class="citation" data-cites="me">@me</span>: remember that each of these would need a leading quote (<code>&#39;</code>) and end with <code>;--</code> to make the rest of the query useless.)</p>
+<p>(<span class="citation" data-cites="me">@me</span>: remember that each of these would need a leading quote (<code>'</code>) and end with <code>;--</code> to make the rest of the query useless.)</p>
 <h3 id="binary-exploitations">2. Binary exploitations</h3>
-<p>Binary exploitations were also new for me. I understood the idea from my Systems I and II courses, but I’d never implemented it in practice. We ended up bruteforcing most of them since we were unable to reason about what was on the stack and in what order, but the base understanding was there.</p>
-<p>One we had to overwrite a integer by overflowing a buffer. Not too difficult. The other we had to overwrite a <code>ret</code> address by overflowing a buffer. Both required some thought about how to spam the actual bytes into the program, but once we figured that out, it was very doable to find the right length sequence to set the bits we needed. Surprisingly, Radare was only useful for finding the new target address of the <code>ret</code> instruction. I wasn’t able to use the tool well enough to help further, but I could tell it was very powerful.</p>
+<p>Binary exploitations were also new for me. I understood the idea from my Systems I and II courses, but I&#x2019;d never implemented it in practice. We ended up bruteforcing most of them since we were unable to reason about what was on the stack and in what order, but the base understanding was there.</p>
+<p>One we had to overwrite a integer by overflowing a buffer. Not too difficult. The other we had to overwrite a <code>ret</code> address by overflowing a buffer. Both required some thought about how to spam the actual bytes into the program, but once we figured that out, it was very doable to find the right length sequence to set the bits we needed. Surprisingly, Radare was only useful for finding the new target address of the <code>ret</code> instruction. I wasn&#x2019;t able to use the tool well enough to help further, but I could tell it was very powerful.</p>
 <h2 id="soft-skills">Soft Skills</h2>
 <p>Some of my teammates had done CTFs before, and knew what kind of thinking was needed. I often struggled to make the creative leaps needed to understand what the goal was, but once we had established how to solve the problem, I often wrote the Python script to solve the problem.</p>
 <p>I guess the lesson is that I do much better with well-defined constraints and goals, which is something to keep in mind when I am setting goals and tasks for myself.</p>
 <h2 id="wrapping-up">Wrapping Up</h2>
 <p>Big thanks to OSU Cybersecurity Club for hosting this CTF remotely, and to my teammates for explaining things to me all weekend!</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
-      <hr/>
+      <hr />
       <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2020</p>
       <p>
@@ -77,8 +80,8 @@
       </p>
     </article>
   </main>
-  <script src="/js/instantclick.min.js" data-no-instant=""></script>
-  <script data-no-instant="">
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
     InstantClick.init();
   </script>
   <style>
@@ -145,6 +148,6 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+</body>
 
-
-</body></html>
+</html>

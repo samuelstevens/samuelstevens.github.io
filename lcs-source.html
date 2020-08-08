@@ -1,11 +1,14 @@
-<!DOCTYPE html><html lang="en"><head>
-  <link rel="stylesheet" href="/css/site.css"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <meta charset="utf-8"/>
-  <meta name="description" content=""/>
-  <meta name="keywords" content=""/>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
   <title>Behold: lcs.c</title>
-  <meta name="robots" content="noindex"/> <meta name="googlebot" content="noindex"/>
+  <meta name="robots" content="noindex"> <meta name="googlebot" content="noindex">
 </head>
 
 <body>
@@ -58,17 +61,17 @@
 <span id="cb1-33"><a href="#cb1-33"></a></span>
 <span id="cb1-34"><a href="#cb1-34"></a><span class="dt">void</span> printSequence(<span class="kw">struct</span> Sequence *seq)</span>
 <span id="cb1-35"><a href="#cb1-35"></a>{</span>
-<span id="cb1-36"><a href="#cb1-36"></a>  printf(<span class="st">&#34;%d</span><span class="sc">\n</span><span class="st">&#34;</span>, seq-&gt;length);</span>
+<span id="cb1-36"><a href="#cb1-36"></a>  printf(<span class="st">&quot;%d</span><span class="sc">\n</span><span class="st">&quot;</span>, seq-&gt;length);</span>
 <span id="cb1-37"><a href="#cb1-37"></a>  <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; seq-&gt;length; i++)</span>
 <span id="cb1-38"><a href="#cb1-38"></a>  {</span>
-<span id="cb1-39"><a href="#cb1-39"></a>    printf(<span class="st">&#34;%s &#34;</span>, seq-&gt;items[i]);</span>
+<span id="cb1-39"><a href="#cb1-39"></a>    printf(<span class="st">&quot;%s &quot;</span>, seq-&gt;items[i]);</span>
 <span id="cb1-40"><a href="#cb1-40"></a>  }</span>
-<span id="cb1-41"><a href="#cb1-41"></a>  printf(<span class="st">&#34;</span><span class="sc">\n</span><span class="st">&#34;</span>);</span>
+<span id="cb1-41"><a href="#cb1-41"></a>  printf(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>);</span>
 <span id="cb1-42"><a href="#cb1-42"></a>}</span>
 <span id="cb1-43"><a href="#cb1-43"></a></span>
 <span id="cb1-44"><a href="#cb1-44"></a><span class="dt">void</span> printCell(<span class="kw">struct</span> Cell *cell)</span>
 <span id="cb1-45"><a href="#cb1-45"></a>{</span>
-<span id="cb1-46"><a href="#cb1-46"></a>  printf(<span class="st">&#34;index: %d</span><span class="sc">\t</span><span class="st"> length: %d </span><span class="sc">\t</span><span class="st">prev: %p</span><span class="sc">\n</span><span class="st">&#34;</span>, cell-&gt;index, cell-&gt;length, cell-&gt;prev);</span>
+<span id="cb1-46"><a href="#cb1-46"></a>  printf(<span class="st">&quot;index: %d</span><span class="sc">\t</span><span class="st"> length: %d </span><span class="sc">\t</span><span class="st">prev: %p</span><span class="sc">\n</span><span class="st">&quot;</span>, cell-&gt;index, cell-&gt;length, cell-&gt;prev);</span>
 <span id="cb1-47"><a href="#cb1-47"></a>}</span>
 <span id="cb1-48"><a href="#cb1-48"></a></span>
 <span id="cb1-49"><a href="#cb1-49"></a><span class="kw">struct</span> Sequence *lcs(<span class="kw">struct</span> Sequence *s1, <span class="kw">struct</span> Sequence *s2)</span>
@@ -169,7 +172,7 @@
 <span id="cb1-144"><a href="#cb1-144"></a>{</span>
 <span id="cb1-145"><a href="#cb1-145"></a>  <span class="cf">if</span> (argc &lt; <span class="dv">3</span>)</span>
 <span id="cb1-146"><a href="#cb1-146"></a>  {</span>
-<span id="cb1-147"><a href="#cb1-147"></a>    printf(<span class="st">&#34;You must provide at least 3 arguments.</span><span class="sc">\n</span><span class="st">&#34;</span>);</span>
+<span id="cb1-147"><a href="#cb1-147"></a>    printf(<span class="st">&quot;You must provide at least 3 arguments.</span><span class="sc">\n</span><span class="st">&quot;</span>);</span>
 <span id="cb1-148"><a href="#cb1-148"></a>    <span class="cf">return</span> -<span class="dv">1</span>;</span>
 <span id="cb1-149"><a href="#cb1-149"></a>  }</span>
 <span id="cb1-150"><a href="#cb1-150"></a></span>
@@ -178,7 +181,7 @@
 <span id="cb1-153"><a href="#cb1-153"></a></span>
 <span id="cb1-154"><a href="#cb1-154"></a>  <span class="cf">if</span> (argc &lt; <span class="dv">3</span> + len1 + len2)</span>
 <span id="cb1-155"><a href="#cb1-155"></a>  {</span>
-<span id="cb1-156"><a href="#cb1-156"></a>    printf(<span class="st">&#34;Sequence lengths must be valid.</span><span class="sc">\n</span><span class="st">&#34;</span>);</span>
+<span id="cb1-156"><a href="#cb1-156"></a>    printf(<span class="st">&quot;Sequence lengths must be valid.</span><span class="sc">\n</span><span class="st">&quot;</span>);</span>
 <span id="cb1-157"><a href="#cb1-157"></a>    <span class="cf">return</span> -<span class="dv">1</span>;</span>
 <span id="cb1-158"><a href="#cb1-158"></a>  }</span>
 <span id="cb1-159"><a href="#cb1-159"></a></span>
@@ -197,7 +200,7 @@
 <span id="cb1-172"><a href="#cb1-172"></a></span>
 <span id="cb1-173"><a href="#cb1-173"></a>  printSequence(common);</span>
 <span id="cb1-174"><a href="#cb1-174"></a>}</span></code></pre></div>
-      <hr/>
+      <hr />
       <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2020</p>
       <p>
@@ -205,8 +208,8 @@
       </p>
     </article>
   </main>
-  <script src="/js/instantclick.min.js" data-no-instant=""></script>
-  <script data-no-instant="">
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
     InstantClick.init();
   </script>
   <style>
@@ -273,6 +276,6 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+</body>
 
-
-</body></html>
+</html>
