@@ -68,7 +68,7 @@
 <span id="cb1-38"><a href="#cb1-38"></a>    main()</span></code></pre></div>
 <p>Running this program will never exit because of <code>while True:</code> in <code>consume</code>.</p>
 <blockquote>
-<p>TODO: explain types in quotes</p>
+<p>To satisfy <a href="https://mypy.readthedocs.io/en/stable/"><code>mypy</code></a>, <code>Queue</code> needs a type parameter. However, <code>Queue</code> cannot be indexed via <code>[]</code>, so you can put the whole type in quotes so that it&#x2019;s not evaluated at runtime.</p>
 </blockquote>
 <p>How does <code>consume</code> know to exit? It can&#x2019;t check if <code>q.empty</code> because according to <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Queue.empty">the docs</a> it&#x2019;s not reliable. We could just use <code>get_nowait()</code> and exit if it raises an exception. But can the queue ever be empty without it being finished? Yes, so just checking if it&#x2019;s empty isn&#x2019;t a reliable way to end the program either.</p>
 <p>The solution is to send some sort of &#x201C;stop&#x201D;-value that tells the consumer that it&#x2019;s done working. For example, if we were to use negative values as a stop value:</p>
