@@ -87,7 +87,7 @@
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a>    q.put(<span class="op">-</span><span class="dv">1</span>) <span class="co"># stop-value</span></span></code></pre></div>
 <p>Now we can run <code>time python queue_demo.py</code> and see that it takes less than 30 seconds (3 seconds * 5 elements produced * 2 producers). It&#x2019;s not perfect (should be exactly 15 seconds), but it&#x2019;s definitely faster than in a single process.</p>
-<p>Here&#x2019;s the final program. If you have any improvements/suggestions, I can be reached at <a href="mailto:samuel.robert.stevens@gmail.com">samuel.robert.stevens@gmail.com</a></p>
+<p>Here&#x2019;s the final program, licensed under <a href="/license-gnu">GNU AGPLv3</a>. If you have any improvements/suggestions, I can be reached at <a href="mailto:samuel.robert.stevens@gmail.com">samuel.robert.stevens@gmail.com</a></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> time</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> multiprocessing <span class="im">import</span> Process, Queue</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
