@@ -50,11 +50,11 @@
 <span id="cb1-20"><a href="#cb1-20"></a>    q: <span class="st">&quot;Queue[int]&quot;</span> <span class="op">=</span> Queue()</span>
 <span id="cb1-21"><a href="#cb1-21"></a></span>
 <span id="cb1-22"><a href="#cb1-22"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
-<span id="cb1-23"><a href="#cb1-23"></a>        c <span class="op">=</span> Process(target<span class="op">=</span>consume, args<span class="op">=</span>(q, <span class="dv">5</span>))</span>
+<span id="cb1-23"><a href="#cb1-23"></a>        c <span class="op">=</span> Process(target<span class="op">=</span>consume, args<span class="op">=</span>(q,))</span>
 <span id="cb1-24"><a href="#cb1-24"></a>        c.start()</span>
 <span id="cb1-25"><a href="#cb1-25"></a></span>
 <span id="cb1-26"><a href="#cb1-26"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
-<span id="cb1-27"><a href="#cb1-27"></a>        p <span class="op">=</span> Process(target<span class="op">=</span>produce, args<span class="op">=</span>(q,))</span>
+<span id="cb1-27"><a href="#cb1-27"></a>        p <span class="op">=</span> Process(target<span class="op">=</span>produce, args<span class="op">=</span>(q, <span class="dv">5</span>))</span>
 <span id="cb1-28"><a href="#cb1-28"></a>        p.start()</span>
 <span id="cb1-29"><a href="#cb1-29"></a></span>
 <span id="cb1-30"><a href="#cb1-30"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
@@ -68,14 +68,14 @@
 <span id="cb1-38"><a href="#cb1-38"></a>    main()</span></code></pre></div>
 <p>Running this program will never exit because of <code>while True:</code> in <code>consume</code>.</p>
 <blockquote>
-<p>T</p>
+<p>TODO: explain types in quotes</p>
 </blockquote>
-<p>How does <code>consume</code> know to exit? It can&#x2019;t check if <code>q.empty</code> because according to <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Queue.empty">the docs</a> it&#x2019;s not reliable. We could just use <code>get_nowait()</code> and exit if it raises an exception. But can the queue ever be empty without it being finished? Of course, so that doesn&#x2019;t work either.</p>
+<p>How does <code>consume</code> know to exit? It can&#x2019;t check if <code>q.empty</code> because according to <a href="https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Queue.empty">the docs</a> it&#x2019;s not reliable. We could just use <code>get_nowait()</code> and exit if it raises an exception. But can the queue ever be empty without it being finished? Yes, so just checking if it&#x2019;s empty isn&#x2019;t a reliable way to end the program either.</p>
 <p>The solution is to send some sort of &#x201C;stop&#x201D;-value that tells the consumer that it&#x2019;s done working. For example, if we were to use negative values as a stop value:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> consume(q: <span class="st">&quot;Queue[int]&quot;</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
 <span id="cb2-3"><a href="#cb2-3"></a>        num <span class="op">=</span> q.get()</span>
-<span id="cb2-4"><a href="#cb2-4"></a>        <span class="cf">if</span> num <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-4"><a href="#cb2-4"></a>        <span class="cf">if</span> num <span class="op">&lt;</span> <span class="dv">0</span>: <span class="co"># sentinel value</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a>            <span class="cf">break</span></span>
 <span id="cb2-6"><a href="#cb2-6"></a></span>
 <span id="cb2-7"><a href="#cb2-7"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Sleeping for </span><span class="sc">{</span>num<span class="sc">}</span><span class="ss"> seconds.&quot;</span>)</span>
@@ -86,7 +86,49 @@
 <span id="cb3-3"><a href="#cb3-3"></a>        q.put(<span class="dv">3</span>)</span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a>    q.put(<span class="op">-</span><span class="dv">1</span>) <span class="co"># stop-value</span></span></code></pre></div>
-<p>Now we can run <code>time python queue_demo.py</code> and see that it takes less than 30 seconds (3 seconds * 5 elements produced * 2 producers). It&#x2019;s not perfect (should be exactly 15 seconds).</p>
+<p>Now we can run <code>time python queue_demo.py</code> and see that it takes less than 30 seconds (3 seconds * 5 elements produced * 2 producers). It&#x2019;s not perfect (should be exactly 15 seconds), but it&#x2019;s definitely faster than in a single process.</p>
+<p>Here&#x2019;s the final program. If you have any improvements/suggestions, I can be reached at <a href="mailto:samuel.robert.stevens@gmail.com">samuel.robert.stevens@gmail.com</a></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> time</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> multiprocessing <span class="im">import</span> Process, Queue</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">def</span> produce(q: <span class="st">&quot;Queue[int]&quot;</span>, length: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(length):</span>
+<span id="cb4-7"><a href="#cb4-7"></a>        q.put(<span class="dv">3</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    q.put(<span class="op">-</span><span class="dv">1</span>)  <span class="co"># stop-value</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a></span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="kw">def</span> consume(q: <span class="st">&quot;Queue[int]&quot;</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb4-13"><a href="#cb4-13"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb4-14"><a href="#cb4-14"></a>        num <span class="op">=</span> q.get()</span>
+<span id="cb4-15"><a href="#cb4-15"></a>        <span class="cf">if</span> num <span class="op">&lt;</span> <span class="dv">0</span>:  <span class="co"># sentinel value</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a>            <span class="cf">break</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a></span>
+<span id="cb4-18"><a href="#cb4-18"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Sleeping for </span><span class="sc">{</span>num<span class="sc">}</span><span class="ss"> seconds.&quot;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>        time.sleep(num)  <span class="co"># expensive work</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="kw">def</span> main() <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb4-23"><a href="#cb4-23"></a>    q: <span class="st">&quot;Queue[int]&quot;</span> <span class="op">=</span> Queue()</span>
+<span id="cb4-24"><a href="#cb4-24"></a></span>
+<span id="cb4-25"><a href="#cb4-25"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb4-26"><a href="#cb4-26"></a>        c <span class="op">=</span> Process(target<span class="op">=</span>consume, args<span class="op">=</span>(q,))</span>
+<span id="cb4-27"><a href="#cb4-27"></a>        c.start()</span>
+<span id="cb4-28"><a href="#cb4-28"></a></span>
+<span id="cb4-29"><a href="#cb4-29"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb4-30"><a href="#cb4-30"></a>        p <span class="op">=</span> Process(target<span class="op">=</span>produce, args<span class="op">=</span>(q, <span class="dv">5</span>))</span>
+<span id="cb4-31"><a href="#cb4-31"></a>        p.start()</span>
+<span id="cb4-32"><a href="#cb4-32"></a></span>
+<span id="cb4-33"><a href="#cb4-33"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb4-34"><a href="#cb4-34"></a>        p.join()</span>
+<span id="cb4-35"><a href="#cb4-35"></a></span>
+<span id="cb4-36"><a href="#cb4-36"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb4-37"><a href="#cb4-37"></a>        c.join()</span>
+<span id="cb4-38"><a href="#cb4-38"></a></span>
+<span id="cb4-39"><a href="#cb4-39"></a></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-41"><a href="#cb4-41"></a>    main()</span></code></pre></div>
       <hr />
       <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
       <p>Sam Stevens, 2020</p>
