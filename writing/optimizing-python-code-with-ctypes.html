@@ -45,29 +45,29 @@
 <p>The built-in data structures in Python like <code>set</code> and <code>dict</code> are written in C. They are much faster than writing your own data structures as Python classes. Other data structures besides the standard <code>set</code>, <code>dict</code>, <code>list</code>, and <code>tuple</code> are documented in the <a href="https://docs.python.org/dev/library/collections.html#module-collections"><code>collections</code> module</a>.</p>
 <h3 id="list-comprehensions">List Comprehensions</h3>
 <p>Rather than appending to a list, use list comprehensions.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Slow</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>mapped <span class="op">=</span> []</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="cf">for</span> value <span class="kw">in</span> originallist:</span>
-<span id="cb1-4"><a href="#cb1-4"></a>    mapped.append(myfunc(value))</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Faster</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>mapped <span class="op">=</span> [myfunc(value) <span class="kw">in</span> originallist]</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co"># Slow</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>mapped <span class="op">=</span> []</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="cf">for</span> value <span class="kw">in</span> originallist:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    mapped.append(myfunc(value))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co"># Faster</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>mapped <span class="op">=</span> [myfunc(value) <span class="kw">in</span> originallist]</span></code></pre></div>
 <h2 id="ctypes"><code>ctypes</code></h2>
 <p><a href="https://docs.python.org/3/library/ctypes.html"><code>ctypes</code></a> is a module that allows you to communicate with C code from your Python code without using <code>subprocess</code> or similar modules to run another process from the CLI.</p>
 <p>There are two parts: compiling your C code to be loaded as a shared object, and setting up the data structures in your Python code to map to C-types.</p>
 <p>In this post, I&#x2019;ll be connecting my Python code to <a href="/lcs-source">lcs.c</a>, which finds the longest common subsequence of two lists of strings. In the Python code, I want this to happen:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
-<span id="cb2-2"><a href="#cb2-2"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>common <span class="op">=</span> lcs(list1, list2)</span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="bu">print</span>(common)</span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># [&#39;My&#39;, &#39;name&#39;, &#39;is&#39;, &#39;Stevens&#39;]</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>common <span class="op">=</span> lcs(list1, list2)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="bu">print</span>(common)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="co"># [&#39;My&#39;, &#39;name&#39;, &#39;is&#39;, &#39;Stevens&#39;]</span></span></code></pre></div>
 <p>Some challenges with this particular C function is function signature having lists of strings as the argument types, and the return type not having a fixed length. I solve this with a <code>Sequence</code> struct containing the pointers and the length.</p>
 <h3 id="compiling-c-code-for-python">Compiling C code for Python</h3>
 <p>First, the C source code (<code>lcs.c</code>) is compiled to <code>lcs.so</code> that can be loaded by Python.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">gcc</span> -c -Wall -Werror -fpic -O3 lcs.c -o lcs.o</span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">gcc</span> -shared -o lcs.so lcs.o</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="fu">gcc</span> -c -Wall -Werror -fpic -O3 lcs.c -o lcs.o</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="fu">gcc</span> -shared -o lcs.so lcs.o</span></code></pre></div>
 <ul>
 <li><code>-Wall</code> show all warnings.</li>
 <li><code>-Werrow</code> turns all warnings into errors.</li>
@@ -77,29 +77,29 @@
 <p>Next, we begin to write the Python code to use this shared object file.</p>
 <h3 id="structs-in-python">Structs in Python</h3>
 <p>Below, I show the two structs that are used in my C source code.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">struct</span> Sequence</span>
-<span id="cb4-2"><a href="#cb4-2"></a>{</span>
-<span id="cb4-3"><a href="#cb4-3"></a>    <span class="dt">char</span> **items;</span>
-<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">int</span> length;</span>
-<span id="cb4-5"><a href="#cb4-5"></a>};</span>
-<span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="kw">struct</span> Cell</span>
-<span id="cb4-8"><a href="#cb4-8"></a>{</span>
-<span id="cb4-9"><a href="#cb4-9"></a>    <span class="dt">int</span> index;</span>
-<span id="cb4-10"><a href="#cb4-10"></a>    <span class="dt">int</span> length;</span>
-<span id="cb4-11"><a href="#cb4-11"></a>    <span class="kw">struct</span> Cell *prev;</span>
-<span id="cb4-12"><a href="#cb4-12"></a>};</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">struct</span> Sequence</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>{</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    <span class="dt">char</span> **items;</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    <span class="dt">int</span> length;</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>};</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="kw">struct</span> Cell</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>{</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>    <span class="dt">int</span> index;</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>    <span class="dt">int</span> length;</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>    <span class="kw">struct</span> Cell *prev;</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>};</span></code></pre></div>
 <p>Here, you see the Python translation of the structs.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> ctypes</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="kw">class</span> SEQUENCE(ctypes.Structure):</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    _fields_ <span class="op">=</span> [(<span class="st">&#39;items&#39;</span>, ctypes.POINTER(ctypes.c_char_p)),</span>
-<span id="cb5-4"><a href="#cb5-4"></a>                (<span class="st">&#39;length&#39;</span>, ctypes.c_int)]</span>
-<span id="cb5-5"><a href="#cb5-5"></a></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="kw">class</span> CELL(ctypes.Structure):</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    <span class="cf">pass</span></span>
-<span id="cb5-8"><a href="#cb5-8"></a></span>
-<span id="cb5-9"><a href="#cb5-9"></a>CELL._fields_ <span class="op">=</span> [(<span class="st">&#39;index&#39;</span>, ctypes.c_int), (<span class="st">&#39;length&#39;</span>, ctypes.c_int),</span>
-<span id="cb5-10"><a href="#cb5-10"></a>                 (<span class="st">&#39;prev&#39;</span>, ctypes.POINTER(CELL))]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="im">import</span> ctypes</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">class</span> SEQUENCE(ctypes.Structure):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>    _fields_ <span class="op">=</span> [(<span class="st">&#39;items&#39;</span>, ctypes.POINTER(ctypes.c_char_p)),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>                (<span class="st">&#39;length&#39;</span>, ctypes.c_int)]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="kw">class</span> CELL(ctypes.Structure):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>CELL._fields_ <span class="op">=</span> [(<span class="st">&#39;index&#39;</span>, ctypes.c_int), (<span class="st">&#39;length&#39;</span>, ctypes.c_int),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>                 (<span class="st">&#39;prev&#39;</span>, ctypes.POINTER(CELL))]</span></code></pre></div>
 <p>Some notes:</p>
 <ul>
 <li>All structs are <code>class</code>es that inherit from <code>ctypes.Structure</code>.</li>
@@ -111,38 +111,38 @@
 </ul>
 <h3 id="calling-your-c-code">Calling Your C Code</h3>
 <p>Additionally, I needed some code to convert your Python types to your new C structs. Finally, you can use your new C function to speed up your Python code.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> list_to_SEQUENCE(strlist: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> SEQUENCE:</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    bytelist <span class="op">=</span> [<span class="bu">bytes</span>(s, <span class="st">&#39;utf-8&#39;</span>) <span class="cf">for</span> s <span class="kw">in</span> strlist]</span>
-<span id="cb6-3"><a href="#cb6-3"></a>    arr <span class="op">=</span> (ctypes.c_char_p <span class="op">*</span> <span class="bu">len</span>(bytelist))()</span>
-<span id="cb6-4"><a href="#cb6-4"></a>    arr[:] <span class="op">=</span> bytelist</span>
-<span id="cb6-5"><a href="#cb6-5"></a>    <span class="cf">return</span> SEQUENCE(arr, <span class="bu">len</span>(bytelist))</span>
-<span id="cb6-6"><a href="#cb6-6"></a></span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="kw">def</span> lcs(s1: List[<span class="bu">str</span>], s2: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> List[<span class="bu">str</span>]:</span>
-<span id="cb6-9"><a href="#cb6-9"></a>    seq1 <span class="op">=</span> list_to_SEQUENCE(s1)</span>
-<span id="cb6-10"><a href="#cb6-10"></a>    seq2 <span class="op">=</span> list_to_SEQUENCE(s2)</span>
-<span id="cb6-11"><a href="#cb6-11"></a></span>
-<span id="cb6-12"><a href="#cb6-12"></a>    <span class="co"># struct Sequence *lcs(struct Sequence *s1, struct Sequence *s2)</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>    common <span class="op">=</span> lcsmodule.lcs(ctypes.byref(seq1), ctypes.byref(seq2))[<span class="dv">0</span>]</span>
-<span id="cb6-14"><a href="#cb6-14"></a></span>
-<span id="cb6-15"><a href="#cb6-15"></a>    ret <span class="op">=</span> []</span>
-<span id="cb6-16"><a href="#cb6-16"></a></span>
-<span id="cb6-17"><a href="#cb6-17"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(common.length):</span>
-<span id="cb6-18"><a href="#cb6-18"></a>        ret.append(common.items[i].decode(<span class="st">&#39;utf-8&#39;</span>))</span>
-<span id="cb6-19"><a href="#cb6-19"></a>    lcsmodule.freeSequence(common)</span>
-<span id="cb6-20"><a href="#cb6-20"></a></span>
-<span id="cb6-21"><a href="#cb6-21"></a>    <span class="cf">return</span> ret</span>
-<span id="cb6-22"><a href="#cb6-22"></a></span>
-<span id="cb6-23"><a href="#cb6-23"></a>lcsmodule <span class="op">=</span> ctypes.cdll.LoadLibrary(<span class="st">&#39;lcsmodule/lcs.so&#39;</span>)</span>
-<span id="cb6-24"><a href="#cb6-24"></a>lcsmodule.lcs.restype <span class="op">=</span> ctypes.POINTER(SEQUENCE)</span>
-<span id="cb6-25"><a href="#cb6-25"></a></span>
-<span id="cb6-26"><a href="#cb6-26"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
-<span id="cb6-27"><a href="#cb6-27"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
-<span id="cb6-28"><a href="#cb6-28"></a></span>
-<span id="cb6-29"><a href="#cb6-29"></a>common <span class="op">=</span> lcs(list1, list2)</span>
-<span id="cb6-30"><a href="#cb6-30"></a></span>
-<span id="cb6-31"><a href="#cb6-31"></a><span class="bu">print</span>(common)</span>
-<span id="cb6-32"><a href="#cb6-32"></a><span class="co"># [&#39;My&#39;, &#39;name&#39;, &#39;is&#39;, &#39;Stevens&#39;]</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">def</span> list_to_SEQUENCE(strlist: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> SEQUENCE:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>    bytelist <span class="op">=</span> [<span class="bu">bytes</span>(s, <span class="st">&#39;utf-8&#39;</span>) <span class="cf">for</span> s <span class="kw">in</span> strlist]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    arr <span class="op">=</span> (ctypes.c_char_p <span class="op">*</span> <span class="bu">len</span>(bytelist))()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>    arr[:] <span class="op">=</span> bytelist</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>    <span class="cf">return</span> SEQUENCE(arr, <span class="bu">len</span>(bytelist))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="kw">def</span> lcs(s1: List[<span class="bu">str</span>], s2: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> List[<span class="bu">str</span>]:</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>    seq1 <span class="op">=</span> list_to_SEQUENCE(s1)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>    seq2 <span class="op">=</span> list_to_SEQUENCE(s2)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>    <span class="co"># struct Sequence *lcs(struct Sequence *s1, struct Sequence *s2)</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>    common <span class="op">=</span> lcsmodule.lcs(ctypes.byref(seq1), ctypes.byref(seq2))[<span class="dv">0</span>]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>    ret <span class="op">=</span> []</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(common.length):</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a>        ret.append(common.items[i].decode(<span class="st">&#39;utf-8&#39;</span>))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a>    lcsmodule.freeSequence(common)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a>    <span class="cf">return</span> ret</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a>lcsmodule <span class="op">=</span> ctypes.cdll.LoadLibrary(<span class="st">&#39;lcsmodule/lcs.so&#39;</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a>lcsmodule.lcs.restype <span class="op">=</span> ctypes.POINTER(SEQUENCE)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true"></a>common <span class="op">=</span> lcs(list1, list2)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true"></a><span class="bu">print</span>(common)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true"></a><span class="co"># [&#39;My&#39;, &#39;name&#39;, &#39;is&#39;, &#39;Stevens&#39;]</span></span></code></pre></div>
 <p>More notes:</p>
 <ul>
 <li><code>**char</code> (a list of strings) maps directly to a list of bytes in Python.</li>

@@ -28,75 +28,75 @@
 <p>I have historically struggled with NumPy matrices being the right size while working on ML-oriented code. After reading some of <a href="http://learnyouahaskell.com/">Learn You a Haskell</a> and working on a couple Elm projects (<a href="https://github.com/samuelstevens/elm-slow-youtube">1</a>, <a href="https://github.com/samuelstevens/elm-csv">2</a>), I felt like it was a problem I could solve using <a href="https://mypy.readthedocs.io/en/stable/index.html"><code>mypy</code></a>&#x2019;s more advanced features.</p>
 <p>The basic idea is a wrapper class for NumPy matrices that overloads <code>*</code>, <code>+</code> and whatever else you want to type check the matrix dimensions using <code>mypy</code> before running the code. This only seemed possible because most of the matrices in a my typical ML problems are fixed sizes, and not changing at runtime.</p>
 <p>The end result is:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>a <span class="op">=</span> Matrix[_100, _500](np.zeros((<span class="dv">100</span>, <span class="dv">500</span>))) <span class="co"># 100 x 500 matrix</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>b <span class="op">=</span> Matrix[_100, _500](np.zeros((<span class="dv">100</span>, <span class="dv">500</span>))) <span class="co"># 100 x 500 matrix</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>c <span class="op">=</span> Matrix[_500, _600](np.zeros((<span class="dv">500</span>, <span class="dv">600</span>))) <span class="co"># 500 x 600 matrix</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>a <span class="op">+</span> b</span>
-<span id="cb1-5"><a href="#cb1-5"></a>a <span class="op">*</span> b <span class="co"># throws a mypy error</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>a <span class="op">*</span> c</span>
-<span id="cb1-7"><a href="#cb1-7"></a>a <span class="op">+</span> c <span class="co"># throws a mypy error</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>a.matrix <span class="co"># access the underlying numpy ndarray</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>a <span class="op">=</span> Matrix[_100, _500](np.zeros((<span class="dv">100</span>, <span class="dv">500</span>))) <span class="co"># 100 x 500 matrix</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>b <span class="op">=</span> Matrix[_100, _500](np.zeros((<span class="dv">100</span>, <span class="dv">500</span>))) <span class="co"># 100 x 500 matrix</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>c <span class="op">=</span> Matrix[_500, _600](np.zeros((<span class="dv">500</span>, <span class="dv">600</span>))) <span class="co"># 500 x 600 matrix</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>a <span class="op">+</span> b</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>a <span class="op">*</span> b <span class="co"># throws a mypy error</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>a <span class="op">*</span> c</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>a <span class="op">+</span> c <span class="co"># throws a mypy error</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>a.matrix <span class="co"># access the underlying numpy ndarray</span></span></code></pre></div>
 <p>I&#x2019;m going to spend the rest of this explaining how it works.</p>
 <h2 id="literal-types-in-mypy">Literal Types in MyPy</h2>
 <p>Literal types in mypy let you define a literal as its own type. This is useful for overloaded functions that return a different type based on a flag value. For example, in a made up function that returns a float or an int based on a flag:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: <span class="bu">bool</span>) <span class="op">-&gt;</span> Union[<span class="bu">float</span>, <span class="bu">int</span>]:</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    ...</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: <span class="bu">bool</span>) <span class="op">-&gt;</span> Union[<span class="bu">float</span>, <span class="bu">int</span>]:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    ...</span></code></pre></div>
 <p>You&#x2019;d have to check if the return value was a float or an int every time you wanted to use the value later on. But if we know that the return type depends on the <code>is_float</code> flag, we can better model this function with literal types.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="im">from</span> typing <span class="im">import</span> overload, Literal</span>
-<span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="at">@overload</span>  </span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: Literal[<span class="va">True</span>]) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
-<span id="cb3-5"><a href="#cb3-5"></a>    ...</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="at">@overload</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: Literal[<span class="va">False</span>]) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
-<span id="cb3-9"><a href="#cb3-9"></a>    ...</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="im">from</span> typing <span class="im">import</span> overload, Literal</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="at">@overload</span>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: Literal[<span class="va">True</span>]) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>    ...</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="at">@overload</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">def</span> parse_float_or_int(s: <span class="bu">str</span>, is_float: Literal[<span class="va">False</span>]) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>    ...</span></code></pre></div>
 <blockquote>
 <p>This is basically ripped straight from the <a href="https://mypy.readthedocs.io/en/stable/literal_types.html#literal-types">mypy docs on literal types</a></p>
 </blockquote>
 <p>Now if we call <code>parse_float_or_int</code> with a literal <code>True</code> or <code>False</code>, mypy will know the return type. Note that if we pass a variable that is not of type <code>Literal</code> then mypy will need you to narrow the type down from a <code>Union[float, int]</code>.</p>
 <p>Can we use literals as the dimensions of our matrix to type check matrix multiplication? Ideally we could use <code>Matrix[100, 200]</code> or some variant as our type annotation, knowing that it will only work for matrices where we know the dimensions at &#x201C;compile&#x201D;-time.</p>
 <p>To the best of my knowledge, we can&#x2019;t define a generic <code>Matrix</code> class that will take integer literals to create concrete types for the dimensions that can be used later on. The <code>Literal</code> type isn&#x2019;t a free type if you don&#x2019;t give it a value. Here&#x2019;s what I mean:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> typing <span class="im">import</span> TypeVar, Literal, Generic</span>
-<span id="cb4-2"><a href="#cb4-2"></a></span>
-<span id="cb4-3"><a href="#cb4-3"></a>A <span class="op">=</span> TypeVar(<span class="st">&quot;A&quot;</span>)</span>
-<span id="cb4-4"><a href="#cb4-4"></a></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">class</span> GenericOverTypeVar(Generic[A]):</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    stuff: A <span class="co"># has type of A, whatever it is</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a></span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="co"># code below causes errors</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">class</span> GenericOverLiteral(Generic[Literal[A]]):</span>
-<span id="cb4-11"><a href="#cb4-11"></a>    stuff: Literal[A] <span class="co"># value is just A</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="im">from</span> typing <span class="im">import</span> TypeVar, Literal, Generic</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>A <span class="op">=</span> TypeVar(<span class="st">&quot;A&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">class</span> GenericOverTypeVar(Generic[A]):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    stuff: A <span class="co"># has type of A, whatever it is</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co"># code below causes errors</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="kw">class</span> GenericOverLiteral(Generic[Literal[A]]):</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>    stuff: Literal[A] <span class="co"># value is just A</span></span></code></pre></div>
 <p>Ideally, I would be able to use <code>GenericOverLiteral</code> with any literal value and then get type checking, like this:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>a <span class="op">=</span> GenericOverLiteral[<span class="dv">100</span>]</span>
-<span id="cb5-2"><a href="#cb5-2"></a>a.stuff <span class="co"># always 100 later on in my code</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>b <span class="op">=</span> GenericOverLiteral[<span class="st">&quot;stay&quot;</span>]</span>
-<span id="cb5-4"><a href="#cb5-4"></a>b.stuff <span class="co"># &quot;stay&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>a <span class="op">=</span> GenericOverLiteral[<span class="dv">100</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>a.stuff <span class="co"># always 100 later on in my code</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>b <span class="op">=</span> GenericOverLiteral[<span class="st">&quot;stay&quot;</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>b.stuff <span class="co"># &quot;stay&quot;</span></span></code></pre></div>
 <p>I couldn&#x2019;t bend mypy into this shape. If you know how, I&#x2019;d love to hear. To get around this, we can define our <code>TypeVar</code> to be bound by <code>int</code>, like so:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Represent the different dimensions in our matrices</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>A <span class="op">=</span> TypeVar(<span class="st">&quot;A&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>B <span class="op">=</span> TypeVar(<span class="st">&quot;B&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span>
-<span id="cb6-4"><a href="#cb6-4"></a>C <span class="op">=</span> TypeVar(<span class="st">&quot;C&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># Represent the different dimensions in our matrices</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>A <span class="op">=</span> TypeVar(<span class="st">&quot;A&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>B <span class="op">=</span> TypeVar(<span class="st">&quot;B&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>C <span class="op">=</span> TypeVar(<span class="st">&quot;C&quot;</span>, bound<span class="op">=</span><span class="bu">int</span>)</span></code></pre></div>
 <p>Now <code>A</code>, <code>B</code> and <code>C</code> always have to be <code>int</code>-like. Then, we can use these bounded type variables in a Matrix class:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">class</span> Matrix(Generic[A, B]):</span>
-<span id="cb7-2"><a href="#cb7-2"></a>    rows: A</span>
-<span id="cb7-3"><a href="#cb7-3"></a>    cols: B</span>
-<span id="cb7-4"><a href="#cb7-4"></a></span>
-<span id="cb7-5"><a href="#cb7-5"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="va">None</span>: ...</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">class</span> Matrix(Generic[A, B]):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>    rows: A</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    cols: B</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="va">None</span>: ...</span></code></pre></div>
 <p>Now <code>Matrix</code> is generic over two types, each of which have to be integer-like. The <code>rows</code> and <code>cols</code> will have those two types. But this alone doesn&#x2019;t do anything useful. Basically, all we&#x2019;ve said is that <code>Matrix</code> has two attributes, <code>rows</code> and <code>cols</code>, that are both integers. The real fun comes when we overload <code>*</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">def</span> <span class="fu">__mul__</span>(<span class="va">self</span>, other: Matrix[B, C]) <span class="op">-&gt;</span> Matrix[A, C]: ...</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">def</span> <span class="fu">__mul__</span>(<span class="va">self</span>, other: Matrix[B, C]) <span class="op">-&gt;</span> Matrix[A, C]: ...</span></code></pre></div>
 <p>Now we see that we take another <code>Matrix</code> that has the same type of rows as we have columns. Not the same <em>number</em>, but the same <em>type</em>. How do we define these types?</p>
 <p>Using <code>Literal</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>_100 <span class="op">=</span> Literal[<span class="dv">100</span>]</span>
-<span id="cb9-2"><a href="#cb9-2"></a>_200 <span class="op">=</span> Literal[<span class="dv">200</span>]</span>
-<span id="cb9-3"><a href="#cb9-3"></a>_300 <span class="op">=</span> Literal[<span class="dv">300</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>_100 <span class="op">=</span> Literal[<span class="dv">100</span>]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>_200 <span class="op">=</span> Literal[<span class="dv">200</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>_300 <span class="op">=</span> Literal[<span class="dv">300</span>]</span></code></pre></div>
 <p>Now we have three types, all of which are integer like, with values known at &#x201C;compile&#x201D;-time. We can use it like this:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>a <span class="op">=</span> Matrix[_100, _200]()</span>
-<span id="cb10-2"><a href="#cb10-2"></a>b <span class="op">=</span> Matrix[_100, _200]()</span>
-<span id="cb10-3"><a href="#cb10-3"></a>c <span class="op">=</span> Matrix[_200, _300]()</span>
-<span id="cb10-4"><a href="#cb10-4"></a>a <span class="op">*</span> b <span class="co"># throws a mypy error</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a>a <span class="op">*</span> c <span class="co"># safe</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>a <span class="op">=</span> Matrix[_100, _200]()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>b <span class="op">=</span> Matrix[_100, _200]()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>c <span class="op">=</span> Matrix[_200, _300]()</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>a <span class="op">*</span> b <span class="co"># throws a mypy error</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>a <span class="op">*</span> c <span class="co"># safe</span></span></code></pre></div>
 <p>Because <code>__mul__</code> requires that the generic types for the columns and rows for the first and second matrices, respectively, <code>a * b</code> throws a error in mypy:</p>
 <blockquote>
 <p><code>Unsupported operand types for * ("Matrix[Literal[100], Literal[200]]" and "Matrix[Literal[100], Literal[200]]")</code>.</p>

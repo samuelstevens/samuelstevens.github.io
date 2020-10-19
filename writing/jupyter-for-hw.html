@@ -36,42 +36,42 @@
 </ol>
 <h2 id="setting-up-a-virtual-environment">Setting up a Virtual Environment</h2>
 <p>Assuming you have <code>python3</code> installed on your machine (if you don&#x2019;t, look <a href="https://realpython.com/installing-python/">here</a> (or anywhere on the internet) for instructions):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="bu">cd</span> <span class="op">&lt;</span>your school folder<span class="op">&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">python3</span> -m venv school-venv</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="bu">.</span> <span class="ex">school-venv/bin/activate</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="op">&lt;</span>your school folder<span class="op">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="ex">python3</span> -m venv school-venv</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="bu">.</span> <span class="ex">school-venv/bin/activate</span></span></code></pre></div>
 <h2 id="installing-dependencies">Installing Dependencies</h2>
 <p>We need Jupyter and Sympy (Jupyter will install iPython as a dependency):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">pip</span> install jupyter sympy</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ex">pip</span> install jupyter sympy</span></code></pre></div>
 <p>Then we need to create a kernel for Jupyter that corresponds to this virtual environment:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="bu">.</span> <span class="ex">school-venv/bin/activate</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">ipython</span> kernel install --user --name=school</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="bu">.</span> <span class="ex">school-venv/bin/activate</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ex">ipython</span> kernel install --user --name=school</span></code></pre></div>
 <h2 id="create-a-notebook">Create a notebook</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">jupyter</span> notebook <span class="op">&lt;</span>your school folder<span class="op">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ex">jupyter</span> notebook <span class="op">&lt;</span>your school folder<span class="op">&gt;</span></span></code></pre></div>
 <p>This will launch the web interface. From here, I navigate to my class folder and create a new notebook with my school kernel</p>
 <figure>
-<img src="/images/jupyter/new-notebook.png" alt="" /><figcaption>A new notebook</figcaption>
+<img src="/images/jupyter/new-notebook.png" alt="A new notebook" /><figcaption aria-hidden="true">A new notebook</figcaption>
 </figure>
 <h2 id="solve-problems">Solve Problems</h2>
 <p>I always import Sympy and <code>exp</code> from <code>cmath</code>, and set up j to mean <code>0+1j</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="im">import</span> sympy <span class="im">as</span> sym</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="im">from</span> cmath <span class="im">import</span> exp</span>
-<span id="cb5-3"><a href="#cb5-3"></a>j <span class="op">=</span><span class="ot"> 1j</span> <span class="co"># for convenience</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="im">import</span> sympy <span class="im">as</span> sym</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="im">from</span> cmath <span class="im">import</span> exp</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>j <span class="op">=</span> <span class="ot">1j</span> <span class="co"># for convenience</span></span></code></pre></div>
 <p>And here&#x2019;s an example of how I would do an ECE problem:</p>
 <p>First, set up my constants.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>w <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a>z1 <span class="op">=</span> <span class="dv">8</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>z2 <span class="op">=</span> <span class="dv">8</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>v <span class="op">=</span> <span class="dv">1</span><span class="op">+</span>0j</span>
-<span id="cb6-5"><a href="#cb6-5"></a>i <span class="op">=</span> <span class="dv">2</span><span class="op">+</span>0j</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>w <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>z1 <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>z2 <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>v <span class="op">=</span> <span class="dv">1</span><span class="op">+</span><span class="ot">0j</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>i <span class="op">=</span> <span class="dv">2</span><span class="op">+</span><span class="ot">0j</span></span></code></pre></div>
 <p>Next, I set up values that depend on constants.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>zL <span class="op">=</span> j <span class="op">*</span> w <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">10</span> <span class="op">**</span> <span class="dv">-6</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="bu">print</span>(<span class="st">&#39;zL:&#39;</span>, zL)</span>
-<span id="cb7-3"><a href="#cb7-3"></a></span>
-<span id="cb7-4"><a href="#cb7-4"></a>zTH <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span><span class="op">/</span>z1 <span class="op">+</span> <span class="dv">1</span><span class="op">/</span>(zL <span class="op">+</span> z2))</span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="bu">print</span>(<span class="st">&#39;zTH:&#39;</span>, zTH)</span>
-<span id="cb7-6"><a href="#cb7-6"></a></span>
-<span id="cb7-7"><a href="#cb7-7"></a>zC <span class="op">=</span> <span class="op">-</span>j <span class="op">/</span> (<span class="dv">300</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">*</span> <span class="dv">10</span> <span class="op">**</span> <span class="dv">-6</span>)</span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="bu">print</span>(<span class="st">&#39;zC:&#39;</span>, zC)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>zL <span class="op">=</span> j <span class="op">*</span> w <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">10</span> <span class="op">**</span> <span class="op">-</span><span class="dv">6</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;zL:&#39;</span>, zL)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>zTH <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span><span class="op">/</span>z1 <span class="op">+</span> <span class="dv">1</span><span class="op">/</span>(zL <span class="op">+</span> z2))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;zTH:&#39;</span>, zTH)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>zC <span class="op">=</span> <span class="op">-</span>j <span class="op">/</span> (<span class="dv">300</span> <span class="op">*</span> <span class="dv">5</span> <span class="op">*</span> <span class="dv">10</span> <span class="op">**</span> <span class="op">-</span><span class="dv">6</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;zC:&#39;</span>, zC)</span></code></pre></div>
 <p>Finally, I use Sympy to solve for variables in multiple equations.</p>
 <blockquote>
 <p>Note: You need to set up <code>Va</code> and <code>Vc</code> as <code>sym.Symbol()</code> for Sympy to solve for it.</p>
@@ -79,22 +79,22 @@
 <blockquote>
 <p>Note 2: The results from Sympy are not type <code>complex</code>; they must be cast before being used with other <code>complex</code> numbers, or you end up with weird results.</p>
 </blockquote>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>Va <span class="op">=</span> sym.Symbol(<span class="st">&#39;Va&#39;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>Vc <span class="op">=</span> sym.Symbol(<span class="st">&#39;Vc&#39;</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a>result <span class="op">=</span> sym.solve(</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    (</span>
-<span id="cb8-6"><a href="#cb8-6"></a>        (Va <span class="op">-</span> v) <span class="op">/</span> z1 <span class="op">+</span> (Va <span class="op">-</span> Vc) <span class="op">/</span> zL, </span>
-<span id="cb8-7"><a href="#cb8-7"></a>        (Vc <span class="op">-</span> Va) <span class="op">/</span> zL <span class="op">+</span> Vc <span class="op">/</span> z2 <span class="op">-</span> i</span>
-<span id="cb8-8"><a href="#cb8-8"></a>        <span class="co"># as far as I know, these equations are always assumed to equal 0</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a>    ),</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    (Va, Vc)</span>
-<span id="cb8-11"><a href="#cb8-11"></a>)</span>
-<span id="cb8-12"><a href="#cb8-12"></a>vTH <span class="op">=</span> <span class="bu">complex</span>(result[Va])</span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="bu">print</span>(<span class="st">&#39;vTH:&#39;</span>, vTH)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>Va <span class="op">=</span> sym.Symbol(<span class="st">&#39;Va&#39;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>Vc <span class="op">=</span> sym.Symbol(<span class="st">&#39;Vc&#39;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>result <span class="op">=</span> sym.solve(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>    (</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a>        (Va <span class="op">-</span> v) <span class="op">/</span> z1 <span class="op">+</span> (Va <span class="op">-</span> Vc) <span class="op">/</span> zL, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>        (Vc <span class="op">-</span> Va) <span class="op">/</span> zL <span class="op">+</span> Vc <span class="op">/</span> z2 <span class="op">-</span> i</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>        <span class="co"># as far as I know, these equations are always assumed to equal 0</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>    ),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a>    (Va, Vc)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a>vTH <span class="op">=</span> <span class="bu">complex</span>(result[Va])</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a><span class="bu">print</span>(<span class="st">&#39;vTH:&#39;</span>, vTH)</span></code></pre></div>
 <p>And this is how it all might look within a Jupyter notebook:</p>
 <figure>
-<img src="/images/jupyter/example.png" alt="" /><figcaption>Example notebook</figcaption>
+<img src="/images/jupyter/example.png" alt="Example notebook" /><figcaption aria-hidden="true">Example notebook</figcaption>
 </figure>
 <p>This is how I avoid doing any hard math in my ECE class.</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
