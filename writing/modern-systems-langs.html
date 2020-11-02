@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Can we ever improve on C?" />
+  <meta name="keywords" content="languages, programming languages, c, c++, rust, dlang, nim, v, zig, ziglang" />
+  <title>Behold: Modern Systems Languages</title>
+  
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/elm-quiet-hn">Quiet HN</a>]
+      </p>
+    </header>
+
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="modern-systems-languages">Modern Systems Languages</h1>
+<p>I mostly write Python code, and smarter people than me have written all the performant stuff for Python in C, or <a href="https://github.com/huggingface/tokenizers">Rust</a>, or something else entirely. But sometimes I need to write some fast code for use with Python. The last time, it was a diffing algorithm that I needed to be fast (should&#x2019;ve just used <a href="https://github.com/syrusakbary/fastdiff">fastdiff</a> I guess). The next time, it&#x2019;ll probably be strings again because I would use <a href="https://numpy.org/">NumPy</a> for basically anything with numbers.</p>
+<p>The point is, sometimes I need to write fast, compiled code. But the important part is being able to use that fast, compiled code in my slow, interpeted Python. And ideally, I don&#x2019;t have to run a subprocess. Otherwise, I could just write my data to a file, then write a standalone tool, then write the processed data back to a file&#x2026;that seems like a much better idea than learning a systems language. Whatever.</p>
+<p>I also don&#x2019;t really want to go back to writing a language without any help from the computer. MyPy, Elm, Go, VSCode and TypeScript have all spoiled me. I want to write code with good tooling. Language servers, or at fast compiler, or amazing error messages; I want a development experience that feels like 2020.</p>
+<h2 id="the-criteria">The Criteria</h2>
+<ol type="1">
+<li>Performance. I&#x2019;m not writing code in a different language just for it to be as slow as Python.</li>
+<li>Ease of use. I really want to just install the compiler and start coding.</li>
+<li>Dynamic libraries (I think). I think the easiest way to interface with Python is to create a shared object file, then use <code>ctypes</code> to load the library in Python. If I have to write a thin Python wrapper or a <code>.pyi</code> file so I get autocomplete, I&#x2019;m ok with that.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+</ol>
+<p>That&#x2019;s all I need. I&#x2019;m willing to learn any syntax, battle any borrow checker, as long as I can write fast code with a decent editor that I can use in Python later on.</p>
+<h2 id="the-list">The List</h2>
+<ol type="1">
+<li>C (<em>The Head Honcho</em>)</li>
+<li>Rust (<em>I should&#x2019;ve learned this already</em>)</li>
+<li>Zig (<em>Rust is to C++ as Zig is to C</em>)</li>
+<li>Nim (<em>Python&#x2019;s syntax but it compiles</em>)</li>
+<li>D (<em>C with a GC?</em>)</li>
+</ol>
+<h2 id="c-the-head-honcho">C (<em>The Head Honcho</em>)</h2>
+<p>The reigning champ. I already <a href="https://samuelstevens.me/writing/optimizing-python-code-with-ctypes">wrote about how to make faster Python code with ctypes</a>. It&#x2019;s very doable. The only problem is that I&#x2019;m writing C, and it&#x2019;s been nearly 50 years, and while the language has been improved, there are parts that are still awful to use (null-terminated strings, for example).</p>
+<h2 id="rust-i-shouldve-learned-this-already">Rust (<em>I should&#x2019;ve learned this already</em>)</h2>
+<p>I really should be using Rust already. Modern systems language, helpful compiler, very mature compared to some other options on this list, includes some functional programming concepts that make me jealous in Python; all good reasons to use Rust. It just looks a little complicated. I guess I could use <a href="https://github.com/PyO3/maturin">maturin</a>, but then I have another third party dependency, which is disappointing.</p>
+<h2 id="zig-rust-is-to-c-as-zig-is-to-c">Zig (<em>Rust is to C++ as Zig is to C</em>)</h2>
+<h2 id="nim-pythons-syntax-but-it-compiles">Nim (<em>Python&#x2019;s syntax but it compiles</em>)</h2>
+<h2 id="d-c-with-a-gc">D (<em>C with a GC?</em>)</h2>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Is there a better way to interface with Python? How does everyone else write fast code for Python?<a href="#fnref1" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</section>
+      <hr />
+      <p>[<a href="https://www.youtube.com/watch?v=SHbS9tYFpcQ">Relevant link</a>]</p>
+      <p>Sam Stevens, 2020</p>
+      <p>
+        <a href="https://github.com/samuelstevens/personal-website">Source</a>
+      </p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
