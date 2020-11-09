@@ -45,7 +45,7 @@
 <li><a href="https://mccormickml.com/2019/07/22/BERT-fine-tuning/">Explore with the <code>huggingface</code> library</a></li>
 </ol></li>
 </ol>
-<h2 id="attentiontransformersbert-tldr">Attention/Transformers/BERT TL;DR</h2>
+<h2 id="attention-transformers-bert-tldr">Attention &amp; Transformers &amp; BERT TL;DR</h2>
 <p>Attention is a mechanism for models to figure out which word is most important at different points in a sentence. Transformers use attention exclusively (it used to be a supplemental mechanism) to great success. BERT is one of the most popular and succesful transformer models, released by Google in 2019. In BERT (specifically the base model), a sentence goes through 12 layers of modeling, and in each layer, for each word, attention <em>heads</em> point to another word in the sentence as the &#x201C;most important&#x201D;.</p>
 <h2 id="the-paper">The Paper</h2>
 <p>Clark and his co-authors inspect the overall attention trends of and find that some of the attention head in the earlier layers put the majority of their weight on either the next or previous token in the sentence.</p>
