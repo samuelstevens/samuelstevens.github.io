@@ -47,28 +47,28 @@
 </ul>
 <h3 id="sql-injection">1. SQL Injection</h3>
 <p>This was my first time doing any sort of SQL injection. The big thing for me was thinking about how the query was written, and how I can verify if a query is written a particular way. For example, if the query is written as:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>query <span class="op">=</span> <span class="st">&quot;SELECT * FROM Employee WHERE name LIKE &#39;%&quot;</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">&quot;%&#39;&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> <span class="st">&quot;SELECT * FROM Employee WHERE name LIKE &#39;%&quot;</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">&quot;%&#39;&quot;</span></span></code></pre></div>
 <p>Then I can put <code>'</code> to finish the first <code>'%</code> and then whatever I want afterwards. Somethings I really liked to do:</p>
 <ol type="1">
 <li><code>' ORDER BY name DESC;--</code>: This query just changes the order of the results. It was an easy way to confirm if comments (<code>--</code>) work, column names (<code>name</code>) and whether the quotes are single or double.</li>
 <li>To find the table names, there&#x2019;s a different way for MySQL/SQL Server, Oracle databases, and SQLite. For each, you have a specialized table name to ask about:</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="co">-- Suppose our original query is</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Employee <span class="kw">WHERE</span> name <span class="kw">LIKE</span> %name%;</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="co">-- we can any of the following after a quote:</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="co">-- Oracle</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> table_name <span class="kw">FROM</span> all_tables</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="co">-- MySQL/SQL Server</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> information_schema.<span class="kw">tables</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a><span class="co">-- SQLite</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> name <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> <span class="kw">type</span> <span class="kw">LIKE</span> <span class="st">&#39;table&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Suppose our original query is</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> Employee <span class="kw">WHERE</span> name <span class="kw">LIKE</span> %name%;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- we can any of the following after a quote:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Oracle</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> table_name <span class="kw">FROM</span> all_tables</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- MySQL/SQL Server</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> <span class="dv">1</span> <span class="kw">FROM</span> information_schema.<span class="kw">tables</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- SQLite</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> name <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> <span class="kw">type</span> <span class="kw">LIKE</span> <span class="st">&#39;table&#39;</span></span></code></pre></div>
 <p>It&#x2019;s also important to remember that <code>UNION</code> needs the same number of columns on both sides. Just keep adding columns to the <code>UNION</code> until it works. There might be more columns in the original <code>SELECT</code> than are showing on the webpage.</p>
 <p>Then, because it was a SQLite database, I used the following query to find the SQL commands that created the tables:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> sql <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> name<span class="op">=</span><span class="st">&#39;CLASSES&#39;</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span> <span class="kw">SELECT</span> sql <span class="kw">FROM</span> sqlite_master <span class="kw">WHERE</span> name<span class="op">=</span><span class="st">&#39;CLASSES&#39;</span>;</span></code></pre></div>
 <p>(<span class="citation" data-cites="me">@me</span>: remember that each of these would need a leading quote (<code>'</code>) and end with <code>;--</code> to make the rest of the query useless.)</p>
 <h3 id="binary-exploitations">2. Binary exploitations</h3>
 <p>Binary exploitations were also new for me. I understood the idea from my Systems I and II courses, but I&#x2019;d never implemented it in practice. We ended up bruteforcing most of them since we were unable to reason about what was on the stack and in what order, but the base understanding was there.</p>
@@ -92,6 +92,7 @@
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }

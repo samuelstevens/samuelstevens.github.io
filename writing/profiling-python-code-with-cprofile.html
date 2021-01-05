@@ -40,18 +40,18 @@
 <ol type="1">
 <li>Outputs all function calls sorted by internal time.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>    <span class="ex">python</span> -m cProfile -s tottime writing.py</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py</span></code></pre></div>
 <ol start="2" type="1">
 <li>Outputs all function calls sorted by internal time and sends it to <code>writing.txt</code> for later inspection.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>    <span class="ex">python</span> -m cProfile -s tottime writing.py <span class="op">&gt;</span> writing.txt</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py <span class="op">&gt;</span> writing.txt</span></code></pre></div>
 <ol start="3" type="1">
 <li>Outputs all function calls to <code>writing.prof</code> to be used by another tool later on.</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>    <span class="ex">python</span> -m cProfile -o writing.prof writing.py</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-o</span> writing.prof writing.py</span></code></pre></div>
 <h3 id="as-a-module">As a Module</h3>
 <p>Additionally, <code>cProfile</code> can be used from inside your source code like so:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>cProfile.run(<span class="st">&quot;eval(arg1, arg2)&quot;</span>, sort<span class="op">=</span><span class="st">&#39;tottime&#39;</span>, filename<span class="op">=</span><span class="st">&#39;eval.prof&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cProfile.run(<span class="st">&quot;eval(arg1, arg2)&quot;</span>, sort<span class="op">=</span><span class="st">&#39;tottime&#39;</span>, filename<span class="op">=</span><span class="st">&#39;eval.prof&#39;</span>)</span></code></pre></div>
 <p>The only downside of this is that the first argument is a string that is evaluated by <code>cProfile</code> instead of passing a function and some arguments. Other than that, it works in exactly the same manner.</p>
 <p>Regardless of how you use it, the output from these <code>cProfile</code> tools is <em>loooong</em>. It can be read, but it&#x2019;s often easier to use it in another tool. Python has support for this with the <a href="https://docs.python.org/3/library/profile.html#pstats.Stats"><code>pstats.Stats</code></a> class.</p>
 <h2 id="visualizing-profiling-data-with-snakeviz">Visualizing Profiling Data with SnakeViz</h2>
@@ -74,6 +74,7 @@
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
     div.sourceCode { margin: 1em 0; }
     pre.sourceCode { margin: 0; }
