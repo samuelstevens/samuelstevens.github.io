@@ -40,6 +40,7 @@
 <li><a href="https://docs.python.org/3.9/reference/expressions.html#generator-expressions">Generator expressions in Python</a> for lazy evaluation.</li>
 <li>Using <code>site:&lt;sitename.com&gt;</code> in web searches.</li>
 <li>Vim (it&#x2019;s awesome)</li>
+<li><a href="https://github.com/tmux/tmux">tmux</a> (also awesome)</li>
 <li><a href="https://kapeli.com/dash">Dash</a> (and I&#x2019;ve only been using it for 3 days)</li>
 </ol>
 <p>I can&#x2019;t imagine going back to not using these tools. But I was doing &#x201C;fine&#x201D; before learning them. To me, that implies that there are other tools/language features that I could not imagine working without, <strong>if I only knew them.</strong> Not knowing &#x201C;can&#x2019;t-live-without&#x201D; features seems like I am deliberately hampering my programming ability. In an effort to alleviate that, I want to learn Lisp.</p>
@@ -49,10 +50,12 @@
 </blockquote>
 <h2 id="related-work---who-advocates-for-lisp">Related Work - Who Advocates for Lisp?</h2>
 <p>Eric Raymond&#x2019;s <a href="http://www.catb.org/~esr/faqs/hacker-howto.html">How to Become a Hacker</a> is widely quoted [emphasis mine]: &#x201C;Lisp is worth learning for a different reason &#x2014; the profound enlightenment experience you will have when you finally get it. <em>That experience will make you a better programmer for the rest of your days</em>, even if you never actually use Lisp itself a lot.&#x201D; <a href="https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule">Greenspun&#x2019;s Tenth Rule</a>, &#x201C;Any sufficiently complicated C or Fortran program contains an ad hoc, informally-specified, bug-ridden, slow implementation of half of Common Lisp,&#x201D; leads one to believe that most big programs end up using Lisp-like features anyways, so why not start with Lisp? Matthew Butterick tries to alleviate some of these issues in <a href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">Why Racket? Why Lisp?</a>. Anurag Mendhekar <a href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">explains</a> that he uses Lisp because it is &#x201C;an s-expression based, dynamically typed, mostly functional, call-by-value lambda-calculus based language.&#x201D;</p>
-<p>Paul Graham deserves his own paragraph; his advocacy for Lisp is unparalleled in my internet experience. Some particular essays of note: <a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a> makes a fundamental argument that languages are better and worse than each other; that languages can be ranked (in the context of a given problem). Graham explains the origins of Lisp and explains that Lisp was always designed to be powerful, whereas other languages (Fortran and its descendants) were designed to be fast. Both families are converging to powerful <em>and</em> fast nowadays. <a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> is an attractice idea to me because I design programs in the top-down manner. Designing from the bottom up is another <em>Blub++ feature</em>: I don&#x2019;t know what this is like, and I can&#x2019;t even imagine how it would change my development process.</p>
-<blockquote>
-<p>Paul Graham also has some essays that don&#x2019;t provide any argument to use Lisp.</p>
-</blockquote>
+<p>Paul Graham deserves his own section; his advocacy for Lisp is unparalleled in my internet experience. Some particular essays of note: <a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a> makes a fundamental argument that languages are better and worse than each other; that languages can be ranked (in the context of a given problem). Graham explains the origins of Lisp and explains that Lisp was always designed to be powerful, whereas other languages (Fortran and its descendants) were designed to be fast. Both families are converging to powerful <em>and</em> fast nowadays. In 2021, this is an argument both for and against Lisp:</p>
+<ol type="1">
+<li>Lisp implementations are sufficiently fast, so Lisp is best.</li>
+<li>Modern languages are powerful, so they are best.</li>
+</ol>
+<p>As we&#x2019;ll see later, there are still Lisp features missing from modern languages, so this is probably an arugment for Lisp: you should write Lisp because you are not limited by processing power anymore. <a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> is an attractive idea to me because I design programs in the top-down manner. Designing from the bottom up is another <em>Blub++ feature</em>: I don&#x2019;t know what this is like, and I can&#x2019;t even imagine how it would change my development process.</p>
 <h2 id="methodology---which-features-will-i-learn">Methodology - Which Features Will I Learn?</h2>
 <p>Based on my reading, the best features of Lisp are (in no particular order):</p>
 <ul>
@@ -103,7 +106,7 @@
 <h3 id="dynamic-typing">Dynamic Typing</h3>
 <p>Python is dynamically typed. <a href="/writing/abstractions-and-types">I have found dynamic typing less and less helpful</a>, but I admit that using <code># type: ignore</code> in some Python code has given me massive flexibility when I need it. But I don&#x2019;t think Lisp&#x2019;s dynamic typing is going to be somehow life-changing compared to Python.</p>
 <h3 id="macros">Macros</h3>
-<p>This is the big one. A quote from <a href="https://school.racket-lang.org/2019/plan/mon-mor-lecture.html#(part._.One_.Racket_.Programmer__.Many_.Languages)">Racket School 2019</a>: &#x201C;You would write such functions <a href="#macros">macros</a> because you want to abstract over recurring patterns in your code that cannot be abstracted over with functions (or other means of conventional abstraction).&#x201D; I understand that Python has some <a href="https://developer.ibm.com/technologies/analytics/tutorials/ba-metaprogramming-python/">meta-programming capapbilities</a>, but I don&#x2019;t ever use them, besides decorators in the standard library like <a href="https://docs.python.org/3.9/library/functools.html#functools.lru_cache"><code>functools.lru_cache</code></a>.</p>
+<p>This is the big one. A quote from <a href="https://school.racket-lang.org/2019/plan/mon-mor-lecture.html#(part._.One_.Racket_.Programmer__.Many_.Languages)">Racket School 2019</a>: &#x201C;You would write such functions [macros] because you want to abstract over recurring patterns in your code that cannot be abstracted over with functions (or other means of conventional abstraction).&#x201D; I understand that Python has some <a href="https://developer.ibm.com/technologies/analytics/tutorials/ba-metaprogramming-python/">meta-programming capapbilities</a>, but I don&#x2019;t ever use them, besides decorators in the standard library like <a href="https://docs.python.org/3.9/library/functools.html#functools.lru_cache"><code>functools.lru_cache</code></a>.</p>
 <p>Macros are, as far as I can tell, 100% a good reason to use Lisp.</p>
 <h3 id="the-amalgamation-of-these-features">The Amalgamation of These Features</h3>
 <p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> seems to suggest that all the features of Lisp come together to make development much easier. It&#x2019;s not any single feature that makes Lisp amazing, but these features in combination.</p>
@@ -117,7 +120,7 @@
 <!-- ## Conclusion -->
 <h2 id="arguments-against-lisp">Arguments Against Lisp</h2>
 <p><a href="https://www.joelonsoftware.com/2004/02/27/27-2/">Joel Spolsky</a>: &#x201C;And I have the ultimate respect for Paul Graham &#x2014; I think there&#x2019;s a good probability that in a year or two we will credit him with being the man who solved spam. But I think that if you try to ignore the fact that millions of programmers around the world have learned lisp and don&#x2019;t prefer to use it, you&#x2019;re in the land of morbid cognitive dissonance.&#x201D;</p>
-<p><a href="https://www.linuxjournal.com/article/3882">Eric Raymond</a>&#x2019;s &#x201C;Why Python&#x201D; is a strong argument for Python (but really only for Python over Perl).</p>
+<!-- [Eric Raymond](https://www.linuxjournal.com/article/3882)'s "Why Python" is a strong argument for Python (but really only for Python over Perl). -->
 <h2 id="other-notes">Other Notes</h2>
 <p>From <a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a>:</p>
 <blockquote>
