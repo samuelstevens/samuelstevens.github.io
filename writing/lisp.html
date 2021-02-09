@@ -33,7 +33,14 @@
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="why-lisp">Why Lisp?</h1>
 <p>This is live documentation of my efforts to understand why I would use Lisp (any Lisp) in 2021. I understand <a href="http://www.paulgraham.com/diff.html">why it was used extensively in previous decades</a>; it had features that no other languages even claimed to have, much less support as robustly as Lisp. But I don&#x2019;t understand why I would use Lisp nowadays. Despite this, <a href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">lots</a> <a href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">of</a> <a href="https://www.grammarly.com/blog/engineering/running-lisp-in-production/">people</a> use Lisp as a day-to-day programming language to get things done. Given that I will be responsible for huge chunks of projects for the next several years and not <a href="http://www.paulgraham.com/icad.html">limited by a non-technical manager</a>, I think it would behoove me to understand both sides of the argument.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> These are my notes.</p>
-<!-- ## Introduction -->
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#why-lisp">Why Lisp?</a></li>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#related-work---who-advocates-for-lisp">Related Work</a></li>
+<li><a href="#methodology---which-features-will-i-learn">Methodology</a></li>
+<li><a href="#results---how-did-i-learn-lisp">Results</a></li>
+</ol>
 <h2 id="motivation">Motivation</h2>
 <p>I am fully aware (and terrified of) Paul Graham&#x2019;s <a href="http://www.paulgraham.com/avg.html">Blub Paradox</a>: I don&#x2019;t know what my programming language of choice (Blub) is missing, so <em>I can&#x2019;t miss it.</em> Since reading Graham&#x2019;s essay, I&#x2019;ve noticed this happen at least four times in recent memory:</p>
 <ol type="1">
@@ -55,8 +62,7 @@
 <li>Lisp implementations are sufficiently fast, so Lisp is best.</li>
 <li>Modern languages are powerful, so they are best.</li>
 </ol>
-<p>As we&#x2019;ll see later, there are still Lisp features missing from modern languages, so this is probably an arugment for Lisp: you should write Lisp because you are not limited by processing power anymore. <a href="http://www.paulgraham.com/power.html">Succinctness is Power</a> is an argument that succinctness is&#x2026;power (great title). I agree that succinctness is a good measure of language power. I don&#x2019;t agree power is always the most important goal. Go, Elm and Rust are examples of modern laguages that do not prioritize power above all else. <!-- Go's emphasis on simplicity makes it appropriate for large teams. --> <!-- Elm[^typeclasses] and Rust's compilers deliberately limit your power to prevent errors (type system, borrow checker). --> These languages are powerful because programmers can implement bug-free code faster (in theory).</p>
-<!-- [^typeclasses]: Elm also focuses on simplicity by not including typeclasses (see [here](https://reasonablypolymorphic.com/blog/elm-is-wrong/) for a particularly passionate rant). -->
+<p>As we&#x2019;ll see later, there are still Lisp features missing from modern languages, so this is probably an arugment for Lisp: you should write Lisp because you are not limited by processing power anymore. <a href="http://www.paulgraham.com/power.html">Succinctness is Power</a> is an argument that succinctness is&#x2026;power (great title). I agree that succinctness is a good measure of language power. I don&#x2019;t agree power is always the most important goal. Go, Elm and Rust are examples of modern laguages that do not prioritize power above all else. These languages are powerful because programmers can implement bug-free code faster (in theory).</p>
 <p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> is an attractive idea to me because I design programs in the top-down manner. Designing from the bottom up is another <em>Blub++ feature</em>: I don&#x2019;t know what this is like, and I can&#x2019;t even imagine how it would change my development process.</p>
 <h2 id="methodology---which-features-will-i-learn">Methodology - Which Features Will I Learn?</h2>
 <p>Based on my reading, the best features of Lisp are (in no particular order):</p>
@@ -111,7 +117,7 @@
 <p>This is the big one. A quote from <a href="https://school.racket-lang.org/2019/plan/mon-mor-lecture.html#(part._.One_.Racket_.Programmer__.Many_.Languages)">Racket School 2019</a>: &#x201C;You would write such functions [macros] because you want to abstract over recurring patterns in your code that cannot be abstracted over with functions (or other means of conventional abstraction).&#x201D; I understand that Python has some <a href="https://developer.ibm.com/technologies/analytics/tutorials/ba-metaprogramming-python/">meta-programming capapbilities</a>, but I don&#x2019;t ever use them, besides decorators in the standard library like <a href="https://docs.python.org/3.9/library/functools.html#functools.lru_cache"><code>functools.lru_cache</code></a>.</p>
 <p>Macros are, as far as I can tell, 100% a good reason to use Lisp.</p>
 <h3 id="the-amalgamation-of-these-features">The Amalgamation of These Features</h3>
-<p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> seems to suggest that all the features of Lisp come together to make development much easier. It&#x2019;s not any single feature that makes Lisp amazing, but these features in combination.</p>
+<p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> seems to suggest that all the features of Lisp come together to make development much easier. It&#x2019;s not any single feature that makes Lisp amazing, but these features in combination. Chapter 1.5 of <a href="http://www.paulgraham.com/onlisp.html">On Lisp</a> suggests that &#x201C;these new possibilities do not stem from a single magical ingredient.&#x201D; Perhaps Lisp is only a great language because it has all of these features, not any single one.</p>
 <p>It is subjective and hard to test, but could be a good reason to use Lisp.</p>
 <h3 id="i-become-a-super-genius-hacker-man-if-i-write-a-lot-of-lisp">I become a super-genius hacker-man if I write a lot of Lisp???</h3>
 <p>This is obviously a subjective reason to use Lisp. Arguably, writing lots of Python would also make me an excellent programmer, especially if I were to use the more complex features (like meta-programming) on a regular basis. But my personal experience working in Elm and then returning to Python supports the argument that writing code in a radically different language can improve your programming ability universally.</p>
