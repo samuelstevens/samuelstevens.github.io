@@ -14,10 +14,10 @@
       en-us
     </language>
     <pubDate>
-      Wed, 10 Feb 2021 10:15:04 UT
+      Thu, 11 Feb 2021 03:00:04 UT
     </pubDate>
     <lastBuildDate>
-      Wed, 10 Feb 2021 10:15:04 UT
+      Thu, 11 Feb 2021 03:00:04 UT
     </lastBuildDate>
     <docs>
       https://cyber.harvard.edu/rss/rss.html
@@ -1882,6 +1882,23 @@
       </pubDate>
       <guid>
         http://okmij.org/ftp/Computation/lightweight-static-guarantees.html
+      </guid>
+    </item>
+    <item>
+      <title>
+        
+      </title>
+      <link>
+        https://notebook.wesleyac.com/hermit-magician/
+      </link>
+      <description>
+        &lt;a href="https://notebook.wesleyac.com/hermit-magician/"&gt;Source&lt;/a&gt;
+      </description>
+      <pubDate>
+        Wed, 10 Feb 2021 11:45:53 UT
+      </pubDate>
+      <guid>
+        https://notebook.wesleyac.com/hermit-magician/
       </guid>
     </item>
   </channel>
