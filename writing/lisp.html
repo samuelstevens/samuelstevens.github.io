@@ -124,6 +124,11 @@
 <p>So maybe learning Lisp for the sake of learning is a good reason to use Lisp.</p>
 <h2 id="results---how-did-i-learn-lisp">Results - How Did I Learn Lisp?</h2>
 <p>In progress.</p>
+<h3 id="when-to-use-macros">When to use Macros</h3>
+<p>One initial worry I had when learning Lisp was the idea that I wouldn&#x2019;t know when to use macros. Whenever I&#x2019;m introduced to a new abstraction (sum types and pattern matching in Elm, for example), I need to learn when it&#x2019;s appropriate to use it.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> But macros are a whole new class of abstraction; it&#x2019;s like learning that functions exist. Luckily, Racket School of 2019 has a whole track for macros. Day 3 is all about macros and starts by explaining &#x201C;a basic framework for when language extension is appropriate.&#x201D;</p>
+<blockquote>
+<p>A fundamental aspect of language-oriented programming is identifying these intended abstractions and the invariants that enforce their integrity, then exploiting those invariants to produce a better program than you would have done without the abstraction.</p>
+</blockquote>
 <!-- ## Discussion -->
 <!-- ## Conclusion -->
 <h2 id="arguments-against-lisp">Arguments Against Lisp</h2>
@@ -143,6 +148,7 @@
 <li id="fn2" role="doc-endnote"><p>Of course, I&#x2019;ll probably end up wanting to do this in other languages like Haskell or another Hindley&#x2013;Milner type system language like OCaML. Are there other big language features that I haven&#x2019;t encountered, but that users can&#x2019;t live without?<a href="#fnref2" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 <li id="fn3" role="doc-endnote"><p>If you are working on a large team and you don&#x2019;t want to use Java/Python/whatever everyone knows, I think <a href="/writing/programming-languages#go">Go</a> is best. It&#x2019;s simple to learn and has reasonable performance, excellent tooling, cross-compiles, etc.<a href="#fnref3" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 <li id="fn4" role="doc-endnote"><p>If performance is critical in every aspect of your application, then I think <a href="/writing/programming-languages#rust">Rust</a> is best. Excellent community (lots of packages), excellent tooling, excellent performance. If performance is critical only in specific areas, then I think most modern Lisps have a FFI mechanism so you can write the hot spots in Rust/C/Fortran and the rest of the application in Lisp. <a href="/writing/optimizing-python-code-with-ctypes">Python also does this well.</a> TODO: Check that whatever Lisp I use actually has a nice FFI.<a href="#fnref4" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Talks like <a href="https://www.youtube.com/watch?v=x1FU3e0sT1I">Make Data Structures</a> really helped me understand these new tools.<a href="#fnref5" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 </ol>
 </section>
       <hr />
