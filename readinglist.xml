@@ -14,10 +14,10 @@
       en-us
     </language>
     <pubDate>
-      Tue, 6 Apr 2021 06:43:51 UT
+      Wed, 7 Apr 2021 07:30:13 UT
     </pubDate>
     <lastBuildDate>
-      Tue, 6 Apr 2021 06:43:51 UT
+      Wed, 7 Apr 2021 07:30:13 UT
     </lastBuildDate>
     <docs>
       https://cyber.harvard.edu/rss/rss.html
@@ -3310,6 +3310,23 @@
       </pubDate>
       <guid>
         https://arnon.dk/5-things-i-learned-developing-billing-system/
+      </guid>
+    </item>
+    <item>
+      <title>
+        
+      </title>
+      <link>
+        https://dorinlazar.ro/2021-02-programming-is-hard/
+      </link>
+      <description>
+        &lt;a href="https://dorinlazar.ro/2021-02-programming-is-hard/"&gt;Source&lt;/a&gt;
+      </description>
+      <pubDate>
+        Tue, 6 Apr 2021 11:23:21 UT
+      </pubDate>
+      <guid>
+        https://dorinlazar.ro/2021-02-programming-is-hard/
       </guid>
     </item>
   </channel>
