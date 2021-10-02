@@ -14,10 +14,10 @@
       en-us
     </language>
     <pubDate>
-      Fri, 1 Oct 2021 07:38:02 UT
+      Sat, 2 Oct 2021 10:18:49 UT
     </pubDate>
     <lastBuildDate>
-      Fri, 1 Oct 2021 07:38:02 UT
+      Sat, 2 Oct 2021 10:18:49 UT
     </lastBuildDate>
     <docs>
       https://cyber.harvard.edu/rss/rss.html
@@ -3429,6 +3429,57 @@
       </pubDate>
       <guid>
         https://www.bloomberg.com/news/features/2021-06-15/airbnb-spends-millions-making-nightmares-at-live-anywhere-rentals-go-away
+      </guid>
+    </item>
+    <item>
+      <title>
+        
+      </title>
+      <link>
+        https://earthly.dev/blog/awk-examples/
+      </link>
+      <description>
+        &lt;a href="https://earthly.dev/blog/awk-examples/"&gt;Source&lt;/a&gt;
+      </description>
+      <pubDate>
+        Fri, 1 Oct 2021 12:14:28 UT
+      </pubDate>
+      <guid>
+        https://earthly.dev/blog/awk-examples/
+      </guid>
+    </item>
+    <item>
+      <title>
+        
+      </title>
+      <link>
+        https://www.sajari.com/blog/vectors-versus-hashes
+      </link>
+      <description>
+        &lt;a href="https://www.sajari.com/blog/vectors-versus-hashes"&gt;Source&lt;/a&gt;
+      </description>
+      <pubDate>
+        Fri, 1 Oct 2021 12:14:36 UT
+      </pubDate>
+      <guid>
+        https://www.sajari.com/blog/vectors-versus-hashes
+      </guid>
+    </item>
+    <item>
+      <title>
+        
+      </title>
+      <link>
+        https://lilianweng.github.io/lil-log/2021/09/24/train-large-neural-networks.html
+      </link>
+      <description>
+        &lt;a href="https://lilianweng.github.io/lil-log/2021/09/24/train-large-neural-networks.html"&gt;Source&lt;/a&gt;
+      </description>
+      <pubDate>
+        Fri, 1 Oct 2021 12:14:40 UT
+      </pubDate>
+      <guid>
+        https://lilianweng.github.io/lil-log/2021/09/24/train-large-neural-networks.html
       </guid>
     </item>
   </channel>
