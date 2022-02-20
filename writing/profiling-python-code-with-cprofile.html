@@ -5,7 +5,8 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="How to profile Python code with <code>cProfile</code>." />
+  <meta name="description" content="How to profile Python code with
+<code>cProfile</code>." />
   <meta name="keywords" content="python, profiling, profile, cProfile, cprofile, cpython, fast, faster, guide, tutorial" />
   <title>Behold: Profiling Python with cProfile</title>
   
@@ -31,39 +32,73 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="profiling-python-code-with-cprofile">Profiling Python Code with <code>cProfile</code></h1>
-<p>Python is an interpreted language, which typically makes it slower than compiled languages like C/C++, Java, Rust, or Go. In order to <a href="/writing/optimizing-python-code-with-ctypes">optimize Python code</a> for speed, it&#x2019;s best to know what parts to optimize. That&#x2019;s where <code>cProfile</code> comes in.</p>
+<h1 id="profiling-python-code-with-cprofile">Profiling Python Code with
+<code>cProfile</code></h1>
+<p>Python is an interpreted language, which typically makes it slower
+than compiled languages like C/C++, Java, Rust, or Go. In order to <a
+href="/writing/optimizing-python-code-with-ctypes">optimize Python
+code</a> for speed, it&#x2019;s best to know what parts to optimize. That&#x2019;s
+where <code>cProfile</code> comes in.</p>
 <h2 id="cprofile">cProfile</h2>
-<p><code>cProfile</code> is a module profiling Python code running in a CPython environment. It can be run as a command-line module, or used in your source code to pinpoint a specific function.</p>
+<p><code>cProfile</code> is a module profiling Python code running in a
+CPython environment. It can be run as a command-line module, or used in
+your source code to pinpoint a specific function.</p>
 <h3 id="from-the-command-line">From the Command Line</h3>
-<p>Run your program as you normally would, but wrap it in <a href="https://docs.python.org/3/library/profile.html#module-cProfile"><code>cProfile</code></a>:</p>
+<p>Run your program as you normally would, but wrap it in <a
+href="https://docs.python.org/3/library/profile.html#module-cProfile"><code>cProfile</code></a>:</p>
 <ol type="1">
 <li>Outputs all function calls sorted by internal time.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py</span></code></pre></div>
 <ol start="2" type="1">
-<li>Outputs all function calls sorted by internal time and sends it to <code>writing.txt</code> for later inspection.</li>
+<li>Outputs all function calls sorted by internal time and sends it to
+<code>writing.txt</code> for later inspection.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py <span class="op">&gt;</span> writing.txt</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-s</span> tottime writing.py <span class="op">&gt;</span> writing.txt</span></code></pre></div>
 <ol start="3" type="1">
-<li>Outputs all function calls to <code>writing.prof</code> to be used by another tool later on.</li>
+<li>Outputs all function calls to <code>writing.prof</code> to be used
+by another tool later on.</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-o</span> writing.prof writing.py</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> <span class="at">-m</span> cProfile <span class="at">-o</span> writing.prof writing.py</span></code></pre></div>
 <h3 id="as-a-module">As a Module</h3>
-<p>Additionally, <code>cProfile</code> can be used from inside your source code like so:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cProfile.run(<span class="st">&quot;eval(arg1, arg2)&quot;</span>, sort<span class="op">=</span><span class="st">&#39;tottime&#39;</span>, filename<span class="op">=</span><span class="st">&#39;eval.prof&#39;</span>)</span></code></pre></div>
-<p>The only downside of this is that the first argument is a string that is evaluated by <code>cProfile</code> instead of passing a function and some arguments. Other than that, it works in exactly the same manner.</p>
-<p>Regardless of how you use it, the output from these <code>cProfile</code> tools is <em>loooong</em>. It can be read, but it&#x2019;s often easier to use it in another tool. Python has support for this with the <a href="https://docs.python.org/3/library/profile.html#pstats.Stats"><code>pstats.Stats</code></a> class.</p>
-<h2 id="visualizing-profiling-data-with-snakeviz">Visualizing Profiling Data with SnakeViz</h2>
-<p><a href="https://jiffyclub.github.io/snakeviz/">SnakeViz</a> is a small open-source tool that was recently very valuable to visualizing profiling data. It presents a graph that shows a breakdown by time per function, and allows you to drill down into what causes the length of each function:</p>
+<p>Additionally, <code>cProfile</code> can be used from inside your
+source code like so:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cProfile.run(<span class="st">&quot;eval(arg1, arg2)&quot;</span>, sort<span class="op">=</span><span class="st">&#39;tottime&#39;</span>, filename<span class="op">=</span><span class="st">&#39;eval.prof&#39;</span>)</span></code></pre></div>
+<p>The only downside of this is that the first argument is a string that
+is evaluated by <code>cProfile</code> instead of passing a function and
+some arguments. Other than that, it works in exactly the same
+manner.</p>
+<p>Regardless of how you use it, the output from these
+<code>cProfile</code> tools is <em>loooong</em>. It can be read, but
+it&#x2019;s often easier to use it in another tool. Python has support for this
+with the <a
+href="https://docs.python.org/3/library/profile.html#pstats.Stats"><code>pstats.Stats</code></a>
+class.</p>
+<h2 id="visualizing-profiling-data-with-snakeviz">Visualizing Profiling
+Data with SnakeViz</h2>
+<p><a href="https://jiffyclub.github.io/snakeviz/">SnakeViz</a> is a
+small open-source tool that was recently very valuable to visualizing
+profiling data. It presents a graph that shows a breakdown by time per
+function, and allows you to drill down into what causes the length of
+each function:</p>
 <figure>
-<img src="/images/python/snakeviz-icicle.png" alt="Icicle graph from SnakeViz" /><figcaption aria-hidden="true">Icicle graph from SnakeViz</figcaption>
+<img src="/images/python/snakeviz-icicle.png"
+alt="Icicle graph from SnakeViz" />
+<figcaption aria-hidden="true">Icicle graph from SnakeViz</figcaption>
 </figure>
-<p>From here, you can see what functions take the most time, and what causes each function to take so long. If you can further optimize from here (removing things from loops, using list comprehensions, etc., do so now).</p>
-<p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a> if you have any comments or want to discuss further.</p>
+<p>From here, you can see what functions take the most time, and what
+causes each function to take so long. If you can further optimize from
+here (removing things from loops, using list comprehensions, etc., do so
+now).</p>
+<p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a>
+if you have any comments or want to discuss further.</p>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2020</p>
+      <p>Sam Stevens, 2022</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>

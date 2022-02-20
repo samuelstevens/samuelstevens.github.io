@@ -5,8 +5,10 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="I always end up with awkward Python module names. If you don&#x2019;t, you should too." />
-  <meta name="keywords" content="programming, python, naming, conflict, name conflict, module, modules, package, packages, import, imports" />
+  <meta name="description" content="I always end up with awkward Python
+module names. If you don&#x2019;t, you should too." />
+  <meta name="keywords" content="programming, python, naming, conflict, name
+conflict, module, modules, package, packages, import, imports" />
   <title>Behold: I Suck at Naming Python Modules.</title>
   
 </head>
@@ -31,28 +33,41 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="i-suck-at-naming-python-modules">I Suck at Naming Python Modules</h1>
-<p>I often end up with name conflicts in Python, where a variable and a module have the same name within a function. I&#x2019;ll explain how it happens naturally, then the various solutions and their pros and cons.</p>
+<h1 id="i-suck-at-naming-python-modules">I Suck at Naming Python
+Modules</h1>
+<p>I often end up with name conflicts in Python, where a variable and a
+module have the same name within a function. I&#x2019;ll explain how it happens
+naturally, then the various solutions and their pros and cons.</p>
 <h2 id="name-conflicts">Name Conflicts</h2>
-<p>Suppose I have a Python class called <code>Spot</code> that represents a point in some image recognition software I&#x2019;m writing:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Spot:</span>
+<p>Suppose I have a Python class called <code>Spot</code> that
+represents a point in some image recognition software I&#x2019;m writing:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Spot:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name, pos):</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> name</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.pos <span class="op">=</span> pos</span></code></pre></div>
 <p>Then I write a couple utility functions, not attached as methods:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_spot_clusters(spots, tolerance):</span>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_spot_clusters(spots, tolerance):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns a list of spot lists, where each list is a </span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    &#39;cluster&#39; of spots within *tolerance* of each other.</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
-<p>I put all this related code into a module (AKA a file). As per <a href="https://www.python.org/dev/peps/pep-0008/#package-and-module-names">PEP 8</a>&#x2019;s advice on naming modules:</p>
+<p>I put all this related code into a module (AKA a file). As per <a
+href="https://www.python.org/dev/peps/pep-0008/#package-and-module-names">PEP
+8</a>&#x2019;s advice on naming modules:</p>
 <blockquote>
-<p>Modules should have short, all-lowercase names. Underscores can be used in the module name if it improves readability. Python packages should also have short, all-lowercase names, although the use of underscores is discouraged.</p>
+<p>Modules should have short, all-lowercase names. Underscores can be
+used in the module name if it improves readability. Python packages
+should also have short, all-lowercase names, although the use of
+underscores is discouraged.</p>
 </blockquote>
-<p>Sounds good to me. This module is all about spots, I&#x2019;ll call it <code>spot.py</code>. All is well.</p>
+<p>Sounds good to me. This module is all about spots, I&#x2019;ll call it
+<code>spot.py</code>. All is well.</p>
 <p>Later on, in some processing code, I&#x2019;m filtering out spots:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># processing.py</span></span>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># processing.py</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> . <span class="im">import</span> spot</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -68,33 +83,75 @@
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
 <p>Did you see the bug?</p>
 <blockquote>
-<p>Side note: I almost never read code in blog posts, I never have the energy.</p>
+<p>Side note: I almost never read code in blog posts, I never have the
+energy.</p>
 </blockquote>
-<p>We clobber the imported <code>spot</code> module with the variable <code>spot</code> in <code>for spot in spots</code>. For the rest of this function, we can no longer refer to the <code>spot</code> module.</p>
+<p>We clobber the imported <code>spot</code> module with the variable
+<code>spot</code> in <code>for spot in spots</code>. For the rest of
+this function, we can no longer refer to the <code>spot</code>
+module.</p>
 <h2 id="potential-solutions">Potential Solutions</h2>
-<p>Let&#x2019;s go through the three ways I fix this, and why none of them satisfy me.</p>
-<h3 id="dont-import-the-entire-module">Don&#x2019;t Import the Entire Module</h3>
-<p>I could just import specific features from the module, rather than the entire spot module:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> .spot <span class="im">import</span> Spot, find_spot_clusters</span></code></pre></div>
-<p>No more conflicts with <code>spot</code>! I don&#x2019;t like this solution for several reasons.</p>
-<p>First, keeping the module name helps me keep my code organized when a project gets bigger and bigger. When I see functions and classes without a module-prefix, I know they are local to the current module I&#x2019;m reading.</p>
-<p>Second, if I know that the module name is always used with a function, I can make shorter function names. Rather than <code>find_spot_clusters</code>, if I know that <code>spot.py</code> is only about spots, I can name it <code>find_clusters</code>. Then inside <code>spot.py</code>, it&#x2019;s clear that <code>find_clusters</code> is about spots, because the entire file is spot-related. If I use the function outside <code>spot.py</code>, it&#x2019;s prefixed with <code>spot.</code>, and I know it&#x2019;s spot-related.</p>
+<p>Let&#x2019;s go through the three ways I fix this, and why none of them
+satisfy me.</p>
+<h3 id="dont-import-the-entire-module">Don&#x2019;t Import the Entire
+Module</h3>
+<p>I could just import specific features from the module, rather than
+the entire spot module:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> .spot <span class="im">import</span> Spot, find_spot_clusters</span></code></pre></div>
+<p>No more conflicts with <code>spot</code>! I don&#x2019;t like this solution
+for several reasons.</p>
+<p>First, keeping the module name helps me keep my code organized when a
+project gets bigger and bigger. When I see functions and classes without
+a module-prefix, I know they are local to the current module I&#x2019;m
+reading.</p>
+<p>Second, if I know that the module name is always used with a
+function, I can make shorter function names. Rather than
+<code>find_spot_clusters</code>, if I know that <code>spot.py</code> is
+only about spots, I can name it <code>find_clusters</code>. Then inside
+<code>spot.py</code>, it&#x2019;s clear that <code>find_clusters</code> is
+about spots, because the entire file is spot-related. If I use the
+function outside <code>spot.py</code>, it&#x2019;s prefixed with
+<code>spot.</code>, and I know it&#x2019;s spot-related.</p>
 <h3 id="better-variable-names">Better Variable Names</h3>
-<p>Rather than <code>for spot in spots</code>, we could write <code>for maybe_valid_spot in spots</code> to clarify that our spot is not necessarily a valid spot at this point in the function. This is clearly clunky; <code>for &lt;thing&gt; in &lt;things&gt;</code> is a very typical Python pattern.</p>
-<p>I could also append an underscore: <code>for spot_ in spots</code>. This also feels clunky; it&#x2019;s expected for Python built-ins, like <code>exec</code> or <code>list</code>, but even some of the built-ins have common abbreviations like &#x201C;lst&#x201D; or &#x201C;dct&#x201D;. I don&#x2019;t want to append underscores if I don&#x2019;t have to.</p>
-<p>I could also shorten my variable name: <code>for sp in spot</code>. Sometimes though I want to rename a module, then I have to look for every variable with the same name as the module and determine if I have to change the variable name to avoid conflicts with the module. Which brings us to how to choose better module names.</p>
+<p>Rather than <code>for spot in spots</code>, we could write
+<code>for maybe_valid_spot in spots</code> to clarify that our spot is
+not necessarily a valid spot at this point in the function. This is
+clearly clunky; <code>for &lt;thing&gt; in &lt;things&gt;</code> is a
+very typical Python pattern.</p>
+<p>I could also append an underscore: <code>for spot_ in spots</code>.
+This also feels clunky; it&#x2019;s expected for Python built-ins, like
+<code>exec</code> or <code>list</code>, but even some of the built-ins
+have common abbreviations like &#x201C;lst&#x201D; or &#x201C;dct&#x201D;. I don&#x2019;t want to append
+underscores if I don&#x2019;t have to.</p>
+<p>I could also shorten my variable name: <code>for sp in spot</code>.
+Sometimes though I want to rename a module, then I have to look for
+every variable with the same name as the module and determine if I have
+to change the variable name to avoid conflicts with the module. Which
+brings us to how to choose better module names.</p>
 <h3 id="different-module-names">Different Module Names</h3>
-<p>Finally, I could find better names for my modules. Some of the naming strategies I&#x2019;ve used in the past:</p>
+<p>Finally, I could find better names for my modules. Some of the naming
+strategies I&#x2019;ve used in the past:</p>
 <ul>
-<li>Using verb gerands as module names: <code>analyzing.py</code> over <code>analyze.py</code>, for example. I find that I rarely use verb gerands as variable names, which makes them good module names. However, sometimes a module refers to a noun, not a verb, like our <code>spot.py</code> example.<br />
+<li>Using verb gerands as module names: <code>analyzing.py</code> over
+<code>analyze.py</code>, for example. I find that I rarely use verb
+gerands as variable names, which makes them good module names. However,
+sometimes a module refers to a noun, not a verb, like our
+<code>spot.py</code> example.<br />
 </li>
-<li>Adding another word to the module: <code>spot_analysis.py</code> over <code>spot.py</code>. This just makes my names longer, and then I have to think of a second, equally valuable word, when in reality my module is all about spots, not spot analysis!</li>
+<li>Adding another word to the module: <code>spot_analysis.py</code>
+over <code>spot.py</code>. This just makes my names longer, and then I
+have to think of a second, equally valuable word, when in reality my
+module is all about spots, not spot analysis!</li>
 </ul>
 <h2 id="conclusion">Conclusion</h2>
-<p>I suck at naming Python modules. If you&#x2019;ve suffered from this same problem and have found a good long-term solution that doesn&#x2019;t require a lot of thinking, please <a href="mailto:samuel.robert.stevens@gmail.com">let me know</a>!</p>
+<p>I suck at naming Python modules. If you&#x2019;ve suffered from this same
+problem and have found a good long-term solution that doesn&#x2019;t require a
+lot of thinking, please <a
+href="mailto:samuel.robert.stevens@gmail.com">let me know</a>!</p>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2020</p>
+      <p>Sam Stevens, 2022</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>

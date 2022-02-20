@@ -5,8 +5,10 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="Explaing what those numbers on man pages actually mean" />
-  <meta name="keywords" content="man, man pages, number, unix, linux, bash, documentation, numbers" />
+  <meta name="description" content="Explaing what those numbers on man
+pages actually mean" />
+  <meta name="keywords" content="man, man
+pages, number, unix, linux, bash, documentation, numbers" />
   <title>Behold: Those Numbers in the Man Pages</title>
   
 </head>
@@ -31,9 +33,13 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="those-numbers-in-the-man-pages">Those Numbers in the Man Pages</h1>
-<p>Ever seen used <code>man</code> and seen output like <code>PRINTF(3)</code>, or <code>TIME(1)</code>? I always wondered what they meant. Here&#x2019;s the answer.</p>
-<h1 id="the-number-corresponds-to-the-manual-section.">The number corresponds to the manual section.</h1>
+<h1 id="those-numbers-in-the-man-pages">Those Numbers in the Man
+Pages</h1>
+<p>Ever seen used <code>man</code> and seen output like
+<code>PRINTF(3)</code>, or <code>TIME(1)</code>? I always wondered what
+they meant. Here&#x2019;s the answer.</p>
+<h1 id="the-number-corresponds-to-the-manual-section.">The number
+corresponds to the manual section.</h1>
 <p>From <code>man man</code> (on RHEL):</p>
 <pre><code>1   Executable programs or shell commands
 2   System calls (functions provided by the kernel)
@@ -44,25 +50,42 @@
 7   Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7)
 8   System administration commands (usually only for root)
 9   Kernel routines [Non standard]</code></pre>
-<p>You can check the purpose of each section with <code>man &lt;NUM&gt; intro</code>.</p>
+<p>You can check the purpose of each section with
+<code>man &lt;NUM&gt; intro</code>.</p>
 <p>You can pick a section when reading the pages:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> 1 time <span class="co"># explains the time shell command</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> 2 time <span class="co"># explain the time syscall</span></span></code></pre></div>
-<p>On macOS, which is a derivative of BSD, system calls like <code>time</code> and <code>printf</code> are actually just library calls. So <code>man 1 time</code> will show the shell command, but <code>man 2 time</code> prints <code>No entry for time in section 2 of the manual</code>. <code>man 3 time</code> shows the documentation for the <code>time_t time(time_t *tloc)</code> function, because it&#x2019;s a standard C library.</p>
-<p>On a Red Hat (RHEL) system I have access to, <code>man 2 time</code> shows the Linux man pages (as a system call) and <code>man 3 time</code> shows the POSIX man pages, explaining that the implementation may differ on Linux compared to the POSIX standard.</p>
-<p>You can also see ALL the available man pages for time (in sequence) with <code>man -a time</code>, or search for man pages with <code>man -k &lt;cmd&gt;</code> (which will also do substring matches). Here are some examples:</p>
+<p>On macOS, which is a derivative of BSD, system calls like
+<code>time</code> and <code>printf</code> are actually just library
+calls. So <code>man 1 time</code> will show the shell command, but
+<code>man 2 time</code> prints
+<code>No entry for time in section 2 of the manual</code>.
+<code>man 3 time</code> shows the documentation for the
+<code>time_t time(time_t *tloc)</code> function, because it&#x2019;s a standard
+C library.</p>
+<p>On a Red Hat (RHEL) system I have access to, <code>man 2 time</code>
+shows the Linux man pages (as a system call) and <code>man 3 time</code>
+shows the POSIX man pages, explaining that the implementation may differ
+on Linux compared to the POSIX standard.</p>
+<p>You can also see ALL the available man pages for time (in sequence)
+with <code>man -a time</code>, or search for man pages with
+<code>man -k &lt;cmd&gt;</code> (which will also do substring matches).
+Here are some examples:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Show all printf man pages:</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> <span class="at">-k</span> <span class="st">&#39;^printf&#39;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Show all print commands with man pages</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> <span class="at">-k</span> print</span></code></pre></div>
-<p>I still don&#x2019;t know how to specify the end of the string: <code>'^printf$'</code> didn&#x2019;t work, like I would have expected.</p>
+<p>I still don&#x2019;t know how to specify the end of the string:
+<code>'^printf$'</code> didn&#x2019;t work, like I would have expected.</p>
 <blockquote>
-<p>Credit: this <a href="https://unix.stackexchange.com/questions/3586/what-do-the-numbers-in-a-man-page-mean">question</a> helped me understand what the numbers after names in man pages mean.</p>
+<p>Credit: this <a
+href="https://unix.stackexchange.com/questions/3586/what-do-the-numbers-in-a-man-page-mean">question</a>
+helped me understand what the numbers after names in man pages mean.</p>
 </blockquote>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2020</p>
+      <p>Sam Stevens, 2022</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>

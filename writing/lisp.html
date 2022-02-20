@@ -5,7 +5,9 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="Why should I use Lisp? What killer feature of Lisp is missing from Python? How can I learn to use these features in a suitable manner?" />
+  <meta name="description" content="Why should I use Lisp? What killer
+feature of Lisp is missing from Python? How can I learn to use these
+features in a suitable manner?" />
   <meta name="keywords" content="lisp, programming languages, racket" />
   <title>Behold: Why use Lisp in 2021?</title>
   
@@ -32,40 +34,120 @@
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="why-lisp">Why Lisp?</h1>
-<p>This is live documentation of my efforts to understand why I would use Lisp (any Lisp) in 2021. I understand <a href="http://www.paulgraham.com/diff.html">why it was used extensively in previous decades</a>; it had features that no other languages even claimed to have, much less support as robustly as Lisp. But I don&#x2019;t understand why I would use Lisp nowadays. Despite this, <a href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">lots</a> <a href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">of</a> <a href="https://www.grammarly.com/blog/engineering/running-lisp-in-production/">people</a> use Lisp as a day-to-day programming language to get things done. Given that I will be responsible for huge chunks of projects for the next several years and not <a href="http://www.paulgraham.com/icad.html">limited by a non-technical manager</a>, I think it would behoove me to understand both sides of the argument.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> These are my notes.</p>
+<p>This is live documentation of my efforts to understand why I would
+use Lisp (any Lisp) in 2021. I understand <a
+href="http://www.paulgraham.com/diff.html">why it was used extensively
+in previous decades</a>; it had features that no other languages even
+claimed to have, much less support as robustly as Lisp. But I don&#x2019;t
+understand why I would use Lisp nowadays. Despite this, <a
+href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">lots</a>
+<a
+href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">of</a>
+<a
+href="https://www.grammarly.com/blog/engineering/running-lisp-in-production/">people</a>
+use Lisp as a day-to-day programming language to get things done. Given
+that I will be responsible for huge chunks of projects for the next
+several years and not <a
+href="http://www.paulgraham.com/icad.html">limited by a non-technical
+manager</a>, I think it would behoove me to understand both sides of the
+argument.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> These are my notes.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
 <li><a href="#why-lisp">Why Lisp?</a></li>
 <li><a href="#motivation">Motivation</a></li>
-<li><a href="#related-work---who-advocates-for-lisp">Related Work</a></li>
-<li><a href="#methodology---which-features-will-i-learn">Methodology</a></li>
+<li><a href="#related-work---who-advocates-for-lisp">Related
+Work</a></li>
+<li><a
+href="#methodology---which-features-will-i-learn">Methodology</a></li>
 <li><a href="#results---how-did-i-learn-lisp">Results</a></li>
 </ol>
 <h2 id="motivation">Motivation</h2>
-<p>I am fully aware (and terrified of) Paul Graham&#x2019;s <a href="http://www.paulgraham.com/avg.html">Blub Paradox</a>: I don&#x2019;t know what my programming language of choice (Blub) is missing, so <em>I can&#x2019;t miss it.</em> Since reading Graham&#x2019;s essay, I&#x2019;ve noticed this happen at least four times in recent memory:</p>
+<p>I am fully aware (and terrified of) Paul Graham&#x2019;s <a
+href="http://www.paulgraham.com/avg.html">Blub Paradox</a>: I don&#x2019;t know
+what my programming language of choice (Blub) is missing, so <em>I can&#x2019;t
+miss it.</em> Since reading Graham&#x2019;s essay, I&#x2019;ve noticed this happen at
+least four times in recent memory:</p>
 <ol type="1">
-<li><a href="https://docs.python.org/3.9/reference/expressions.html#generator-expressions">Generator expressions in Python</a> for lazy evaluation.</li>
+<li><a
+href="https://docs.python.org/3.9/reference/expressions.html#generator-expressions">Generator
+expressions in Python</a> for lazy evaluation.</li>
 <li>Using <code>site:&lt;sitename.com&gt;</code> in web searches.</li>
 <li>Vim (it&#x2019;s awesome)</li>
 <li><a href="https://github.com/tmux/tmux">tmux</a> (also awesome)</li>
-<li><a href="https://kapeli.com/dash">Dash</a> (and I&#x2019;ve only been using it for 3 days)</li>
+<li><a href="https://kapeli.com/dash">Dash</a> (and I&#x2019;ve only been using
+it for 3 days)</li>
 </ol>
-<p>I can&#x2019;t imagine going back to not using these tools. But I was doing &#x201C;fine&#x201D; before learning them. To me, that implies that there are other tools/language features that I could not imagine working without, <strong>if I only knew them.</strong> Not knowing &#x201C;can&#x2019;t-live-without&#x201D; features seems like I am deliberately hampering my programming ability. In an effort to alleviate that, I want to learn Lisp.</p>
-<p>Specifically, I want to enumerate the features in Lisp that I&#x2019;m missing and write enough Lisp to understand the value and power of those specific features.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>I can&#x2019;t imagine going back to not using these tools. But I was doing
+&#x201C;fine&#x201D; before learning them. To me, that implies that there are other
+tools/language features that I could not imagine working without,
+<strong>if I only knew them.</strong> Not knowing &#x201C;can&#x2019;t-live-without&#x201D;
+features seems like I am deliberately hampering my programming ability.
+In an effort to alleviate that, I want to learn Lisp.</p>
+<p>Specifically, I want to enumerate the features in Lisp that I&#x2019;m
+missing and write enough Lisp to understand the value and power of those
+specific features.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></p>
 <blockquote>
-<p>Throughout this document, I&#x2019;ll refer to these features as <em>Blub++ features</em>: features that Blub doesn&#x2019;t have, but that Blub++ would.</p>
+<p>Throughout this document, I&#x2019;ll refer to these features as <em>Blub++
+features</em>: features that Blub doesn&#x2019;t have, but that Blub++
+would.</p>
 </blockquote>
-<h2 id="related-work---who-advocates-for-lisp">Related Work - Who Advocates for Lisp?</h2>
-<p>Eric Raymond&#x2019;s <a href="http://www.catb.org/~esr/faqs/hacker-howto.html">How to Become a Hacker</a> is widely quoted [emphasis mine]: &#x201C;Lisp is worth learning for a different reason &#x2014; the profound enlightenment experience you will have when you finally get it. <em>That experience will make you a better programmer for the rest of your days</em>, even if you never actually use Lisp itself a lot.&#x201D; <a href="https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule">Greenspun&#x2019;s Tenth Rule</a>, &#x201C;Any sufficiently complicated C or Fortran program contains an ad hoc, informally-specified, bug-ridden, slow implementation of half of Common Lisp,&#x201D; leads one to believe that most big programs end up using Lisp-like features anyways, so why not start with Lisp? Matthew Butterick tries to alleviate some of these issues in <a href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">Why Racket? Why Lisp?</a>. Anurag Mendhekar <a href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">explains</a> that he uses Lisp because it is &#x201C;an s-expression based, dynamically typed, mostly functional, call-by-value lambda-calculus based language.&#x201D;</p>
-<p>Paul Graham deserves his own section; his advocacy for Lisp is unparalleled in my internet experience. Some particular essays of note: <a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a> makes a fundamental argument that languages are better and worse than each other; that languages can be ranked (in the context of a given problem). Graham explains the origins of Lisp and explains that Lisp was always designed to be powerful, whereas other languages (Fortran and its descendants) were designed to be fast. Both families are converging to powerful <em>and</em> fast nowadays. In 2021, this is an argument both for and against Lisp:</p>
+<h2 id="related-work---who-advocates-for-lisp">Related Work - Who
+Advocates for Lisp?</h2>
+<p>Eric Raymond&#x2019;s <a
+href="http://www.catb.org/~esr/faqs/hacker-howto.html">How to Become a
+Hacker</a> is widely quoted [emphasis mine]: &#x201C;Lisp is worth learning for
+a different reason &#x2014; the profound enlightenment experience you will have
+when you finally get it. <em>That experience will make you a better
+programmer for the rest of your days</em>, even if you never actually
+use Lisp itself a lot.&#x201D; <a
+href="https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule">Greenspun&#x2019;s
+Tenth Rule</a>, &#x201C;Any sufficiently complicated C or Fortran program
+contains an ad hoc, informally-specified, bug-ridden, slow
+implementation of half of Common Lisp,&#x201D; leads one to believe that most
+big programs end up using Lisp-like features anyways, so why not start
+with Lisp? Matthew Butterick tries to alleviate some of these issues in
+<a
+href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">Why
+Racket? Why Lisp?</a>. Anurag Mendhekar <a
+href="https://medium.com/better-programming/why-i-still-lisp-and-you-should-too-18a2ae36bd8">explains</a>
+that he uses Lisp because it is &#x201C;an s-expression based, dynamically
+typed, mostly functional, call-by-value lambda-calculus based
+language.&#x201D;</p>
+<p>Paul Graham deserves his own section; his advocacy for Lisp is
+unparalleled in my internet experience. Some particular essays of note:
+<a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a>
+makes a fundamental argument that languages are better and worse than
+each other; that languages can be ranked (in the context of a given
+problem). Graham explains the origins of Lisp and explains that Lisp was
+always designed to be powerful, whereas other languages (Fortran and its
+descendants) were designed to be fast. Both families are converging to
+powerful <em>and</em> fast nowadays. In 2021, this is an argument both
+for and against Lisp:</p>
 <ol type="1">
 <li>Lisp implementations are sufficiently fast, so Lisp is best.</li>
 <li>Modern languages are powerful, so they are best.</li>
 </ol>
-<p>As we&#x2019;ll see later, there are still Lisp features missing from modern languages, so this is probably an arugment for Lisp: you should write Lisp because you are not limited by processing power anymore. <a href="http://www.paulgraham.com/power.html">Succinctness is Power</a> is an argument that succinctness is&#x2026;power (great title). I agree that succinctness is a good measure of language power. I don&#x2019;t agree power is always the most important goal. Go, Elm and Rust are examples of modern laguages that do not prioritize power above all else. These languages are powerful because programmers can implement bug-free code faster (in theory).</p>
-<p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> is an attractive idea to me because I design programs in the top-down manner. Designing from the bottom up is another <em>Blub++ feature</em>: I don&#x2019;t know what this is like, and I can&#x2019;t even imagine how it would change my development process.</p>
-<h2 id="methodology---which-features-will-i-learn">Methodology - Which Features Will I Learn?</h2>
-<p>Based on my reading, the best features of Lisp are (in no particular order):</p>
+<p>As we&#x2019;ll see later, there are still Lisp features missing from modern
+languages, so this is probably an arugment for Lisp: you should write
+Lisp because you are not limited by processing power anymore. <a
+href="http://www.paulgraham.com/power.html">Succinctness is Power</a> is
+an argument that succinctness is&#x2026;power (great title). I agree that
+succinctness is a good measure of language power. I don&#x2019;t agree power is
+always the most important goal. Go, Elm and Rust are examples of modern
+laguages that do not prioritize power above all else. These languages
+are powerful because programmers can implement bug-free code faster (in
+theory).</p>
+<p><a href="http://www.paulgraham.com/progbot.html">Programming
+Bottom-Up</a> is an attractive idea to me because I design programs in
+the top-down manner. Designing from the bottom up is another <em>Blub++
+feature</em>: I don&#x2019;t know what this is like, and I can&#x2019;t even imagine
+how it would change my development process.</p>
+<h2 id="methodology---which-features-will-i-learn">Methodology - Which
+Features Will I Learn?</h2>
+<p>Based on my reading, the best features of Lisp are (in no particular
+order):</p>
 <ul>
 <li>Everything is an expression</li>
 <li>Emphasis on functional programming</li>
@@ -74,86 +156,239 @@
 <li>Improved development experience as a result of these aspects</li>
 <li>I become a super-genius hacker-man if I write a lot of Lisp???</li>
 </ul>
-<p>Also based on my reading, Lisp seems to be best used in applications where (again, no particular order):</p>
+<p>Also based on my reading, Lisp seems to be best used in applications
+where (again, no particular order):</p>
 <ul>
 <li>Developer speed is critical.</li>
-<li>You control the execution environment (you&#x2019;re not sending executables to clients).</li>
-<li>You are not working on a large team .<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
-<li>Performance is not absolutely critical. <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></li>
+<li>You control the execution environment (you&#x2019;re not sending
+executables to clients).</li>
+<li>You are not working on a large team .<a href="#fn3"
+class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></li>
+<li>Performance is not absolutely critical. <a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></li>
 </ul>
-<p>With those criteria in mind, the other languages that I&#x2019;m quite familiar with that also fit most of these criteria is Python. Python 3 (henceforth referred to as just Python) has excellent community support, simple syntax, and a <a href="/writing/optimizing-python-code-with-ctypes">C FFI</a> as a performance escape-hatch. MyPy also makes writing correct code much easier in my opinion.</p>
-<p>Other languages that I&#x2019;m <strong>not</strong> familiar with that might fit these criteria:</p>
+<p>With those criteria in mind, the other languages that I&#x2019;m quite
+familiar with that also fit most of these criteria is Python. Python 3
+(henceforth referred to as just Python) has excellent community support,
+simple syntax, and a <a
+href="/writing/optimizing-python-code-with-ctypes">C FFI</a> as a
+performance escape-hatch. MyPy also makes writing correct code much
+easier in my opinion.</p>
+<p>Other languages that I&#x2019;m <strong>not</strong> familiar with that
+might fit these criteria:</p>
 <ul>
 <li>Erlang/Elixir</li>
 <li>Ruby</li>
-<li>Haskell/OCaML (I think? There are advocates for Haskell that the type system makes development easier/faster.) TODO: source</li>
+<li>Haskell/OCaML (I think? There are advocates for Haskell that the
+type system makes development easier/faster.) TODO: source</li>
 </ul>
-<p>To evaluate Lisp against Python, I&#x2019;ll choose features present in Lisp that are not present in Python:</p>
+<p>To evaluate Lisp against Python, I&#x2019;ll choose features present in Lisp
+that are not present in Python:</p>
 <h3 id="everything-is-an-expression">Everything is an Expression</h3>
-<p>Python does not treat everything as an expression. The classic example to explain the value of &#x201C;everything is an expression&#x201D; is presented by Butterick in <a href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">Why Racket? Why Lisp?</a>, and goes something like this: In Lisp, there are no statements, so any expresssion can be used anywhere. In Python, you cannot use an if-statement as a value in an assignment expression:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<p>Python does not treat everything as an expression. The classic
+example to explain the value of &#x201C;everything is an expression&#x201D; is
+presented by Butterick in <a
+href="https://beautifulracket.com/appendix/why-racket-why-lisp.html">Why
+Racket? Why Lisp?</a>, and goes something like this: In Lisp, there are
+no statements, so any expresssion can be used anywhere. In Python, you
+cannot use an if-statement as a value in an assignment expression:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="cf">if</span> foo:</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="dv">4</span></span></code></pre></div>
 <p>This is quickly refuted by Python&#x2019;s ternary:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">2</span> <span class="cf">if</span> foo <span class="cf">else</span> <span class="dv">4</span></span></code></pre></div>
-<p>Butterick explains that you can do the same thing with operators, which is &#x201C;impossible&#x201D; in Python:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">if</span> foo <span class="op">*</span> <span class="op">+</span>) <span class="dv">4</span> <span class="dv">3</span>) <span class="co">; if foo, then 4 * 3, else 4 + 3</span></span></code></pre></div>
-<p>Arguably you can do this in Python as well (thanks to the power of <a href="https://en.wikipedia.org/wiki/Immediately_invoked_function_expression">immediately invoked function expressions</a>, as I recently learned from <a href="https://garrettmorse.com/">Garrett Morse</a>), but it is certainly less ergnomic:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> x, y: x <span class="op">*</span> y) <span class="cf">if</span> <span class="va">True</span> <span class="cf">else</span> (<span class="kw">lambda</span> x, y: x <span class="op">+</span> y))(<span class="dv">4</span>, <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">2</span> <span class="cf">if</span> foo <span class="cf">else</span> <span class="dv">4</span></span></code></pre></div>
+<p>Butterick explains that you can do the same thing with operators,
+which is &#x201C;impossible&#x201D; in Python:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">if</span> foo <span class="op">*</span> <span class="op">+</span>) <span class="dv">4</span> <span class="dv">3</span>) <span class="co">; if foo, then 4 * 3, else 4 + 3</span></span></code></pre></div>
+<p>Arguably you can do this in Python as well (thanks to the power of <a
+href="https://en.wikipedia.org/wiki/Immediately_invoked_function_expression">immediately
+invoked function expressions</a>, as I recently learned from <a
+href="https://garrettmorse.com/">Garrett Morse</a>), but it is certainly
+less ergnomic:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">lambda</span> x, y: x <span class="op">*</span> y) <span class="cf">if</span> <span class="va">True</span> <span class="cf">else</span> (<span class="kw">lambda</span> x, y: x <span class="op">+</span> y))(<span class="dv">4</span>, <span class="dv">3</span>)</span></code></pre></div>
 <p>(It&#x2019;s almost surprising how much this looks like Lisp.)</p>
-<p>It&#x2019;s clunkier in Python than Lisp, but this example is more possible in Lisp because it treats * and + as functions, whereas infix operators in Python aren&#x2019;t. If instead of * and + we had <code>multiply</code> and <code>add</code>, it would be:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">if</span> foo multiply add) <span class="dv">4</span> <span class="dv">3</span>)</span></code></pre></div>
+<p>It&#x2019;s clunkier in Python than Lisp, but this example is more possible
+in Lisp because it treats * and + as functions, whereas infix operators
+in Python aren&#x2019;t. If instead of * and + we had <code>multiply</code> and
+<code>add</code>, it would be:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode scheme"><code class="sourceCode scheme"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>((<span class="kw">if</span> foo multiply add) <span class="dv">4</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>And:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(multiply <span class="cf">if</span> foo <span class="cf">else</span> add)(<span class="dv">4</span>, <span class="dv">3</span>)</span></code></pre></div>
-<p>So while I agree that not everything is an expression in Python, I&#x2019;m not convinced of its utility.</p>
-<h3 id="emphasis-on-functional-programming">Emphasis on Functional Programming</h3>
-<p>I think Python has a fairly strong lean towards functional programming. Functions are first-class objects and can be passed around as values (as shown <a href="#everything-is-an-expression">above</a>). <a href="https://docs.python.org/3.9/tutorial/datastructures.html#list-comprehensions">List comprehensions</a> create copies of lists (emphasizing immutability) and can be used to map and filter lists. Furthermore, <code>map</code> and <code>filter</code> are builtins that lazily evaluate the effects of applyin a function to a list. Reduce is available as <a href="https://docs.python.org/3.9/library/functools.html#functools.reduce"><code>functools.reduce</code></a>, but I definitely use reduce less than map/filter in day-to-day programming. <a href="https://docs.python.org/3.9/tutorial/classes.html#generators">Generators</a> allow you to create infinite, lazily-evaluated sequences.</p>
-<p>Some missing functional features would be built-in function currying (although it does exist in <code>functools</code> under the name of <a href="https://docs.python.org/3.9/library/functools.html#functools.partial"><code>partial</code></a>) and enforcing side-effect-free (pure) functions. Other than that, I don&#x2019;t know of any functional programming features that I miss in Python. Granted, my only experience with a purely functional language is <a href="/writing/programming-languages#elm">Elm</a>, so I don&#x2019;t know how to use monads or typeclasses (although I think typeclasses are <a href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley&#x2013;Milner type system</a> feature, not a function language feature). There are probably functional programming features that I&#x2019;m not even aware of, simply because they aren&#x2019;t in Python. Given that, I belive that functional programming features available in Lisp that I&#x2019;m not aware of might be worth using Lisp. Once I know of such features, however, I&#x2019;m not convinced that I won&#x2019;t be able to apply that style of thinking to Python.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(multiply <span class="cf">if</span> foo <span class="cf">else</span> add)(<span class="dv">4</span>, <span class="dv">3</span>)</span></code></pre></div>
+<p>So while I agree that not everything is an expression in Python, I&#x2019;m
+not convinced of its utility.</p>
+<h3 id="emphasis-on-functional-programming">Emphasis on Functional
+Programming</h3>
+<p>I think Python has a fairly strong lean towards functional
+programming. Functions are first-class objects and can be passed around
+as values (as shown <a href="#everything-is-an-expression">above</a>).
+<a
+href="https://docs.python.org/3.9/tutorial/datastructures.html#list-comprehensions">List
+comprehensions</a> create copies of lists (emphasizing immutability) and
+can be used to map and filter lists. Furthermore, <code>map</code> and
+<code>filter</code> are builtins that lazily evaluate the effects of
+applyin a function to a list. Reduce is available as <a
+href="https://docs.python.org/3.9/library/functools.html#functools.reduce"><code>functools.reduce</code></a>,
+but I definitely use reduce less than map/filter in day-to-day
+programming. <a
+href="https://docs.python.org/3.9/tutorial/classes.html#generators">Generators</a>
+allow you to create infinite, lazily-evaluated sequences.</p>
+<p>Some missing functional features would be built-in function currying
+(although it does exist in <code>functools</code> under the name of <a
+href="https://docs.python.org/3.9/library/functools.html#functools.partial"><code>partial</code></a>)
+and enforcing side-effect-free (pure) functions. Other than that, I
+don&#x2019;t know of any functional programming features that I miss in Python.
+Granted, my only experience with a purely functional language is <a
+href="/writing/programming-languages#elm">Elm</a>, so I don&#x2019;t know how
+to use monads or typeclasses (although I think typeclasses are <a
+href="https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system">Hindley&#x2013;Milner
+type system</a> feature, not a function language feature). There are
+probably functional programming features that I&#x2019;m not even aware of,
+simply because they aren&#x2019;t in Python. Given that, I belive that
+functional programming features available in Lisp that I&#x2019;m not aware of
+might be worth using Lisp. Once I know of such features, however, I&#x2019;m
+not convinced that I won&#x2019;t be able to apply that style of thinking to
+Python.</p>
 <h3 id="dynamic-typing">Dynamic Typing</h3>
-<p>Python is dynamically typed. <a href="/writing/abstractions-and-types">I have found dynamic typing less and less helpful</a>, but I admit that using <code># type: ignore</code> in some Python code has given me massive flexibility when I need it. But I don&#x2019;t think Lisp&#x2019;s dynamic typing is going to be somehow life-changing compared to Python.</p>
+<p>Python is dynamically typed. <a
+href="/writing/abstractions-and-types">I have found dynamic typing less
+and less helpful</a>, but I admit that using <code># type: ignore</code>
+in some Python code has given me massive flexibility when I need it. But
+I don&#x2019;t think Lisp&#x2019;s dynamic typing is going to be somehow life-changing
+compared to Python.</p>
 <h3 id="macros">Macros</h3>
-<p>This is the big one. A quote from <a href="https://school.racket-lang.org/2019/plan/mon-mor-lecture.html#(part._.One_.Racket_.Programmer__.Many_.Languages)">Racket School 2019</a>: &#x201C;You would write such functions [macros] because you want to abstract over recurring patterns in your code that cannot be abstracted over with functions (or other means of conventional abstraction).&#x201D; I understand that Python has some <a href="https://developer.ibm.com/technologies/analytics/tutorials/ba-metaprogramming-python/">meta-programming capapbilities</a>, but I don&#x2019;t ever use them, besides decorators in the standard library like <a href="https://docs.python.org/3.9/library/functools.html#functools.lru_cache"><code>functools.lru_cache</code></a>.</p>
+<p>This is the big one. A quote from <a
+href="https://school.racket-lang.org/2019/plan/mon-mor-lecture.html#(part._.One_.Racket_.Programmer__.Many_.Languages)">Racket
+School 2019</a>: &#x201C;You would write such functions [macros] because you
+want to abstract over recurring patterns in your code that cannot be
+abstracted over with functions (or other means of conventional
+abstraction).&#x201D; I understand that Python has some <a
+href="https://developer.ibm.com/technologies/analytics/tutorials/ba-metaprogramming-python/">meta-programming
+capapbilities</a>, but I don&#x2019;t ever use them, besides decorators in the
+standard library like <a
+href="https://docs.python.org/3.9/library/functools.html#functools.lru_cache"><code>functools.lru_cache</code></a>.</p>
 <p>Macros are, as far as I can tell, 100% a good reason to use Lisp.</p>
-<h3 id="the-amalgamation-of-these-features">The Amalgamation of These Features</h3>
-<p><a href="http://www.paulgraham.com/progbot.html">Programming Bottom-Up</a> seems to suggest that all the features of Lisp come together to make development much easier. It&#x2019;s not any single feature that makes Lisp amazing, but these features in combination. Chapter 1.5 of <a href="http://www.paulgraham.com/onlisp.html">On Lisp</a> suggests that &#x201C;these new possibilities do not stem from a single magical ingredient.&#x201D; Perhaps Lisp is only a great language because it has all of these features, not any single one.</p>
-<p>It is subjective and hard to test, but could be a good reason to use Lisp.</p>
-<h3 id="i-become-a-super-genius-hacker-man-if-i-write-a-lot-of-lisp">I become a super-genius hacker-man if I write a lot of Lisp???</h3>
-<p>This is obviously a subjective reason to use Lisp. Arguably, writing lots of Python would also make me an excellent programmer, especially if I were to use the more complex features (like meta-programming) on a regular basis. But my personal experience working in Elm and then returning to Python supports the argument that writing code in a radically different language can improve your programming ability universally.</p>
-<p>So maybe learning Lisp for the sake of learning is a good reason to use Lisp.</p>
-<h2 id="results---how-did-i-learn-lisp">Results - How Did I Learn Lisp?</h2>
+<h3 id="the-amalgamation-of-these-features">The Amalgamation of These
+Features</h3>
+<p><a href="http://www.paulgraham.com/progbot.html">Programming
+Bottom-Up</a> seems to suggest that all the features of Lisp come
+together to make development much easier. It&#x2019;s not any single feature
+that makes Lisp amazing, but these features in combination. Chapter 1.5
+of <a href="http://www.paulgraham.com/onlisp.html">On Lisp</a> suggests
+that &#x201C;these new possibilities do not stem from a single magical
+ingredient.&#x201D; Perhaps Lisp is only a great language because it has all of
+these features, not any single one.</p>
+<p>It is subjective and hard to test, but could be a good reason to use
+Lisp.</p>
+<h3 id="i-become-a-super-genius-hacker-man-if-i-write-a-lot-of-lisp">I
+become a super-genius hacker-man if I write a lot of Lisp???</h3>
+<p>This is obviously a subjective reason to use Lisp. Arguably, writing
+lots of Python would also make me an excellent programmer, especially if
+I were to use the more complex features (like meta-programming) on a
+regular basis. But my personal experience working in Elm and then
+returning to Python supports the argument that writing code in a
+radically different language can improve your programming ability
+universally.</p>
+<p>So maybe learning Lisp for the sake of learning is a good reason to
+use Lisp.</p>
+<h2 id="results---how-did-i-learn-lisp">Results - How Did I Learn
+Lisp?</h2>
 <p>In progress.</p>
 <h3 id="when-to-use-macros">When to use Macros</h3>
-<p>One initial worry I had when learning Lisp was the idea that I wouldn&#x2019;t know when to use macros. Whenever I&#x2019;m introduced to a new abstraction (sum types and pattern matching in Elm, for example), I need to learn when it&#x2019;s appropriate to use it.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> But macros are a whole new class of abstraction; it&#x2019;s like learning that functions exist. Luckily, Racket School of 2019 has a whole track for macros. Day 3 is all about macros and starts by explaining &#x201C;a basic framework for when language extension is appropriate.&#x201D;</p>
+<p>One initial worry I had when learning Lisp was the idea that I
+wouldn&#x2019;t know when to use macros. Whenever I&#x2019;m introduced to a new
+abstraction (sum types and pattern matching in Elm, for example), I need
+to learn when it&#x2019;s appropriate to use it.<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> But
+macros are a whole new class of abstraction; it&#x2019;s like learning that
+functions exist. Luckily, Racket School of 2019 has a whole track for
+macros. Day 3 is all about macros and starts by explaining &#x201C;a basic
+framework for when language extension is appropriate.&#x201D;</p>
 <blockquote>
-<p>A fundamental aspect of language-oriented programming is identifying these intended abstractions and the invariants that enforce their integrity, then exploiting those invariants to produce a better program than you would have done without the abstraction.</p>
+<p>A fundamental aspect of language-oriented programming is identifying
+these intended abstractions and the invariants that enforce their
+integrity, then exploiting those invariants to produce a better program
+than you would have done without the abstraction.</p>
 </blockquote>
 <!-- ## Discussion -->
 <!-- ## Conclusion -->
 <h2 id="arguments-against-lisp">Arguments Against Lisp</h2>
-<p><a href="https://www.joelonsoftware.com/2004/02/27/27-2/">Joel Spolsky</a>: &#x201C;And I have the ultimate respect for Paul Graham &#x2014; I think there&#x2019;s a good probability that in a year or two we will credit him with being the man who solved spam. But I think that if you try to ignore the fact that millions of programmers around the world have learned lisp and don&#x2019;t prefer to use it, you&#x2019;re in the land of morbid cognitive dissonance.&#x201D;</p>
+<p><a href="https://www.joelonsoftware.com/2004/02/27/27-2/">Joel
+Spolsky</a>: &#x201C;And I have the ultimate respect for Paul Graham &#x2014; I think
+there&#x2019;s a good probability that in a year or two we will credit him with
+being the man who solved spam. But I think that if you try to ignore the
+fact that millions of programmers around the world have learned lisp and
+don&#x2019;t prefer to use it, you&#x2019;re in the land of morbid cognitive
+dissonance.&#x201D;</p>
 <!-- [Eric Raymond](https://www.linuxjournal.com/article/3882)'s "Why Python" is a strong argument for Python (but really only for Python over Perl). -->
 <h2 id="other-notes">Other Notes</h2>
-<p>From <a href="http://www.paulgraham.com/icad.html">Revenge of the Nerds</a>:</p>
+<p>From <a href="http://www.paulgraham.com/icad.html">Revenge of the
+Nerds</a>:</p>
 <blockquote>
-<p>&#x201C;If you can&#x2019;t find ten Lisp hackers, then your company is probably based in the wrong city for developing software.&#x201D;</p>
+<p>&#x201C;If you can&#x2019;t find ten Lisp hackers, then your company is probably
+based in the wrong city for developing software.&#x201D;</p>
 </blockquote>
-<p>Maybe I&#x2019;m in the wrong city, but I don&#x2019;t know anyone who writes <em>any</em> Lisp code. We wrote a little bit of Scheme at the end of CSE 3345, but nobody I know has continued to use Lisp.</p>
+<p>Maybe I&#x2019;m in the wrong city, but I don&#x2019;t know anyone who writes
+<em>any</em> Lisp code. We wrote a little bit of Scheme at the end of
+CSE 3345, but nobody I know has continued to use Lisp.</p>
 <!-- > "Unlike in other languages, a Racket programmer chooses the programming language for each module in a software base independently of what languages the other components are written in." -->
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p><a href="https://en.wikipedia.org/wiki/John_Stuart_Mill#Higher_and_lower_pleasures">As Mill said</a> [emphasis mine], &#x201C;It is better to be a human being dissatisfied than a pig satisfied; better to be Socrates dissatisfied than a fool satisfied. And if the fool, or the pig, is of a different opinion, it is because they only know their own side of the question. <em>The other party to the comparison knows both sides</em>.&#x201D; I also went and learned how to use <a href="/writing/vim">Vim</a> for the bazillionth time and it finally stuck. I can&#x2019;t imagine writing <em>anything</em> in editors without Vim support now. Maybe it&#x2019;s the same for Lisp?<a href="#fnref1" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Of course, I&#x2019;ll probably end up wanting to do this in other languages like Haskell or another Hindley&#x2013;Milner type system language like OCaML. Are there other big language features that I haven&#x2019;t encountered, but that users can&#x2019;t live without?<a href="#fnref2" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
-<li id="fn3" role="doc-endnote"><p>If you are working on a large team and you don&#x2019;t want to use Java/Python/whatever everyone knows, I think <a href="/writing/programming-languages#go">Go</a> is best. It&#x2019;s simple to learn and has reasonable performance, excellent tooling, cross-compiles, etc.<a href="#fnref3" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
-<li id="fn4" role="doc-endnote"><p>If performance is critical in every aspect of your application, then I think <a href="/writing/programming-languages#rust">Rust</a> is best. Excellent community (lots of packages), excellent tooling, excellent performance. If performance is critical only in specific areas, then I think most modern Lisps have a FFI mechanism so you can write the hot spots in Rust/C/Fortran and the rest of the application in Lisp. <a href="/writing/optimizing-python-code-with-ctypes">Python also does this well.</a> TODO: Check that whatever Lisp I use actually has a nice FFI.<a href="#fnref4" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
-<li id="fn5" role="doc-endnote"><p>Talks like <a href="https://www.youtube.com/watch?v=x1FU3e0sT1I">Make Data Structures</a> really helped me understand these new tools.<a href="#fnref5" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn1" role="doc-endnote"><p><a
+href="https://en.wikipedia.org/wiki/John_Stuart_Mill#Higher_and_lower_pleasures">As
+Mill said</a> [emphasis mine], &#x201C;It is better to be a human being
+dissatisfied than a pig satisfied; better to be Socrates dissatisfied
+than a fool satisfied. And if the fool, or the pig, is of a different
+opinion, it is because they only know their own side of the question.
+<em>The other party to the comparison knows both sides</em>.&#x201D; I also
+went and learned how to use <a href="/writing/vim">Vim</a> for the
+bazillionth time and it finally stuck. I can&#x2019;t imagine writing
+<em>anything</em> in editors without Vim support now. Maybe it&#x2019;s the
+same for Lisp?<a href="#fnref1" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Of course, I&#x2019;ll probably end up
+wanting to do this in other languages like Haskell or another
+Hindley&#x2013;Milner type system language like OCaML. Are there other big
+language features that I haven&#x2019;t encountered, but that users can&#x2019;t live
+without?<a href="#fnref2" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn3" role="doc-endnote"><p>If you are working on a large team
+and you don&#x2019;t want to use Java/Python/whatever everyone knows, I think
+<a href="/writing/programming-languages#go">Go</a> is best. It&#x2019;s simple
+to learn and has reasonable performance, excellent tooling,
+cross-compiles, etc.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn4" role="doc-endnote"><p>If performance is critical in every
+aspect of your application, then I think <a
+href="/writing/programming-languages#rust">Rust</a> is best. Excellent
+community (lots of packages), excellent tooling, excellent performance.
+If performance is critical only in specific areas, then I think most
+modern Lisps have a FFI mechanism so you can write the hot spots in
+Rust/C/Fortran and the rest of the application in Lisp. <a
+href="/writing/optimizing-python-code-with-ctypes">Python also does this
+well.</a> TODO: Check that whatever Lisp I use actually has a nice
+FFI.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Talks like <a
+href="https://www.youtube.com/watch?v=x1FU3e0sT1I">Make Data
+Structures</a> really helped me understand these new tools.<a
+href="#fnref5" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 </ol>
 </section>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2020</p>
+      <p>Sam Stevens, 2022</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>
