@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="A simple guide to setting up python
+packages without polluting global environments." />
+  <meta name="keywords" content="project, python, setup, tox, mypy, flit, packaging, simple, lightweight, easy" />
+  <title>Behold: Lightweight Python Project Setup</title>
+  
+</head>
+
+<body>
+  <aside>
+    <div id="sidebar">
+      <img src="/images/me.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="python-project-setup">Python Project Setup</h1>
+<p>Recently I have split some python projects into separate packages,
+rather than git submodules. In an effort to make these packages useful
+to myself in a variety of situtations, I want to make the packages
+available on <a href="https://pypi.org/">PyPI</a> and ensure they run on
+multiple versions of python (at least the versions I have installed on
+my local machine&#x2013;3.6 to 3.9). <a
+href="https://github.com/pypa/flit"><code>flit</code></a> makes it easy
+to publish packages to PyPI if there&#x2019;s nothing complicated going on
+(like compiling C extensions or bundling JavaScript). Then I use <a
+href="https://github.com/tox-dev/tox"><code>tox</code></a> as a generic
+command runner to run tests on multiple versions of Python, as well as
+check that code is formatted and has correct static types. This is a
+living document of the process I use to set up or convert some existing
+code to a standalone Python package.</p>
+<h2 id="project-specific">Project-Specific</h2>
+<ol start="0" type="1">
+<li>(Only if you use pyenv) Set up pyenv to use as many versions as you
+want to test with tox:
+<code>pyenv local 3.9.12 3.8.11 3.7.12 3.6.15</code>. The first version
+should be the one you want to use for your virtual environment.</li>
+<li>Make a new virtual environment. It doesn&#x2019;t matter what version of
+Python you use&#x2013;I use the latest version I have installed on my
+machine.</li>
+<li><code>pip install flit</code></li>
+<li><code>flit init</code>. Answer the questions.</li>
+<li><code>pip install tox</code></li>
+<li>Make your <code>tox.ini</code> file. <code>pyproject.toml</code> is
+supported by tox but only as a single string, so for now we are stuck
+with <code>tox.ini</code>. I hav an example <code>tox.ini</code> at the
+end of this post.</li>
+<li>Install all your dependencies in your virtual environment
+(<code>pip install pytest black isort mypy # etc.</code>) and develop
+and write tests as normal.</li>
+<li>Run <code>tox</code> and it will create the virtual environments
+then run the tests, type checks and formatting checks.</li>
+</ol>
+<h2 id="additional-tips">Additional Tips</h2>
+<p>Make <code>isort</code> follow <code>black</code>&#x2019;s conventions:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">tool</span><span class="kw">.</span><span class="dt">isort</span><span class="kw">]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">profile</span> <span class="op">=</span> <span class="st">&quot;black&quot;</span></span></code></pre></div>
+<p>Add coverage to <code>pytest</code>:
+<code>pip install pytest-cov</code></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">tool</span><span class="kw">.</span><span class="dt">pytest</span><span class="kw">.</span><span class="dt">ini_options</span><span class="kw">]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">addopts</span> <span class="op">=</span> <span class="st">&quot;--cov prelude --cov-report html&quot;</span></span></code></pre></div>
+<h2 id="example-tox.ini-file">Example <code>tox.ini</code> File</h2>
+<p>The <code>isolated_build = True</code> is required for
+<code>pyproject.toml</code>-based projects.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[tox]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">envlist </span><span class="ot">=</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">  py3{9,8,7,6}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">  typing</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="dt">  formatting</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">isolated_build </span><span class="ot">=</span><span class="st"> </span><span class="kw">True</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">[testenv]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">deps </span><span class="ot">=</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dt">  pytest</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dt">  hypothesis</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">  pytest-cov</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="dt">commands </span><span class="ot">=</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="dt">  pytest</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="kw">[testenv:typing]</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">deps </span><span class="ot">=</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="dt">  mypy</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="dt">commands </span><span class="ot">=</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="dt">  mypy --strict prelude</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="kw">[testenv:formatting]</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="dt">deps </span><span class="ot">=</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="dt">  isort</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="dt">  black</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="dt">commands </span><span class="ot">=</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="dt">  isort --quiet --check .</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="dt">  black --quiet --check .</span></span></code></pre></div>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</body>
+
+</html>
