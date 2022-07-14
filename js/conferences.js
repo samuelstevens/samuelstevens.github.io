@@ -5514,14 +5514,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$table = _VirtualDom_node('table');
 var $elm$html$Html$tbody = _VirtualDom_node('tbody');
-var $author$project$Conferences$icon = function (order) {
-	if (!order) {
-		return '▼';
-	} else {
-		return '▲';
-	}
-};
-var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -5539,6 +5531,7 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
@@ -5546,17 +5539,45 @@ var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$th = _VirtualDom_node('th');
 var $author$project$Conferences$thead = F4(
 	function (msg, sortedBy, order, str) {
-		var text = (!_Utils_eq(sortedBy, msg)) ? str : (str + (' ' + $author$project$Conferences$icon(order)));
+		var _v0 = function () {
+			var _v1 = _Utils_Tuple2(
+				_Utils_eq(sortedBy, msg),
+				order);
+			if (_v1.a) {
+				if (!_v1.b) {
+					var _v2 = _v1.b;
+					return _Utils_Tuple2('▼', 'active');
+				} else {
+					var _v3 = _v1.b;
+					return _Utils_Tuple2('▲', 'active');
+				}
+			} else {
+				return _Utils_Tuple2('▼', 'inactive');
+			}
+		}();
+		var icon = _v0.a;
+		var _class = _v0.b;
 		return A2(
 			$elm$html$Html$th,
 			_List_fromArray(
 				[
 					$elm$html$Html$Events$onClick(msg),
-					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer')
+					A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+					$elm$html$Html$Attributes$class(_class)
 				]),
 			_List_fromArray(
 				[
-					$elm$html$Html$text(text)
+					$elm$html$Html$text(str),
+					A2(
+					$elm$html$Html$span,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class(_class)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(icon)
+						]))
 				]));
 	});
 var $elm$html$Html$thead = _VirtualDom_node('thead');
@@ -5713,6 +5734,48 @@ var $author$project$Conferences$viewPosix = function (time) {
 		A2($elm$time$Time$toDay, $elm$time$Time$utc, time)) + (', ' + $elm$core$String$fromInt(
 		A2($elm$time$Time$toYear, $elm$time$Time$utc, time)))));
 };
+var $author$project$Conferences$viewPosixSpan = F2(
+	function (start, end) {
+		return _Utils_eq(
+			A2($elm$time$Time$toYear, $elm$time$Time$utc, start),
+			A2($elm$time$Time$toYear, $elm$time$Time$utc, end)) ? (_Utils_eq(
+			A2($elm$time$Time$toMonth, $elm$time$Time$utc, start),
+			A2($elm$time$Time$toMonth, $elm$time$Time$utc, end)) ? ($author$project$Conferences$toShortEnglishMonth(
+			A2($elm$time$Time$toMonth, $elm$time$Time$utc, start)) + (' ' + ($elm$core$String$fromInt(
+			A2($elm$time$Time$toDay, $elm$time$Time$utc, start)) + ('-' + ($elm$core$String$fromInt(
+			A2($elm$time$Time$toDay, $elm$time$Time$utc, end)) + (', ' + $elm$core$String$fromInt(
+			A2($elm$time$Time$toYear, $elm$time$Time$utc, start)))))))) : ($author$project$Conferences$toShortEnglishMonth(
+			A2($elm$time$Time$toMonth, $elm$time$Time$utc, start)) + (' ' + ($elm$core$String$fromInt(
+			A2($elm$time$Time$toDay, $elm$time$Time$utc, start)) + (' to ' + ($author$project$Conferences$toShortEnglishMonth(
+			A2($elm$time$Time$toMonth, $elm$time$Time$utc, end)) + (' ' + ($elm$core$String$fromInt(
+			A2($elm$time$Time$toDay, $elm$time$Time$utc, end)) + (', ' + $elm$core$String$fromInt(
+			A2($elm$time$Time$toYear, $elm$time$Time$utc, start))))))))))) : ($author$project$Conferences$viewPosix(start) + (' to ' + $author$project$Conferences$viewPosix(end)));
+	});
+var $author$project$Conferences$viewConferenceDates = F2(
+	function (maybeStart, maybeEnd) {
+		var _v0 = _Utils_Tuple2(maybeStart, maybeEnd);
+		if (_v0.a.$ === 1) {
+			if (!_v0.b.$) {
+				var _v1 = _v0.a;
+				var end = _v0.b.a;
+				return 'Ends on ' + $author$project$Conferences$viewPosix(end);
+			} else {
+				var _v2 = _v0.a;
+				var _v3 = _v0.b;
+				return '';
+			}
+		} else {
+			if (!_v0.b.$) {
+				var start = _v0.a.a;
+				var end = _v0.b.a;
+				return A2($author$project$Conferences$viewPosixSpan, start, end);
+			} else {
+				var start = _v0.a.a;
+				var _v4 = _v0.b;
+				return 'Starts on ' + $author$project$Conferences$viewPosix(start);
+			}
+		}
+	});
 var $author$project$Conferences$viewMaybePosix = function (maybe) {
 	if (maybe.$ === 1) {
 		return '-';
@@ -5770,7 +5833,7 @@ var $author$project$Conferences$viewConference = function (conference) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						$author$project$Conferences$viewMaybePosix(conference.k) + (' to ' + $author$project$Conferences$viewMaybePosix(conference.m)))
+						A2($author$project$Conferences$viewConferenceDates, conference.k, conference.m))
 					]))
 			]));
 };
