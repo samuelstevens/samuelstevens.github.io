@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Current and historical conference
+deadlines for a number of NLP-related conferences." />
+  <meta name="keywords" content="nlp, conference, research, deadline, date, submission" />
+  <title>Behold: NLP Conference Deadlines</title>
+  
+</head>
+
+<body>
+  <aside>
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="nlp-conference-deadlines">NLP Conference Deadlines</h1>
+<p>This is a sortable table of conference deadlines. You can click on
+the headers to sort the table by each column. I included past deadlines
+so that you can get a sense of when conference deadlines <em>will</em>
+be, even if they have not announced the dates yet.</p>
+<div id="conference-table">
+
+</div>
+<!-- elm make src/Conferences.elm --output=js/conferences.js --optimize -->
+<script src="/js/conferences.js"></script>
+<script>
+  const app = Elm.Conferences.init({ node: document.getElementById('conference-table') });
+</script>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
