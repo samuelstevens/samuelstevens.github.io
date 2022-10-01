@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="How should I write my own software
+utilities? What language is best suited, and how much effort should I
+devote towards these tools?" />
+  <meta name="keywords" content="programming, languages, tools, scripting, shell, python" />
+  <title>Behold: Personal Software</title>
+  
+</head>
+
+<body>
+  <aside>
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="personal-software">Personal Software</h1>
+<p>I find myself more and more disappointed in the state of most
+software, and I&#x2019;m writing more and more tools for myself. I enumerate
+the kinds of bugs I experience that make software feel low-quality, then
+I discuss some examples of tools I&#x2019;ve built, and I finish by discussing
+languages that I think offer the most support for building the kinds of
+tools I&#x2019;m describing.</p>
+<h2 id="software-is-crap">Software is Crap</h2>
+<!-- software is crap -->
+<p>In my (admittedly limited, extremely narrow) experience, most
+software is crap. It&#x2019;s amazing that we can communicate wirelessly and
+work remotely and share information easily! But the dedication to
+quality in most software is poor, and the overall effect for me is to
+make software feel like crap.</p>
+<p>Let me give some examples.</p>
+<h3 id="spotify">Spotify</h3>
+<p>The desktop Spotify app takes 10+ seconds to fully open on my brand
+new Macbook Pro with an M1 Pro chip. By fully open, I mean all album art
+loads, main pages are completely filled, etc. This is after
+opening/closing it less than thirty seconds before, so I don&#x2019;t think
+it&#x2019;s because there are invalid cached files. Even Microsoft teams takes
+less than 4 seconds (but there are other issues with Teams).</p>
+<p>Spotify also continues to recommend podcasts, and most recently,
+audiobooks to my account. I don&#x2019;t want to listen to podcasts or
+audiobooks on Spotify. If I wanted to listen to podcasts, I would do so
+on podcast app. Same goes for audiobooks. If I didn&#x2019;t pay for Spotify,
+this wouldn&#x2019;t make me unhappy, because, as the saying goes, <a
+href="https://www.forbes.com/sites/marketshare/2012/03/05/if-youre-not-paying-for-it-you-become-the-product/">&#x201C;if
+you&#x2019;re not paying for it, <em>you&#x2019;re</em> the product&#x201D;</a>. But I pay
+for this product!</p>
+<p>If I queue songs on Spotify desktop while listening on my phone, the
+queue sometimes disappears.</p>
+<p>For a while, when I opened an album on Spotify iOS, if I swiped back,
+then my scroll position would reset to the top of the screen (this one
+almost had me back to <a href="writing/ios-13s-music-app-sucks">Apple
+Music</a>).</p>
+<p>Then, because Spotify changed their web API structure (well within
+their rights as a private company), <a
+href="https://github.com/Rigellute/spotify-tui">spotify-tui</a> <a
+href="https://github.com/Rigellute/spotify-tui/issues/960">broke</a>.
+Unfortunately, the maintainer is busy with other projects (again, not
+something I am complaining about). But somehow I am sad that a bug-free
+product just grew a bug.</p>
+<h3 id="microsoft-teams">Microsoft Teams</h3>
+<p>Microsoft Teams is one of the worst pieces of software I have ever
+needed to use, especially on macOS. Everything is slow. There isn&#x2019;t a
+single page that doesn&#x2019;t take its sweet time to render.</p>
+<p>You can only have page open at a time, so if you wanted to see a chat
+and your calendar at the same time, you&#x2019;re out of luck. (This also means
+you have to switch between pages; this wouldn&#x2019;t be so bad if the app was
+snappy; see above.)</p>
+<p>I find the information density very low; when I discovered the dense
+chat setting, it made a huge quality of life difference. If only there
+were a similar setting for the main channels.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>The search implementation is really, really awful. There is no sort
+and are no patterns for more specific search<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<h3 id="sony-wh-1000xm4-headphones">Sony WH-1000XM4 Headphones</h3>
+<p>My headphones use my phone&#x2019;s ringer volume, rather than the media
+volume. When I start listening to music, the volume is all the way up
+because I leave my ringer as loud as possible. Then when I adjust the
+volume down, it adjusts my ringer volume as well, so my alarms all very
+quiet after disconnecting.</p>
+<h3 id="git">git</h3>
+<p>Git&#x2019;s UX is garbage. This isn&#x2019;t a bug, and I know maintainers are
+working on improving this situation, and needing to maintain backward
+compatibility is hard. But the UX is pretty bad. Everything else is
+amazing though!</p>
+<hr />
+<p>For more examples, check out Dan Luu&#x2019;s <a
+href="https://danluu.com/everything-is-broken/">one week of
+bugs</a>.</p>
+<!-- I write a lot of scripts and small software tools -->
+<h2 id="tools-i-develop">Tools I Develop</h2>
+<p>With that in mind, I end up spending a lot of time working on my own
+solutions to make my computer use as smooth as possible.</p>
+<p>I will discuss some examples so it&#x2019;s clear what kind of tools I want
+to build.</p>
+<h2 id="todo">todo</h2>
+<p><code>todo</code> is an 80 line bash script that opens my editor in
+<code>~/Documents/todo</code> with a file with the current day. If the
+previous day&#x2019;s file exists, it copies it into today&#x2019;s file. It&#x2019;s
+extremely simple and extremely practical.</p>
+<h2 id="wiki">wiki</h2>
+<p><code>wiki</code> is a 130 line fish script that makes it easy to
+add, find and edit documents in <code>~/Documents/wiki</code>. It also
+includes a basic tag system. I use it all the time for daily logs on
+projects as well as snippets and other pieces of knowledge I don&#x2019;t want
+to use.</p>
+<h2 id="airpods.app">Airpods.app</h2>
+<p><a href="/projects/airpods">Airpods.app</a> was a simple AppleScript
+wrapper I built around a BluetoothConnector which let you connect to
+Airpods really quickly.</p>
+<h2 id="slow-youtube">Slow YouTube</h2>
+<p><a href="https://github.com/samuelstevens/elm-slow-youtube">Slow
+YouTube</a> was a client-side only website built in Elm that only showed
+the channels you wanted to subscribe to, and only the three most recent
+videos. This prevented any sort of distractions or recommended videos.
+There&#x2019;s an instance up at <a
+href="https://samuelstevens.me/elm-slow-youtube/">samuelstevens.me/elm-slow-youtube</a>
+if you have an API key you want to use.</p>
+<h2 id="quiet-hacker-news">Quiet Hacker News</h2>
+<p><a href="/elm-quiet-hn">Quiet HN</a> is an Elm app that shows the top
+30 links from Hacker News without any comments. I use this site every
+day.</p>
+<h2 id="pycodesearch">pycodesearch</h2>
+<p><a
+href="https://github.com/samuelstevens/pycodesearch"><code>pycodesearch</code></a>
+is a command line search tool that lets you use regular expression
+semantic search over Python codebases. You can find all matches for
+<code>hi!.*sorry</code> in all string literals, for example.</p>
+<hr />
+<p>This is just a small list of examples. There are dozens of shell
+functions, scripts and web apps that I develop for one-off use, which
+sometimes are used all the time (<code>todo</code>, <code>wiki</code>)
+and sometimes are used once and then never again (I&#x2019;m looking at you,
+<code>pycodesearch</code>).</p>
+<!-- what are the tradeoffs? -->
+<h2 id="tradeoffs">Tradeoffs</h2>
+<p>Given that I am going to write a lot of small scripts/tools to make
+my life better, <em>what&#x2019;s the best way to do it?</em></p>
+<h3 id="getting-started">Getting Started</h3>
+<p>The most important factor is how easy it is to get an initial version
+working. Most of the time, I develop a tool because I am just fed up and
+want something working <em>right this very second.</em> Scripting
+languages, interpreted languages with interactive debuggers, languages
+that I personally know very well, languages with large standard
+libraries that don&#x2019;t need a lot of imports are all winners here. For
+example, Python and fish are both winners for getting something done
+quickly (see <a
+href="https://github.com/samuelstevens/pycodesearch">pycodesearch</a> or
+<a
+href="https://github.com/samuelstevens/dotfiles/blob/main/dot_config/fish/functions/wiki.fish">wiki</a>
+for examples in each of these languages).</p>
+<h3 id="returning-to-development">Returning to Development</h3>
+<p>Another important factor is how easy it is to come back and make
+edits after a long time. Often I will get a version 1 finished, use it
+and <em>adapt my workflow to the tool,</em> then realize a new feature
+would be neat. But I haven&#x2019;t worked on the original tool in sometimes
+months! So languages that improve ease of <em>returning to
+development</em> are also better for this kind of software.</p>
+<p>How would a language improve ease of returning to development? I
+actually think of the language as encouraging me to make it easy for
+myself, either through cultural norms or hard constraints.</p>
+<p>For example, Elm&#x2019;s type sytem makes it very easy to return to
+development. If you look at the commit history for
+(elm-slow-youtube)[https://github.com/samuelstevens/elm-slow-youtube/commits/master],
+you can see that I stopped working on it from August 8th until November
+2nd. I explicitly remember coming back to the code and realizing how
+easy it was to figure out what was going on (admittedly, it is a
+particularly simple app) <em>because of the types.</em></p>
+<p>As a counterexample, look at bash. Google&#x2019;s <a
+href="https://google.github.io/styleguide/shellguide.html">style
+guidelines for bash</a> explicitly tell you to not write anything
+serious in bash:</p>
+<blockquote>
+<p>If you are writing a script that is more than 100 lines long, or that
+uses non-straightforward control flow logic, you should rewrite it in a
+more structured language <em>now.</em> Bear in mind that scripts grow.
+Rewrite your script early to avoid a more time-consuming rewrite at a
+later date.</p>
+</blockquote>
+<p>As one more positive example, consider Go&#x2019;s culture of testing. The
+standard library&#x2019;s test package is pretty good, so if you are building
+something without external packages, you can still write tests (unlike
+Python, where <a href="https://docs.pytest.org/">pytest</a> is the only
+sane option). Having both unit and integration tests help a <em>ton</em>
+with coming back to a project. For example, when developing <a
+href="https://github.com/samuelstevens/relic">relic</a>, I use existing
+tests to ensure there are no breaking behavior changes. If a language
+encourages the writing of tests through culture, language support, etc.,
+I will be more likely to use them when working on personal projects.</p>
+<h3 id="performance">Performance</h3>
+<p>A third factor is performance, especially start-up speed. The
+majority of tools I write are thin wrappers around my editor (see <a
+href="https://github.com/samuelstevens/scripts/tree/main/todo">todo</a>
+for a great example). If I have to start up an entire VM just to open my
+editor, that&#x2019;s going to be a waste of time. Whenever possible, I want my
+tools to be lightning quick. Performance doesn&#x2019;t matter for most
+applications, except when you get such high-performance software that
+you can completely upgrade your workflow. While developing relic, I
+realized that being able to see patterns in hyperparameter configs just
+by querying with <code>relic ls</code> meant I was making significantly
+better decisions about what options to pursue, and I was doing it more
+often than I would have if I had to fire up a Jupyter notebook.</p>
+<p>I want to discover those new workflows that dramatically improve my
+ability to run ML experiments, track progress, develop new insights,
+etc. If a 20% slowdown in software performance prevents me from doing
+that, that&#x2019;s not a 20% loss in progress, it could be closer to 100%.</p>
+<p>500ms vs 600ms doesn&#x2019;t make a big difference. But 200ms vs 20ms
+does.</p>
+<p><strong>Speed matters when it can affect your workflow.</strong></p>
+<h3 id="distribution">Distribution</h3>
+<p>The last relevant factor is how easy it is to run on different
+environments. Python is great except you need a python interpreter
+installed (and it needs to be the right version) and you need all
+dependencies installed. Then you need to make it available in your path,
+and that installed interpreter and dependencies can&#x2019;t conflict with your
+other virtual environments&#x2026;fine, I&#x2019;ll just write a bash script
+instead.</p>
+<p>These are the benefits of Rust and Go&#x2013;I don&#x2019;t use any systems without
+a relatively modern libc, so I don&#x2019;t need to get into the whole
+static-vs-dynamically-linked debate. I just don&#x2019;t want to deal with
+<code>node_modules/</code> or <code>venv/</code> in my
+<code>$HOME</code>.</p>
+<!-- what are the options? -->
+<h2 id="options">Options</h2>
+<p>There are four main options available to me, depending on what kind
+of tool I want to build. Then there are some other options that might be
+worth the learning curve if I discover glaring deficiencies in my
+already known languages.</p>
+<blockquote>
+<p>This is also a Part II of my <a
+href="writing/programming-languages">initial debate on programming
+langauges</a>, but specific to writing personal tools.</p>
+</blockquote>
+<h3 id="contendors">Contendors</h3>
+<p>These are the options I reach for every single time when I need to
+write a tool. They (mostly) embody the traits I mentioned earlier.</p>
+<h4 id="fish">Fish</h4>
+<p>Fish is better than bash for writing scripts. I rewrote my wiki
+script in fish in a morning, and it didn&#x2019;t include <code>sed</code> or
+<code>awk</code> once. All the options are nice and human readable, the
+built-ins are very well documented. It&#x2019;s a shell, so it&#x2019;s great for
+manipulating some other commmands (ripgrep, fzf and fd) and it has very
+low startup time. It doesn&#x2019;t have any support for unit testing (it&#x2019;s
+still a shell langauge), but it&#x2019;s easier to read than bash and doesn&#x2019;t
+care about being POSIX compatible (which is fine by me).</p>
+<h4 id="go">Go</h4>
+<p>Go (cross-)compiles to single binaries, has great test support, has a
+great standard library (but you can use packages easily because it
+compiles to a single binary), has strong performance and is easy to
+write (but you do have to write a <em>lot</em> of it). The downside is
+that you have to write a lot of it, you can&#x2019;t have unused variables, you
+need to set up a <code>go.mod</code> to start, etc., which makes it
+harder to get started. But if you develop version 0 in an easy language,
+then develop your workflow around version 0, then decide you need a real
+version 1, Go is probably a good choice.</p>
+<h4 id="python">Python</h4>
+<p>I write enough Python that, for example, I can add an argument parser
+without consulting documentation. That alone makes Python useful for
+getting shit done because I can just sit down and crank it out. If I
+need a script for an existing Python project, I will write it in Python
+because I know I&#x2019;ll have an interpreter available. If I want to write a
+standalone program, I will rarely use Python because of the distribution
+hassle.</p>
+<h4 id="elm">Elm</h4>
+<p>Elm is the only sane way to write web interfaces. Given the choice, I
+would re-write <a href="https://salty.software/ticketbay">TicketBay</a>
+as a web app in Elm every day of the week. It takes a little bit to get
+started, but if I&#x2019;m writing a whole web interface then I might as well
+write it once instead of writing it in html/css/js, then typescript,
+then react, then elm. Plus the build system doesn&#x2019;t exist, whereas I
+have to relearn webpack/babel/esbuild/(whatever the JavaScript community
+is doing) every single time I use them.</p>
+<h3 id="worth-the-learning-curve">Worth the Learning Curve?</h3>
+<p>Should I learn <a href="https://www.rust-lang.org/">Rust</a>, <a
+href="https://ziglang.org/">Zig</a>, <a
+href="https://sr.ht/~duangle/scopes/">Scopes</a>, <a
+href="https://odin-lang.org/">Odin</a>, <a
+href="https://janet-lang.org/">Janet</a>, <a
+href="https://nim-lang.org/">Nim</a>, <a
+href="https://dart.dev/">Dart</a> or <a
+href="https://dlang.org/">D</a>?</p>
+<p>All of these languages would replace Go in my personal dev use. They
+all compile to native executables. Some notable differences:</p>
+<ul>
+<li>Rust, Zig, Scopes and Odin don&#x2019;t have garbage collection.</li>
+<li>Rust and Scopes use a borrow checker.</li>
+<li>Janet is a Lisp-like language.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Writing this post helped me clarify my position on what software I
+should use to write personal software. The answer is:</p>
+<ul>
+<li>fish for shell scripts/wrappers around $EDITOR</li>
+<li>Go for more serious CLI utilities</li>
+<li>Python for tools inside existing Python projects</li>
+<li>Elm for web UIs.</li>
+</ul>
+<p>Some questions that are still unanswered:</p>
+<ul>
+<li>What should I use for writing desktop app(let)s? Things with a
+single-page GUI that edit some configs or move some files, etc.</li>
+<li>What should I use for terminal-based UIs? Maybe Go is best (like <a
+href="https://github.com/normen/whatscli">whatscli</a>). There is also
+<a href="https://github.com/Textualize/textual">textual</a> in Python,
+but then we have the distribution issues associated with Python.</li>
+<li>Should I be writing these tools in languages without garbage
+collection for maximum speed? Since they are often very simple, I
+wouldn&#x2019;t have to worry about the complexity of managing lots of objects
+myself.</li>
+<li>Should I look into Janet? Lisps are, you know, Lisp. Apparently
+something magical happens (<a href="writing/lisp">but I don&#x2019;t get it
+yet</a>).</li>
+</ul>
+<h2 id="appendix-editor-plugins">Appendix: $EDITOR &amp; Plugins</h2>
+<p>None of this even considers the application I use the most: (Neo)Vim.
+Given that NeoVim added Lua to make plugins easier to write, why don&#x2019;t I
+write plugins for my editor? Those have to be some of the highest impact
+tools I can write, but learning how to interact with NeoVim just feels
+so hard.</p>
+<p>Given that <a href="https://github.com/mawww/kakoune">kakoune</a> has
+a more consistent UX, should I use that? I would love to use <a
+href="https://github.com/helix-editor/helix">helix</a> but there is no
+soft-wrapping (<a
+href="https://github.com/helix-editor/helix/issues/136">issue</a>).</p>
+<!-- ## References -->
+<!-- [Janet's jpm can create executables](https://janet-lang.org/docs/jpm.html#Creating-an-executable) -->
+<!-- [Dart has an ahead of time (AOT) compiler that creates native executables](https://dart.dev/overview#platform) -->
+<!-- [Nim compiles to native executables](https://nim-lang.org/docs/tut1.html) -->
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I don&#x2019;t understand the point of building these Electron
+applications on top of web technologies if you don&#x2019;t let users edit the
+CSS. That seems like a major point in favor of Electron&#x2013;you can let the
+browser do the scaling work if you expose the CSS via settings (or
+directly). But very few non-developer apps do this.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn2"><p>In my opinion, search tools either need (1) regular
+expressions, (2) fuzzy search (like <a
+href="https://github.com/junegunn/fzf">fzf</a>) or (3) semantic matching
+(like querying &#x201C;happy&#x201D; would return results with &#x201C;good&#x201D; in them). If all
+you get is exact match, you will eventually run into a scenario where
+you need to search because it&#x2019;s infeasible otherwise, but the search
+isn&#x2019;t powerful enough to support your query.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</section>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
