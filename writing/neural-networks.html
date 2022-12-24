@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Tips and tricks that don&#x2019;t show up
+in papers for training big neural networks." />
+  <meta name="keywords" content="neural networks, training tips, batch
+size, learning rate scheduling" />
+  <title>Behold: Tips &amp; Tricks for Training Neural Networks</title>
+  
+</head>
+
+<body>
+  <aside>
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="tips-tricks-for-training-neural-networks">Tips &amp; Tricks for
+Training Neural Networks</h1>
+<p>Read <a href="https://karpathy.github.io/2019/04/25/recipe/">Andrej
+Karpathy&#x2019;s guide</a>. Do everything he says. Visualize your inputs,
+write some code to check that you&#x2019;re not mixing information across the
+batch dimension&#x2013;do it all.</p>
+<p>These are the other tips and tricks that I picked up over many, many
+failed attempts.</p>
+<ul>
+<li>Batch size matters a lot in pretraining. When pretraining a Swin
+Transformer (~89M parameters, supervised image classification), I needed
+a global batch size of at least 1024 to see meaningful improvement.</li>
+<li>Learning rate decay will make it seem like your model is not
+&#x201C;converging&#x201D; because the performance will continue to improve until the
+last epoch. But if you had a constant learning rate, it would likely
+flatten out.</li>
+</ul>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
