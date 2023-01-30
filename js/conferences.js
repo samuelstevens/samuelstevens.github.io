@@ -5174,166 +5174,201 @@ var $author$project$Conferences$init = function (_v0) {
 				[
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1630296000000)),
+						$elm$time$Time$millisToPosix(1630306800000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1646110800000)),
+						$elm$time$Time$millisToPosix(1646121600000)),
 					name: 'AAAI',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1645506000000)),
+						$elm$time$Time$millisToPosix(1645516800000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1631073600000)),
+						$elm$time$Time$millisToPosix(1631084400000)),
 					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1659931200000)),
+						$elm$time$Time$millisToPosix(1659942000000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1676350800000)),
+						$elm$time$Time$millisToPosix(1676361600000)),
 					name: 'AAAI',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1675746000000)),
+						$elm$time$Time$millisToPosix(1675756800000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1660536000000)),
+						$elm$time$Time$millisToPosix(1660546800000)),
 					year: 2023
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1611550800000)),
+						$elm$time$Time$millisToPosix(1611561600000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1628222400000)),
+						$elm$time$Time$millisToPosix(1628233200000)),
 					name: 'ACL',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1627790400000)),
+						$elm$time$Time$millisToPosix(1627801200000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1612155600000)),
+						$elm$time$Time$millisToPosix(1612166400000)),
 					year: 2021
 				},
 					{
 					_abstract: $elm$core$Maybe$Nothing,
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1653624000000)),
+						$elm$time$Time$millisToPosix(1653634800000)),
 					name: 'ACL',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1653192000000)),
+						$elm$time$Time$millisToPosix(1653202800000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1642222800000)),
+						$elm$time$Time$millisToPosix(1642233600000)),
 					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1673586000000)),
+						$elm$time$Time$millisToPosix(1673596800000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1689307200000)),
+						$elm$time$Time$millisToPosix(1689318000000)),
 					name: 'ACL',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1688875200000)),
+						$elm$time$Time$millisToPosix(1688886000000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1674190800000)),
+						$elm$time$Time$millisToPosix(1674201600000)),
 					year: 2023
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1620619200000)),
+						$elm$time$Time$millisToPosix(1667545200000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1636606800000)),
+						$elm$time$Time$millisToPosix(1687417200000)),
+					name: 'CVPR',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1687071600000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1668153600000)),
+					year: 2023
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1620630000000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1636617600000)),
 					name: 'EMNLP',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1636257600000)),
+						$elm$time$Time$millisToPosix(1636268400000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1621224000000)),
+						$elm$time$Time$millisToPosix(1621234800000)),
 					year: 2021
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1655438400000)),
+						$elm$time$Time$millisToPosix(1655449200000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1670734800000)),
+						$elm$time$Time$millisToPosix(1670745600000)),
 					name: 'EMNLP',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1670389200000)),
+						$elm$time$Time$millisToPosix(1670400000000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1656043200000)),
-					year: 2022
-				},
-					{
-					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1642654800000)),
-					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1658548800000)),
-					name: 'ICML',
-					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1658030400000)),
-					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1643259600000)),
+						$elm$time$Time$millisToPosix(1656054000000)),
 					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Nothing,
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1690603200000)),
-					name: 'ICML',
+						$elm$time$Time$millisToPosix(1696575600000)),
+					name: 'ICCV',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1690084800000)),
+						$elm$time$Time$millisToPosix(1696230000000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1674709200000)),
+						$elm$time$Time$millisToPosix(1678262400000)),
 					year: 2023
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1632801600000)),
+						$elm$time$Time$millisToPosix(1663743600000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1651204800000)),
+						$elm$time$Time$millisToPosix(1683270000000)),
 					name: 'ICLR',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1650859200000)),
+						$elm$time$Time$millisToPosix(1682924400000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1633406400000)),
+						$elm$time$Time$millisToPosix(1664348400000)),
+					year: 2023
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1642665600000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1658559600000)),
+					name: 'ICML',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1658041200000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1643270400000)),
 					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Nothing,
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1623384000000)),
+						$elm$time$Time$millisToPosix(1690614000000)),
+					name: 'ICML',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1690095600000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1674720000000)),
+					year: 2023
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1632812400000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1651215600000)),
+					name: 'ICLR',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1650870000000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1633417200000)),
+					year: 2022
+				},
+					{
+					_abstract: $elm$core$Maybe$Nothing,
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1623394800000)),
 					name: 'NAACL',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1622952000000)),
+						$elm$time$Time$millisToPosix(1622962800000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1606107600000)),
+						$elm$time$Time$millisToPosix(1606118400000)),
 					year: 2021
 				},
 					{
 					_abstract: $elm$core$Maybe$Nothing,
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1657857600000)),
+						$elm$time$Time$millisToPosix(1657868400000)),
 					name: 'NAACL',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1657425600000)),
+						$elm$time$Time$millisToPosix(1657436400000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1642222800000)),
+						$elm$time$Time$millisToPosix(1642233600000)),
 					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1621569600000)),
+						$elm$time$Time$millisToPosix(1621580400000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1639458000000)),
+						$elm$time$Time$millisToPosix(1639468800000)),
 					name: 'NeurIPS',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1638766800000)),
+						$elm$time$Time$millisToPosix(1638777600000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1622174400000)),
+						$elm$time$Time$millisToPosix(1622185200000)),
 					year: 2021
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1652673600000)),
+						$elm$time$Time$millisToPosix(1652684400000)),
 					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1670562000000)),
+						$elm$time$Time$millisToPosix(1670572800000)),
 					name: 'NeurIPS',
 					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1669611600000)),
+						$elm$time$Time$millisToPosix(1669622400000)),
 					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1652846400000)),
+						$elm$time$Time$millisToPosix(1652857200000)),
 					year: 2022
 				}
 				]),
@@ -5554,7 +5589,9 @@ var $author$project$Conferences$update = F2(
 						A2(
 							$elm$core$List$sortBy,
 							function (conf) {
-								return _Utils_Tuple2(conf.year, conf.name);
+								return _Utils_Tuple2(
+									conf.year,
+									$author$project$Conferences$maybePosixToMonthAndDay(conf.start));
 							},
 							model.conferences));
 					return _Utils_Tuple2(
@@ -5567,7 +5604,9 @@ var $author$project$Conferences$update = F2(
 					var conferences = A2(
 						$elm$core$List$sortBy,
 						function (conf) {
-							return _Utils_Tuple2(conf.year, conf.name);
+							return _Utils_Tuple2(
+								conf.year,
+								$author$project$Conferences$maybePosixToMonthAndDay(conf.start));
 						},
 						model.conferences);
 					return _Utils_Tuple2(
