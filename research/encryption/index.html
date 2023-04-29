@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SELM: Symmetric Encryption with Language Models</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="icon" href="favicon.png">
+  <!-- MathJax -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <!-- RoughJS -->
+  <script src="https://unpkg.com/roughjs@4.5.2/bundled/rough.js"></script>
+
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
+
+  <script src="helpers.js"></script>
+  <style>
+    @font-face {
+	    font-family: xkcd;
+	    src: url("https://cdn.rawgit.com/ipython/xkcd-font/master/xkcd-script/font/xkcd-script.woff") format("woff");
+    }
+    * {
+      box-sizing: border-box;
+    }
+    main {
+      max-width: 800px;
+      margin: auto;
+    }
+    blockquote {
+      padding-left: 1em;
+      border-left: 0.4em solid #bb0000;
+    }
+    figure {
+      text-align: center;
+      margin: auto;
+    }
+    img {
+      max-width: 50%;
+      margin: auto;
+    }
+    .acronym {
+      text-decoration-line: underline;
+    }
+    #caesar-form,#caesar-message {
+      font: 30px xkcd;
+    }
+    #caesar-key {
+      width: 100%;
+    }
+
+    /* Juicy Buttons */
+    button {
+      border: 1px solid black;
+      background-color: #f3f3f3;
+      padding: 2px 12px;
+      margin: 4px;
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.1s ease-in-out;
+    }
+    button:hover {
+      background-color: #ffffff;
+      transform: translate(0px, -1px);
+    }
+    button:active {
+      background-color: #cee4ce;
+      transform: translate(0px, 1px);
+    }
+    button::after {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 2px;
+      box-shadow: 0px 1px 2px 1px black;
+      opacity: 0;
+      transition: opacity 0.1s ease-in-out;
+    }
+    button:hover::after {
+      opacity: 1;
+    }
+    button:active::after {
+      opacity: 0;
+    }
+    /* For layering multiple canvas */
+    .stacked-canvas {
+      position: relative;
+    }
+    .stacked-canvas > canvas:not(:first-child) {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    /* Tables */
+    td,th {
+      padding: 4px 12px;
+    }
+    tr:nth-last-child(even) {
+      background-color: #f2f2f2;
+    }
+    table {
+      max-width: 400px;
+      margin: auto;
+    }
+    th {
+      border-top: 2px solid black;
+      border-bottom: 1px solid black;
+    }
+    tbody > tr:last-child > td {
+      border-bottom: 2px solid black;
+    }
+
+  </style>
+  <script>
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    function caesarCipher(message, key) {
+      let ciphertext = "";
+      for (let i = 0; i < message.length; i++) {
+        if (alphabet.includes(message[i])) {
+          const ch = parseInt(message[i], 36) - 10;
+          ciphertext += alphabet[(ch + key + 26) % 26];
+        } else {
+          ciphertext += message[i];
+        }
+      }
+      return ciphertext;
+    }
+
+    const arrowHandleLength = 20;
+    const arrowHandleAngle = 20 * Math.PI / 180;
+    function drawArrow(rc, x1, y1, x2, y2, params) {
+      rc.line(x1, y1, x2, y2, params);
+
+      let angle = Math.atan((y2 - y1) / (x2 - x1));
+      if (x2 - x1 < 0) { angle += Math.PI; }
+
+      const rightHandleAngle = angle - arrowHandleAngle;
+      const leftHandleAngle = angle + arrowHandleAngle;
+      
+      const rightHandleX = Math.cos(rightHandleAngle) * arrowHandleLength;
+      const rightHandleY = Math.sin(rightHandleAngle) * arrowHandleLength;
+      rc.line(x2 - rightHandleX, y2 - rightHandleY, x2, y2, params);
+
+      const leftHandleX = Math.cos(leftHandleAngle) * arrowHandleLength;
+      const leftHandleY = Math.sin(leftHandleAngle) * arrowHandleLength;
+      rc.line(x2 - leftHandleX, y2 - leftHandleY, x2, y2, params);
+    }
+  </script>
+</head>
+<body>
+  <main>
+    <h1>SELM: Symmetric Encryption with Language Models</h1>
+    <p>
+      Research by <a href="">Samuel Stevens</a> &amp; <a href="https://ysu1989.github.io/">Yu Su</a>
+    </p>
+    <blockquote>
+      <p>
+        We're excited to present our encryption algorithm SELM, a novel symmetric encrytion algorithm based on language models' incredible ability to memorize data.
+        While SELM is not amenable to conventional cryptanalysis, we investigate its security through an empirical vairant of the classic IND-CPA game.
+      </p>
+      <p>
+        <a href="">Paper</a>
+        <a href="">Code</a>
+    </blockquote>
+
+    <h2>Table of Contents</h2>
+    <ol>
+      <a href="#hundred-mile-overview"><li>Hundred-Mile Overview</li></a>
+      <a href="#what-is-encryption"><li>What is Encryption?</li></a>
+      <a href="#how-selm-works"><li>How SELM Works</li></a>
+    </ol>
+    <h2 id="hundred-mile-overview">Hundred-Mile Overview</h2>
+    <blockquote>
+      <p>
+        This overview assumes at least a passing familiarity with autoregressive language models, machine learning, symmetric encryption, and the IND-CPA game. The later sections present everything without any assumed background.
+      </p>
+    </blockquote>
+    <p>
+      Large language models (LMs) pre-trained on large text corpora often memorize data seen during pretraining, which compromises language quality (cite lee et al 2022) and can reveal private data in the pretraining corpora (cite carlini et al 2022).
+      Because of this, we typically consider LM memorization a problem to be solved (cite bommasani et al 2021).
+    </p>
+    <p>
+      We frame LM memorization as a under-explored <i>skill</i> and develop SELM, a <span class="acronym">s</span>ymmetric <span class="acronym">e</span>ncryption algorithm with autoregressive <span class="acronym">l</span>anguge <span class="acronym">m</span>odels.
+    </p>
+    <p>
+    Alice sends a message to Bob by fine-tuning a public language model in a secret subspace (parameterized by the secret key <i>k</i>) of the original parameter space to memorize her message <i>m</i>.
+    She sends the change in parameters in the secret subspace to Bob, who converts them from the secret subspace to the original parameter space using the secret key <i>k</i>, and decodes the original message.
+      Eve can't read the message because she can't convert from the secret subspace to the original parameter space.
+    </p>
+    <p>
+      We empirically investigate SELM's security by training binary classifiers to play the IND-CPA game and find that regularization is necessary to prevent simple classifiers from winning the IND-CPA game.
+    </p>
+
+    <blockquote>
+      <p>
+        The rest of this blog post is less dense and has examples, pictures and interactive widgets to develop intuition around our work.
+      </p>
+    </blockquote>
+
+    <h2 id="what-is-encryption">What is Encryption?</h2>
+    <blockquote>
+      <p>
+        This section covers some basics of cryptography, including symmetric encryption algorithms, basic properties and how we measure security.
+        You can skip it if you're familiar with the IND-CPA game.
+      </p>
+    </blockquote>
+    <p>
+      Encryption is the outcome of cryptography, a field of math that tries to convert some readable message to an ciphertext that only the owners can read.
+      Suppose Alice and Bob want to pass notes to each other in class about Eve's birthday gift.
+      Alice has to pass the note to Eve, who will pass it to Bob, but only after she reads it.
+      How can Alice and Bob communicate during class without Eve reading about their gift ideas?
+      This is one of the many problems cryptography tries to solve with encryption.
+      When you log in to your online banking account, for example, you only want you and your bank to see your password, not anyone else on the internet.
+    </p>
+    <figure>
+      <img src="images/passing-notes.jpeg" alt="Alice and Bob pass notes in class." />
+      <figcaption aria-hidden="true">Alice and Bob pass notes. Generated by Stable Diffusion.</figcaption>
+    </figure>
+    <h3>Symmetric Encryption</h3>
+    <p>
+      Symmetric encryption assumes that Alice and Bob share a secret key that <b>Eve doesn't know.</b>
+      In our example, Alice and Bob shared a secret key&mdash;like a password&mdash;during lunch, when Eve couldn't hear them.
+      The symmetric encryption algorithm is actually a pair of algorithms:
+    </p>
+    <ol>
+      <li>The first algorithm (encryption) tells Alice how to turn her message into something Eve can't read: a ciphertext.</li>
+      <li>The second algorithm (decryption) tells Bob how to turn Alice's ciphertext (the encrypted message) back into her original message.</li>
+    </ol>
+    <p>
+      Both algorithms use the key as input.
+      In a mathematical notation, encryption is a function \(E\) from messages \(M\) and keys \(K\) to ciphertexts \(C\), and decryption \(D\) is a function from ciphertexts \(C\) and keys \(K\) to messages \(M\):
+      $$E : M \times K \rightarrow C$$
+      $$D : C \times K \rightarrow M$$
+    </p>
+    <p>
+      Decryption should be the inverse of encryption: anytime message Alice encrypts, Bob should always be able to decrypt it (assuming they have the same key).
+      Again, formally:
+      $$\forall m, k : D(E(m, k), k) = m$$
+    </p>
+    <p>
+      Caesar's cipher is a famous symmetric encryption algorithm. 
+      Alice would take every letter in her message and shift it forward by \(k\) letters.
+      Then Bob would shift the letters back.
+      You can play with the Caesar cipher here.
+      Try typing in "the moon is made of cheese" with a key of 0, then a key of 1, then a key of 2.
+    </p>
+    <form id="caesar-form">
+      <p>
+        <label>Message:</label>
+        <input id="caesar-message" value="hello world"/>
+      </p>
+      <p>
+        <label id="caesar-key-label">Key: 3</label>
+        <input type="range" min="-26" max="26" step="1" value="3" id="caesar-key" style="width: 100%;"/>
+      </p>
+    </form>
+    <canvas id="caesar-cipher-demo"></canvas>
+    <script>
+      (function() {
+        const height = 50;
+        const width = 30;
+
+        const canvas = document.getElementById("caesar-cipher-demo");
+        const ctx = canvas.getContext("2d");
+        // Likely 800, but could be less for mobile devices
+        canvas.width = document.querySelector("main").clientWidth;
+        canvas.height = height * 5;
+        const rc = rough.canvas(canvas);
+        ctx.font = "30px xkcd";
+
+        const keyLabel = document.getElementById("caesar-key-label");
+
+        let cvMargin = (canvas.width - (26 * width)) / 2
+        if (cvMargin < 0) { cvMargin = 0; }
+
+
+        function render(key, message) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const ciphertext = caesarCipher(message, key);
+          keyLabel.innerHTML = `Key: ${key}`;
+
+          const y1 = height * 0;
+          for (let i = 0; i < alphabet.length; i ++) {
+            const ch = alphabet[i];
+            const chWidth = ctx.measureText(ch).width;
+            let margin = (width - chWidth) / 2;
+            if (margin < 0) { margin = 0; }
+
+            if (ch === message[0]) {
+              rc.rectangle(cvMargin + i * width, y1, width, height, { fill: "green" });
+            } else {
+              rc.rectangle(cvMargin + i * width, y1, width, height);
+            }
+            ctx.fillText(ch, cvMargin + i * width + margin, y1 + 35);
+          }
+
+          const y2 = height * 2;
+          for (let i = 0; i < alphabet.length; i ++) {
+            const ch = alphabet[i];
+            const chWidth = ctx.measureText(ch).width;
+            let margin = (width - chWidth) / 2;
+            if (margin < 0) { margin = 0; }
+
+            if (ch === ciphertext[0]) {
+              rc.rectangle(cvMargin + i * width, y2, width, height, { fill: "green" });
+            } else {
+              rc.rectangle(cvMargin + i * width, y2, width, height);
+            }
+            ctx.fillText(ch, cvMargin + i * width + margin, y2 + 35);
+          }
+
+          ctx.fillText(`Ciphertext: ${ciphertext}`, cvMargin, height * 4 + 35, canvas.width - 2 * cvMargin);
+        
+          let start = 0 - Math.abs(key);
+          let end = 26 + Math.abs(key);
+          for (let i = start; i < end; i++) {
+            drawArrow(rc, cvMargin + (i + 0.5) * width, y1 + height, cvMargin + (i + key + 0.5) * width, y2);
+          }
+        }
+        
+        // Initial key and message
+        render(3, "hello world");
+
+        const keyElem = document.getElementById("caesar-key");
+        const messageElem = document.getElementById("caesar-message");
+
+        function onChange(event) {
+          const key = parseInt(keyElem.value, 10);
+          const message = messageElem.value.toLowerCase();
+          render(key, message);
+        }
+
+        keyElem.addEventListener("input", onChange);
+        messageElem.addEventListener("input", onChange);
+      })();
+    </script>
+    <p>
+      Did you see what happened when you changed the key to 26?
+      The ciphertext was the same as when the key was 0!
+    </p>
+    <p>
+      This is an important property of an encryption aglgorithm: the <b>keyspace</b>.
+      Caesar's cipher has a keyspace of 26: there are only 26 possible keys to try.
+      If Eve knows Alice and Bob are using a Caesar cipher, then she only has to try 26 different keys to read their message.
+      In a long math class, there's plenty of time to try them all!
+    </p>
+    <p>
+      You could argue that Eve has to know that Alice and Bob are using a Caesar cipher first.
+      If she doesn't know what the encryption algorithm is, then she won't try 26 keys.
+      Cryptographers call this <b>security through obscurity</b> and it's generally regarded as a weak argument.
+      Instead, cryptography is in favor of <a href="https://en.wikipedia.org/wiki/Kerckhoffs's_principle">Kerchoff's principle</a>: the <b>security</b> of an algorithm should depend <b>only</b> on the <b>secrecy of the key</b> and nothing else.
+      That means Alice and Bob's messages should still be completely unreadable by Eve even if Eve knows the algorithm, the time of day, the weather&mdash;anything and everything except the key and the original message.
+    </p>
+    <p>
+      The big question is: <b>How do we measure the security of an algorithm?</b>
+    </p>
+
+    <h3>Security</h3>
+    <p>
+      Remember, Alice and Bob want to send each other messages without Eve being able to read them.
+      More than that, Alice and Bob want to send messages without Eve learning <b>anything at all</b> about them.
+    </p>
+    <p>
+      Why does it matter if Eve can learn anything, if she can't read the whole message?
+      Suppose that Eve knows that Alice and Bob are choosing between getting Eve a bunny, a goose, a horse or a snake for her birthday (Eve really likes animals!).
+      If Alice and Bob are using a Caesar cipher with an unknown key, can Eve figure out which animal they're getting?
+    </p>
+    <p>
+      Suppose Eve knows that Alice and Bob are going to get her a snake 1 in 20 times, a horse 1 in 10 times, a goose 1 in 5 times and a bunny the rest of the time.
+      Then Eve can plot those probabilities as a pie chart (on the left).
+    </p>
+    <p>
+      If Alice sends the word "goose" with a key of 3, then the ciphertext is "jrrvh" (try it on the Caesar cipher demo above!).
+      Even though Eve doesn't know the key, since "goose" is the only word where the second and third letters are the same, she knows that "jrrvh" must be "goose"!
+    </p>
+    <p>
+      If Alice sends the word "snake" with a key of 4, the ciphertext is "wreoi", which doesn't have any repeating letters in it.
+      So Eve isn't sure if it's "snake" or "horse", but <b>she does know she's not getting a goose or bunny for her birthday!</b>
+      Once she removes the goose and the bunny from the pie chart, she gets the chart on the right (After Ciphertext).
+      <b>Even though Eve can't understand the ciphertext, she's learned something!</b>
+      In a perfect encryption algorithm, the two pie charts would always be the same.
+    </p>
+    <p>
+      You can play with the different keys and messages in the demo below and see what Eve can learn.
+    </p>
+    <form id="bday-gift-form">
+      <fieldset>
+        <legend>Choose a message:</legend>
+
+        <input type="radio" id="snake" name="bday-gift" value="snake" checked>
+        <label for="snake">snake</label>
+
+        <input type="radio" id="horse" name="bday-gift" value="horse">
+        <label for="horse">horse</label>
+
+        <input type="radio" id="goose" name="bday-gift" value="goose">
+        <label for="goose">goose</label>
+
+        <input type="radio" id="bunny" name="bday-gift" value="bunny">
+        <label for="bunny">bunny</label>
+      </fieldset>
+      <label id="bday-gift-key-label">Key: 3</label>
+      <input type="range" min="0" max="26" step="1" value="3" id="bday-gift-key-input" style="width: 100%;"/>
+    </form>
+    <canvas id="bday-gift-demo"></canvas>
+    <script>
+      // Use the demo from the talk at Alison's club
+      (function() {
+        const canvas = document.getElementById("bday-gift-demo");
+        const ctx = canvas.getContext("2d");
+        // Likely 800, but could be less for mobile devices
+        canvas.width = document.querySelector("main").clientWidth;
+        canvas.height = 360;
+        const rc = rough.canvas(canvas);
+        ctx.font = "30px xkcd";
+
+        const radius = 100;
+        const inputs = [
+          { label: "snake", value: 1/20, color: "red" },
+          { label: "horse", value: 1/10, color: "green" },
+          { label: "goose", value: 1/5, color: "blue" },
+          { label: "bunny", value: 1 - 1/20 - 1/10 - 1/5, color: "orange" },
+        ]
+        
+        function pie(x, y, slices, caption) {
+          const captionWidth = ctx.measureText(caption).width
+          ctx.fillText(caption, x - captionWidth / 2, y + radius + 35);
+
+          const total = slices.reduce((sum, slice) => slice.value + sum, 0);
+
+          // Outline  
+          rc.circle(x, y, radius * 2);
+          
+          // Only one slice? Just fill the circle
+          if (slices.length == 1) {
+            rc.circle(x, y, radius * 2, { fill: slices[0].color });
+            return;
+          }
+
+          let start = 0;
+          for (let i = 0; i < slices.length; i++) {
+            const { value, color } = slices[i];
+            const end = start + value / total * 2 * Math.PI; 
+            
+            // Some flag needed to make big arcs
+            let arcFlag = 0;
+            if (end - start > Math.PI) { arcFlag = 1; }
+
+            const svg = `M ${x} ${y} L ${x + Math.cos(start) * radius} ${y + Math.sin(start) * radius} A ${radius} ${radius} 0 ${arcFlag} 1 ${x + Math.cos(end) * radius} ${y + Math.sin(end) * radius} Z`;
+            rc.path(svg, { fill: color });
+            start = end;
+          }
+        }
+
+        // Legend
+        const labelW = 130;
+        const boxW = 30;
+        const margin = (canvas.width - labelW * inputs.length) / 2;
+        for (let i = 0; i < inputs.length; i++) {
+          ctx.fillText(inputs[i].label, margin + 20 + i * labelW, 30);
+          rc.rectangle(margin - 20 + i * labelW, 5, boxW, boxW, { fill: inputs[i].color });
+        }
+
+        function possibleAnimals(animal, key) {
+          if (key % 26 == 0) { return [animal]; }
+          switch (animal) {
+            case "snake":
+            case "horse":
+              return ["snake", "horse"];
+            case "goose":
+              return ["goose"];
+            case "bunny":
+              return ["bunny"];
+            default:
+              throw Exception();
+          }
+        }
+
+        function render(animal, key) {
+          // Don't clear the legend
+          ctx.clearRect(0, 60, canvas.width, canvas.height);
+
+          document.getElementById("bday-gift-key-label").innerHTML = `Key: ${key}`;
+          const outputLabels = possibleAnimals(animal, key);
+          const outputs = inputs.filter(input => outputLabels.includes(input.label));
+          const ciphertext = `encrypt(${animal}, ${key}) => ${caesarCipher(animal, key)}`
+          const ciphertextWidth = ctx.measureText(ciphertext).width; 
+          ctx.fillText(ciphertext, (canvas.width - ciphertextWidth) / 2, 100);
+
+          pie(200, 220, inputs, "Before Ciphertext");
+          pie(500, 220, outputs, "After Ciphertext");
+        }
+        
+        function onChange() {
+          const animal = document.querySelector('input[name="bday-gift"]:checked').value;
+          const key = parseInt(document.getElementById("bday-gift-key-input").value, 10);
+          render(animal, key);
+        }
+        document.getElementById("bday-gift-form").addEventListener("input", onChange);
+
+        onChange();
+      })();
+    </script>
+    <p>
+    You can see that the Caesar cipher isn't helping Alice and Bob much because <b>Eve can learn from the ciphertext.</b>
+      Then how do we make sure our algorithms don't leak any information to Eve?
+    </p>
+
+    <h3>IND-CPA Game</h3>
+    <p>
+      We're going to take a slight detour into another security concept: security games; specifically, the IND-CPA game.
+    </p>
+    <p>
+      <b>Shafi Goldwasser and Silvio Micali proved that Alice &amp; Bob winning the IND-CPA game means Eve cannot learn anything about the message!</b>
+      This makes it much easier for cryptographers. 
+      If we can just show that Eve never wins the IND-CPA game, then we don't have to worry about showing that she can't learn anything from the ciphertext.
+    </p>
+    <p>
+      Security games are useful strategies for cryptographers to reason about algorithm security because they enable us to focus on the absolute hardest task for an encryption algorithm.
+      If our algorithm passes this test, it passes all the tests!
+    </p>
+    <p>
+      But what is the IND-CPA game?
+      Just a series of steps.
+    </p>
+    <ol>
+      <li>Eve sends any message she likes to Alice.</li>
+      <li>Alice encrypts the message and sends it back to Eve.</li>
+      <li>Eve and Alice repeat steps 1 &amp; 2 as many times as Eve wants to.</li>
+      <li>Eve sends 2 messages \(m_1\) and \(m_2\) to Alice (with the same length).</li>
+      <li>Alice chooses a message randomly (50/50), encrypts it and sends it to Eve.</li>
+      <li>Eve guesses which message was encrypted.</li>
+    </ol>
+    <p>
+      <b>If Eve can guess which message was encrypted, she wins!</b>
+    </p>
+    <p>
+      But even if Eve always chooses \(m_1\), she'll win half the time.
+      So we say that Eve wins only if she gets it right more than 50% of the time.
+    </p>
+    <p>
+      Below, you can play as Eve against Alice with the Caesar cipher.
+      Send messages to Alice until you think you know her key.
+      Then send pairs of messages to Alice and guess which message she encrypted.
+      Try to get 5 wins in a row!
+    </p>
+    <p>
+      Alice's key will be different every game.
+    </p>
+    <div id="incpa-demo">
+      <div class="stacked-canvas">
+        <canvas id="indcpa-canvas-1-anim"></canvas>
+        <canvas id="indcpa-canvas-1-ui"></canvas>
+      </div>
+      <table cellpadding="0" cellspacing="0" style="min-height: 4em;">
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Ciphertext</th>
+          </tr>
+        </thead>
+        <tbody id="indcpa-table-body"></tbody>
+      </table>
+      <br />
+      <div class="stacked-canvas">
+        <canvas id="indcpa-canvas-2-anim"></canvas>
+        <canvas id="indcpa-canvas-2-ui"></canvas>
+      </div>
+    </div>
+    <script>
+      const indcpa1key = Math.floor(Math.random() * 26);
+    </script>
+    <script src="indcpa-part1.js"></script>
+    <script src="indcpa-part2.js"></script>
+    <p>
+      Hopefully you played the game a couple times.
+      You might have noticed that there are a couple trivial ways to win the game, where you don't need to gather any message-ciphertext pairs.
+    </p>
+    <ol>
+      <li>You give Alice two messages with different lengths. Then you can use the ciphertext's length.</li>
+      <li>You give Alice two messages that you already encrypted in the upper half. Then you know the exact ciphertexts for the messages you're going to submit in the lower half.</li> 
+      <li>You use the double-letter trick from earlier.</li>
+    </ol>
+    <p>
+      If you didn't try any of these strategies, refresh the page and try to win without sending any messages in the top half.
+    </p>
+    <p>
+      These three challenges are all well-known in cryptography:
+    </p>
+    <ol>
+      <li>The IND-CPA game rules specify that Eve sends Alice two messages with the same number of characters. Cryptographers get around this challenge by outlawing it.</li>
+      <li>There is a well-known cryptographic construction that lets Alice choose a pseudo-random key for every message she encrypts. We use this cryptographic construction in our work.</li>
+      <li>This is the challenge of creating a secure cipher! This is another reason the Caesar cipher isn't <b>semantically secure</b>.</li>
+    </ol>
+    <h2 id="how-selm-works">How SELM Works</h2>
+    <p>
+      SELM is our novel symmetric encryption algorithm that uses large language models (like GPT) to encrypt arbitrary data.
+    </p>
+    <p>
+      When Alice wants to send Bob a message, she fine-tunes a public pre-trained language model with \(D\) pre-trained parameters \(\theta^D_0\) to memorize her message \(m\).
+      After fine-tuning, she has a parameter update vector \(\Delta \theta^D\)
+      $$\Delta \theta^D = \theta^D_* - \theta^D_0$$
+      Then she can send Bob the update vector \(\Delta \theta^D\).
+      Bob just adds the vector to the public pre-trained model:
+      $$\theta^D_0 + \Delta \theta^D = \theta^D_*$$
+      Then Bob can autoregressively generate text from the tuned language model, and he is guaranteed to generate <b>Alice's original message</b>.
+    </p>
+    <p>
+      There are two problems:
+    </p>
+    <ol>
+      <li>The vector \(\Delta \theta^D\) is very large (it's the same size as the original language model).</li>
+      <li>More importantly, Eve can also add \(\Delta \theta^d\) to the public pre-trained language model and <b>read Alice's message</b>.</li>
+    </ol>
+    <p style="text-decoration: underline;">
+      In our work, we propose solving <b>both</b> issues at once through the use of <i>secret subspace optimization</i>.
+    </p>
+    <p>
+      Instead of minimizing loss with respect to \(\theta^D\), we project a much smaller vector \(\theta^d\) into the \(D\)-dimensional space via a <i>secret projection</i> \(P_k : \mathbb{R}^d \rightarrow \mathbb{R}^D\), then minimize loss with respect to this smaller vector \(\theta^d\).
+      Then Alice sends the optimized \(\theta^d_*\) to Bob, who uses the secret projection \(P_k\) to project \(\theta^d_*\) back to original parameter space, which he adds to the public pre-trained LM parameters:
+      $$P_k(\theta^d_*) + \theta^D_0 = \theta^D_*$$
+    </p>
+    <p>
+      This elegantly solves both problems at once:
+    </p>
+    <ol>
+      <li>The vector \(\theta^d_*\) is much smaller (upwards of 100,000x) than the original vector \(\theta^D_*\).</li>
+      <li>Eve can't project the smaller vector \(\theta^d_*\) into the LM's parameter space because the projection \(P\) is parameterized by the secret key \(k\) that only Alice and Bob share.</li>
+    </ol>
+    <p>
+      If this idea of secret subspace optimization is unclear, don't worry!
+      We have a toy example where you can play with all the different variables in 2- and 3-D until you have a better feel for what SELM is all about.
+    </p>
+    <script>
+    </script>
+    <br>
+    <p>
+      Thanks so much for reading!
+      Please feel free to reach out if you still have questions!
+    </p>
+    <br>
+  </main>
+</body>
+</html>
