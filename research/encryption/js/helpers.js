@@ -216,7 +216,6 @@ class Button extends Thing {
   }
 
   register(rc) {
-    console.log('registered');
     rc.canvas.addEventListener("mousemove", (event) => {
       const { left, top } = rc.canvas.getBoundingClientRect();
       const x = event.clientX - left;

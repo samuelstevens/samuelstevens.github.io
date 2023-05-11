@@ -25,13 +25,13 @@
 
   const input = document.createElement('input');
   input.type = "text";
-  input.placeholder = "your message";
+  input.placeholder = "your msg";
   input.style.position = "absolute";
   input.style.font = "25px xkcd";
   anim.canvas.parentElement.appendChild(input);
 
   function send() {
-    console.log("hello", world);
+    console.log(world);
     if (input.value.length === 0) {
       return
     }
@@ -58,7 +58,6 @@
   input.addEventListener("input", function(event) {
     input.value = input.value.replace(/[^a-z]/g, "");
   });
-
 
   const table = document.getElementById("indcpa-table-body");
 
@@ -104,7 +103,7 @@
         x: Math.floor(initKeyPos.x + y * (finalKeyPos.x - initKeyPos.x)),
         y: Math.floor(initKeyPos.y + y * (finalKeyPos.y - initKeyPos.y)),
       }
-      if (t - start > total) {
+      if (t - start >= total) {
         // Needs to be back here
         world.message.pos = initMessagePos;
         world.message.hidden = true;
@@ -113,16 +112,15 @@
         world.k.hidden = true;
 
         part2();
-      }
-      render();
-      world.message.arrowLeft(anim, world.e); 
-      world.k.arrowDown(anim, world.e); 
+      } else {
+        render();
+        world.message.arrowLeft(anim, world.e); 
+        world.k.arrowDown(anim, world.e); 
 
-      if (t - start < total) {
         window.requestAnimationFrame(update);
       }
     }
-    update(0);
+    window.requestAnimationFrame(update);
   }
 
   function part2() {
@@ -142,18 +140,15 @@
       const y = curve(x);
       
       world.e.scale = y;
-      if (t - start > total) {
+      if (t - start >= total) {
         world.e.scale = 1.0;
         part3();
-      }
-      render();
-      
-      // Do another frame
-      if (t - start < total) {
+      } else {
+        render();
         window.requestAnimationFrame(update);
       }
     }
-    update(0);
+    window.requestAnimationFrame(update);
   }
 
   function part3() {
@@ -161,10 +156,12 @@
     let start = 0;
     const total = 600;
 
-    const initCipherPos = { x: world.e.right + world.cipher.width / 2, y: world.e.pos.y };
-    const finalCipherPos = world.cipher.pos;
+    const { e, cipher } = world;
 
-    world.cipher.hidden = false;
+    const initCipherPos = { x: e.right + cipher.width / 2, y: e.pos.y };
+    const finalCipherPos = cipher.pos;
+
+    cipher.hidden = false;
 
     function update(t) {
       if (start === 0) {
@@ -173,23 +170,22 @@
       const x = (t - start) / total;
       const y = hermite(x);
       
-      world.cipher.pos = { 
+      cipher.pos = { 
         // This y is the eased value of the time elapsed
         x: Math.floor(initCipherPos.x + y * (finalCipherPos.x - initCipherPos.x)),
         y: Math.floor(initCipherPos.y + y * (finalCipherPos.y - initCipherPos.y)),
       }
-      if (t - start > total) {
-        world.cipher.pos = finalCipherPos;
+      if (t - start >= total) {
+        cipher.pos = finalCipherPos;
         part4();
-      }
-      render();
-      world.e.arrowLeft(anim, world.cipher); 
+      } else {
+        render();
+        e.arrowLeft(anim, cipher); 
 
-      if (t - start < total) {
         window.requestAnimationFrame(update);
       }
     }
-    update(0);
+    window.requestAnimationFrame(update);
   }
 
   function part4() {
@@ -239,14 +235,12 @@
         appendToTable(message.text, cipher.text);
         input.focus();
         return
-      }
-      render();
-
-      if (timestamp - start < total) {
+      } else {
+        render();
         window.requestAnimationFrame(update);
       }
     }
-    update(0);
+    window.requestAnimationFrame(update);
   }
 
   function reset() {

@@ -22,6 +22,9 @@
   function newInput(rc, placeholder) {
     const input = document.createElement('input');
     input.type = "text";
+    input.addEventListener("input", function(event) {
+      input.value = input.value.replace(/[^a-z]/g, "");
+    });
     if (placeholder !== undefined) { input.placeholder = placeholder; }
     input.style.position = "absolute";
     input.style.font = "25px xkcd";
@@ -84,7 +87,7 @@
         y: Math.floor(init2.y + eased * (final2.y - init2.y)),
       }
 
-      if (timestamp - start > total) {
+      if (timestamp - start >= total) {
         world.m1.pos = init1;
         world.m1.hidden = true;
 
@@ -121,7 +124,7 @@
       const y = curve(x);
       
       world.alice.scale = y;
-      if (t - start > total) {
+      if (t - start >= total) {
         world.alice.scale = 1.0;
         part3();
       }
@@ -157,7 +160,7 @@
         x: Math.floor(init.x + eased * (last.x - init.x)),
         y: Math.floor(init.y + eased * (last.y - init.y)),
       }
-      if (timestamp - start > total) {
+      if (timestamp - start >= total) {
         c.pos = last;
         world.m1.hidden = false;
         world.m2.hidden = false;
