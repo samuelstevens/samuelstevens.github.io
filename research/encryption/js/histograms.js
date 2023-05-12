@@ -14,7 +14,7 @@ const distregs = [
 ];
 
 (function() {
-  const colors = [ [247, 129, 84], [95, 173, 86] ];
+  const colors = [ [0, 48, 73], [252, 191, 73] ];
   
   const base = {
     hovertemplate: "%{meta}: %{y}<extra></extra>",
