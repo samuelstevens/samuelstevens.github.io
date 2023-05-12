@@ -137,28 +137,37 @@
 
     <h2>Table of Contents</h2>
     <ol>
-      <a href="#hundred-mile-overview"><li>Hundred-Mile Overview</li></a>
-      <a href="#intro-to-selm"><li>Introduction to SELM</li></a>
-      <a href="#what-can-we-encrypt"><li>Can LMs Memorize Everything?</li></a>
-      <a href="#semantic-security"><li>Interlude: Semantic Security</li></a>
-      <a href="#selm-security"><li>SELM's Security</li></a>
-      <a href="#who-cares"><li>Why Does This Matter?</li></a>
-      <a href="#what-is-encryption"><li>(Optional) Beginner Introduction to Symmetric Encryption</li></a>
+      <li><a href="#hundred-mile-overview">Hundred-Mile Overview</a></li>
+      <li><a href="#intro-to-selm">Introduction to SELM</a></li>
+      <li><a href="#what-can-we-encrypt">Can LMs Memorize Everything?</a></li>
+      <li><a href="#semantic-security">Interlude: Semantic Security</a></li>
+      <li><a href="#selm-security">SELM's Security</a></li>
+      <li><a href="#who-cares">Why Does This Matter?</a></li>
+      <li><a href="#what-is-encryption">(Optional) Beginner Introduction to Symmetric Encryption</a></li>
     </ol>
     <h2>Demos, Figures &amp; Tables</h2>
     <ol>
-      <a href="#plot-3d"><li>Intrinsic Dimension Intuition (Demo)</li></a>
-      <a href="#fig-what-can-we-encrypt"><li>What Affects LM Memorization (Figure)</li></a>
-      <a href="#indcpa-demo"><li>Caesar Cipher Semantic Security (Demo)</li></a>
-      <a href="#original-l2-norm-distribution"><li>SELM L2 Norm. Distribution (Figure)</li></a>
-      <a href="#l2-reg-l2-norm-distribution"><li>L2-normalized SELM L2 Norm. Distribution (Figure)</li></a>
-      <a href="#dist-reg-l2-norm-distribution"><li>Distribution-Regularized SELM L2 Norm. Distribution (Figure)</li></a>
-      <a href="#original-l2-norm-distribution"><li>SELM L2 Norm. Distribution (Figure)</li></a>
-      <a href="#security-results-feat-fn"><li>Security Results with Summary Statistics (Table)</li></a>
-      <a href="#security-results-cipher"><li>Security Results with the Cipher (Table)</li></a>
-      <a href="#caesar-cipher-demo"><li>Caesar Cipher (Demo)</li></a>
-      <a href="#bday-gift-demo"><li>Learning From Ciphertext Intuition (Demo)</li></a>
+      <li><a href="#plot-3d">Intrinsic Dimension Intuition (Demo)</a></li>
+      <li><a href="#fig-what-can-we-encrypt">What Affects LM Memorization (Figure)</a></li>
+      <li><a href="#indcpa-demo">Caesar Cipher Semantic Security (Demo)</a></li>
+      <li><a href="#original-l2-norm-distribution">SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#l2-reg-l2-norm-distribution">L2-normalized SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#dist-reg-l2-norm-distribution">Distribution-Regularized SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#original-l2-norm-distribution">SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#security-results-feat-fn">Security Results with Summary Statistics (Table)</a></li>
+      <li><a href="#security-results-cipher">Security Results with the Cipher (Table)</a></li>
+      <li><a href="#caesar-cipher-demo">Caesar Cipher (Demo)</a></li>
+      <li><a href="#bday-gift-demo">Learning From Ciphertext Intuition (Demo)</a></li>
     </ol>
+    <figure>
+      <!-- Generate the poster with:
+        ffmpeg -i teaser-video-cropped.mp4 -qscale:v 4 -frames:v 1 teaser-poster.jpg
+      -->
+      <video controls width="100%" preload="none" poster="images/teaser-poster.jpg">
+        <source src="images/teaser-video-cropped.mp4" type="video/mp4">
+      </video>
+      <figcaption style="text-align: center;">Animated overview of SELM (545 KB). Read on for more deatils!</figcaption>
+    </figure>
 
     <h2 id="intro-to-selm">Introduction to SELM <a href="#intro-to-selm">[permalink]</a></h2>
     <p>
