@@ -37,6 +37,8 @@ blockquote {
   padding-left: 1em;
   border-left: 0.4em solid var(--accent-1);
 }
+
+/* Figures */
 figure {
   max-width: 100%;
   display: flex;
@@ -45,7 +47,11 @@ figure {
   justify-content: center;
   margin: 0;
 }
-figure > img {
+/* Makes <a> behave like it doesn't exist with regards to flexbox */
+figure > a {
+  display: contents;
+}
+figure > a > img {
   flex: 1;
   min-width: 200px;
 }
@@ -56,6 +62,8 @@ figcaption {
   font-style: italic;
   text-align: left;
 }
+
+
 .acronym {
   text-decoration-line: underline;
 }

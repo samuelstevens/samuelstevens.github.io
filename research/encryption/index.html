@@ -10,15 +10,15 @@
   <script>
     var MathJax = {};
   </script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+  <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
   <!-- RoughJS -->
-  <script src="https://unpkg.com/roughjs@4.5.2/bundled/rough.js"></script>
+  <script src="https://unpkg.com/roughjs@4.5.2/bundled/rough.js" defer></script>
 
   <!-- Plotly -->
-  <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
+  <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" defer></script>
   <!-- math.js -->
-  <script src="https://unpkg.com/mathjs@11.8.0/lib/browser/math.js"></script>
+  <script src="https://unpkg.com/mathjs@11.8.0/lib/browser/math.js" defer></script>
 
   <script src="js/helpers.js"></script>
   <link rel="stylesheet" href="index.css">
@@ -107,6 +107,16 @@
       </p>
     </blockquote>
 
+    <figure id="teaser-video">
+      <!-- Generate the poster with:
+        ffmpeg -i teaser-video-cropped.mp4 -qscale:v 4 -frames:v 1 teaser-poster.jpg
+      -->
+      <video controls width="100%" preload="none" poster="images/teaser-poster.jpg">
+        <source src="images/teaser-video-cropped.mp4" type="video/mp4">
+      </video>
+      <figcaption style="text-align: center;">Animated overview of SELM (545 KB). Read on for more deatils!</figcaption>
+    </figure>
+
     <h2 id="hundred-mile-overview">Hundred-Mile Overview <a href="#hundred-mile-overview">[permalink]</a></h2>
     <blockquote>
       <p>
@@ -147,6 +157,7 @@
     </ol>
     <h2>Demos, Figures &amp; Tables</h2>
     <ol>
+      <li><a href="#teaser-video">Animated Overview</a></li>
       <li><a href="#plot-3d">Intrinsic Dimension Intuition (Demo)</a></li>
       <li><a href="#fig-what-can-we-encrypt">What Affects LM Memorization (Figure)</a></li>
       <li><a href="#indcpa-demo">Caesar Cipher Semantic Security (Demo)</a></li>
@@ -159,15 +170,6 @@
       <li><a href="#caesar-cipher-demo">Caesar Cipher (Demo)</a></li>
       <li><a href="#bday-gift-demo">Learning From Ciphertext Intuition (Demo)</a></li>
     </ol>
-    <figure>
-      <!-- Generate the poster with:
-        ffmpeg -i teaser-video-cropped.mp4 -qscale:v 4 -frames:v 1 teaser-poster.jpg
-      -->
-      <video controls width="100%" preload="none" poster="images/teaser-poster.jpg">
-        <source src="images/teaser-video-cropped.mp4" type="video/mp4">
-      </video>
-      <figcaption style="text-align: center;">Animated overview of SELM (545 KB). Read on for more deatils!</figcaption>
-    </figure>
 
     <h2 id="intro-to-selm">Introduction to SELM <a href="#intro-to-selm">[permalink]</a></h2>
     <p>
@@ -261,10 +263,40 @@
       You can (and should) read the full paper for all the details, but we tried data from different domains, data with different lengths, and different pre-trained language models.
     </p>
     <figure class="multifig" id="fig-what-can-we-encrypt">
-      <img src="images/domain.png" alt="Chart comparing data domain against memorization speed." />
-      <img src="images/length.png" alt="Chart comparing data length against memorization speed." />
-      <img src="images/model.png" alt="Chart comparing language model against memorization speed." />
-      <figcaption aria-hidden="true">Comparisons of different factors on encryption speed. The x-axis is always the intrinsic dimension \(d\) and the y-axis is always the number of updates to memorize a message. If not specified, we used GPT-2 (124M) on 100-token chunks of news articles from XSum.</figcaption>
+      <a href="images/domain-full.png">
+        <img 
+          srcset="images/domain-full.png 2493w, images/domain-half.png 1247w, images/domain-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/domain-full.png" 
+          alt="Chart comparing data domain against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <a href="images/length-full.png">
+        <img 
+          srcset="images/length-full.png 2493w, images/length-half.png 1247w, images/length-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/length-full.png" 
+          alt="Chart comparing data length against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <a href="images/model-full.png">
+        <img 
+          srcset="images/model-full.png 2493w, images/model-half.png 1247w, images/model-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/model-full.png" 
+          alt="Chart comparing language model against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <figcaption aria-hidden="true">Comparisons of different factors on encryption speed. The x-axis is always the intrinsic dimension \(d\) and the y-axis is always the number of updates to memorize a message. If not specified, we used GPT-2 (124M) on 100-token chunks of news articles from XSum. Click on each image for full resolution.</figcaption>
     </figure>
     <p>
       We found that:
@@ -503,7 +535,7 @@ bdbf</pre>
       We model the classification models' accuracies as binomial distributions and evaluate the null hypothesis that a model is simply guessing (\(p = \frac{1}{2}\)).
       We reject the null hypothesis that a model is guessing for p-values less than 0.05.
     </p>
-    <h4>A Concrete Example</h4>
+    <h3>A Concrete Example</h3>
     <p>
       For example, we train a K-nearest neighbors (KNN) classifier to predict class 1 or 2 for a 10,000-dimensional vector (the ciphertext) with 800 training examples.
       Then we evaluate the model's accuracy on 200 unseen examples.
@@ -517,7 +549,7 @@ bdbf</pre>
     <p>
       If it were less than 5% likely that the KNN model is just flipping a coin for its predictions, we would <b>reject the idea that the model is guessing</b> and say that the only way the model could guess correctly that often is if it <b>wasn't flipping a coin, but actually making good predictions.</b>
     </p>
-    <h4>Binary Classification Results</h4>
+    <h3>Binary Classification Results</h3>
     <p>
       For each of the three SELM variants, we use four binary classification tasks, where each task is a new pair of messages.
       Message 1 is always a news article.
@@ -890,7 +922,17 @@ bdbf</pre>
       When you log in to your online banking account, for example, you only want you and your bank to see your password, not anyone else on the internet.
     </p>
     <figure>
-      <img src="images/passing-notes.jpeg" alt="Alice and Bob pass notes in class." style="max-width: 400px;" />
+      <a href="images/passing-notes-hd.jpeg">
+        <img 
+          srcset="images/passing-notes-hd.jpeg 1024w, images/passing-notes-sd.jpeg 512w"
+          sizes="(max-width: 600px) 512px
+                 1024px"
+          src="images/passing-notes-hd.jpeg" 
+          alt="Alice and Bob pass notes in class." 
+          style="max-width: 400px;" 
+          loading="lazy" 
+        />
+      </a>
       <figcaption aria-hidden="true" style="text-align: center;">Alice and Bob pass notes. Generated by Stable Diffusion.</figcaption>
     </figure>
     <h3 id="symmetric-encryption">Symmetric Encryption <a href="#symmetric-encryption">[permalink]</a></h3>
@@ -933,7 +975,7 @@ bdbf</pre>
     </form>
     <canvas id="caesar-cipher-demo"></canvas>
     <script>
-      (function() {
+      window.addEventListener('onload', function() {
         const height = 50;
         const width = 30;
 
@@ -1009,7 +1051,7 @@ bdbf</pre>
 
         keyElem.addEventListener("input", onChange);
         messageElem.addEventListener("input", onChange);
-      })();
+      });
     </script>
     <p>
       Did you see what happened when you changed the key to 26?
@@ -1082,7 +1124,7 @@ bdbf</pre>
     <canvas id="bday-gift-demo"></canvas>
     <script>
       // Use the demo from the talk at Alison's club
-      (function() {
+      window.addEventListener('onload', function() {
         const canvas = new RoughCanvas("bday-gift-demo", 360);
         if (canvas.width < 600) {
           canvas.centeredText("This demo requires a", canvas.center.x, 10);
@@ -1176,7 +1218,7 @@ bdbf</pre>
         document.getElementById("bday-gift-form").addEventListener("input", onChange);
 
         onChange();
-      })();
+      });
     </script>
     <p>
       You can see that the Caesar cipher isn't helping Alice and Bob much because <b>Eve can learn from the ciphertext.</b>

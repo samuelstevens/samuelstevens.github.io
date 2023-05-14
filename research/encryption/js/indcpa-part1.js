@@ -1,5 +1,6 @@
 'use strict';
-(function() {
+
+window.addEventListener('onload', function() {
   // Initialize a canvas
   const height = 280;
 
@@ -297,4 +298,4 @@
   }
 
   reset();
-})();
+});
