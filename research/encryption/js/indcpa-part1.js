@@ -1,6 +1,6 @@
 'use strict';
 
-window.addEventListener('onload', function() {
+window.addEventListener("load", function() {
   // Initialize a canvas
   const height = 280;
 

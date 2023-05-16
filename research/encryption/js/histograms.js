@@ -42,7 +42,7 @@ const distregs = [
   };
 
 
-  Plotly.newPlot(
+  Plotly.react(
     document.getElementById("original-l2-norm-distribution"),
     [
       { 
@@ -63,7 +63,7 @@ const distregs = [
     layout,
   );
 
-  Plotly.newPlot(
+  Plotly.react(
     document.getElementById("l2-reg-l2-norm-distribution"),
     [
       { 
@@ -84,7 +84,7 @@ const distregs = [
     layout,
   );
 
-  Plotly.newPlot(
+  Plotly.react(
     document.getElementById("dist-reg-l2-norm-distribution"),
     [
       { 

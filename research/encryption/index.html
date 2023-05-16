@@ -103,7 +103,7 @@
       </p>
       <p>
         <a href="https://arxiv.org/">Paper</a>
-        <a href="https://github.com/samuelstevens/foundation-model-encryption">Code</a>
+        <a href="https://github.com/OSU-NLP-Group/SELM">Code</a>
       </p>
     </blockquote>
 
@@ -379,8 +379,8 @@
     <script>
       const indcpa1key = Math.floor(Math.random() * 26);
     </script>
-    <script src="js/indcpa-part1.js"></script>
-    <script src="js/indcpa-part2.js"></script>
+    <script src="js/indcpa-part1.js" defer></script>
+    <script src="js/indcpa-part2.js" defer></script>
     <p>
       Hopefully you played the game a couple times.
       You might have noticed that there are a couple trivial ways to win the game, where you don't need to gather any message-ciphertext pairs.
@@ -975,7 +975,7 @@ bdbf</pre>
     </form>
     <canvas id="caesar-cipher-demo"></canvas>
     <script>
-      window.addEventListener('onload', function() {
+      window.addEventListener("load", function() {
         const height = 50;
         const width = 30;
 
@@ -1124,7 +1124,7 @@ bdbf</pre>
     <canvas id="bday-gift-demo"></canvas>
     <script>
       // Use the demo from the talk at Alison's club
-      window.addEventListener('onload', function() {
+      window.addEventListener("load", function() {
         const canvas = new RoughCanvas("bday-gift-demo", 360);
         if (canvas.width < 600) {
           canvas.centeredText("This demo requires a", canvas.center.x, 10);

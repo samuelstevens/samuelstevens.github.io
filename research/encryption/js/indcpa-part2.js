@@ -1,6 +1,6 @@
 'use strict';
 
-window.addEventListener('onload', function() {
+window.addEventListener("load", function() {
   // Initialize a canvas
   const height = 360;
 
@@ -20,7 +20,7 @@ window.addEventListener('onload', function() {
   const roughness = 0.5;
 
   function newInput(rc, placeholder) {
-    const input = document.createElement('input');
+    const input = document.createElement("input");
     input.type = "text";
     input.addEventListener("input", function(event) {
       input.value = input.value.replace(/[^a-z]/g, "");

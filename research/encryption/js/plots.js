@@ -213,7 +213,7 @@ function seededrng(seed) {
 
     const surface = makeSurface(model.P);
 
-    Plotly.newPlot(plotElem, 
+    Plotly.react(plotElem, 
       [
         { 
           type: "surface", 
