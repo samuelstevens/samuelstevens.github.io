@@ -72,12 +72,12 @@ then run the tests, type checks and formatting checks.</li>
 <h2 id="additional-tips">Additional Tips</h2>
 <p>Make <code>isort</code> follow <code>black</code>&#x2019;s conventions:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode toml"><code class="sourceCode toml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">tool</span><span class="kw">.</span><span class="dt">isort</span><span class="kw">]</span></span>
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[tool.isort]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">profile</span> <span class="op">=</span> <span class="st">&quot;black&quot;</span></span></code></pre></div>
 <p>Add coverage to <code>pytest</code>:
 <code>pip install pytest-cov</code></p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode toml"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="dt">tool</span><span class="kw">.</span><span class="dt">pytest</span><span class="kw">.</span><span class="dt">ini_options</span><span class="kw">]</span></span>
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[tool.pytest.ini_options]</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">addopts</span> <span class="op">=</span> <span class="st">&quot;--cov prelude --cov-report html&quot;</span></span></code></pre></div>
 <h2 id="example-tox.ini-file">Example <code>tox.ini</code> File</h2>
 <p>The <code>isolated_build = True</code> is required for
