@@ -50,7 +50,7 @@ figcaption {
   text-align: center;
 }
 
-aside {
+aside.sidebar {
   float: left;
   width: calc((100% - var(--main-width)) / 2);
   padding: 0 4px 4px 4px;
@@ -62,7 +62,7 @@ aside {
 }
 
 @media only screen and (max-width: 900px) {
-  aside {
+  aside.sidebar {
     display: none;
   }
 }

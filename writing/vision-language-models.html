@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Behold: Vision Language Models</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="vision-language-models">Vision Language Models</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#foundational-works">Foundational Works</a></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#issues">Issues</a></li>
+<li><a href="#fine-tuning">Fine-Tuning</a></li>
+<li><a href="#domain-specific-models">Domain-Specific Models</a></li>
+<li><a href="#further-reading">Further Reading</a></li>
+</ul>
+<h2 id="foundational-works">Foundational Works</h2>
+<ul>
+<li>Learning Transferable Visual Models From Natural Language
+Supervision (CLIP)</li>
+<li>Scaling Up Visual and Vision-Language Representation Learning With
+Noisy Text Supervision (ALIGN)</li>
+</ul>
+<h2 id="data">Data</h2>
+<ul>
+<li>DataComp: In search of the next generation of multimodal
+datasets</li>
+<li>OBELICS: An Open Web-Scale Filtered Dataset of Interleaved
+Image-Text Documents</li>
+<li>[Redcaps: Web-curated image-text data created by the people, for the
+people]</li>
+<li>[WIT: wikipedia-based image text dataset for multimodal multilingual
+machine learning]</li>
+</ul>
+<p><a href="https://arxiv.org/abs/2201.12086">Li et al.&#xA0;2023</a>
+(<em>Bootstrapping Language-Image Pre-training for Unified
+Vision-Language Understanding and Generation</em>,
+<strong>BLIP</strong>)</p>
+<h2 id="issues">Issues</h2>
+<p>When and Why Vision-Language Models Behave Like Bags-of-Words, and
+What to Do About It?</p>
+<h2 id="fine-tuning">Fine-Tuning</h2>
+<p><a href="https://arxiv.org/abs/2307.11315">Lewis et al.&#xA0;2023</a>
+(<em>Generating Image-Specific Text for Fine-grained Object
+Classification</em>, <strong>GIST</strong>) use domain-specific prompts
+with GPT-4 to generate fine-grained class-level descriptions. They then
+match the descriptions with images using CLIP to a small subset of the
+class-level descriptions. Finally, they use GPT-4 to summarize the now
+<em>image</em>-level descriptions. Finally, they fine-tune CLIP models
+on the new image, text dataset. This method produces fine-grained
+image-level texts for arbitrary labeled datasets.</p>
+<h2 id="domain-specific-models">Domain-Specific Models</h2>
+<p><a href="https://arxiv.org/abs/2308.15670">Christensen et
+al.&#xA0;2023</a> (<em>Multimodal Foundation Models For Echocardiogram
+Interpretation</em>, <strong>EchoCLIP</strong>) train a CLIP model on 1M
+cardiac ultrasound videos and the expert interpretations from 224K
+studies across nearly 100K patients. EchoCLIP uses a ConvNeXt image
+encoder. The authors use EchoCLIP to measure the similarity between two
+echocardiograms and classify whether two echocardiograms are from the
+same patient (challenging for human physicians). They use a
+regular-expression-based tokenizer to enable more efficient tokenizing,
+reducing the average number of text tokens from 530.3 to only 63.8.</p>
+<p><a href="http://arxiv.org/abs/2303.00915">Zhang et al.&#xA0;2023</a>
+(<em>Large-Scale Domain-Specific Pretraining for Biomedical
+Vision-Language Processing</em>, <strong>BiomedCLIP</strong>) train a
+CLIP model on 15M figure-caption pairs gathered from PubMed Central
+articles. The authors improve upon the base CLIP architecture with a
+domain-specific pre-trained text encoder (PubMedBert, <a href="TODO">Gu
+et al.&#xA0;2021</a>), a longer context (256 tokens instead of 77) and larger
+images with patch dropout (448x488, 50% patch dropout until the last
+epoch) leads to 2 points improvement on txt2img and img2txt
+recall@1.</p>
+<p>Some interesting decisions and findings:</p>
+<ol type="1">
+<li>They re-initialize the vision transformer rather than start with a
+pre-trained ViT-B/16 model (Table 6)</li>
+<li>224x224 pretraining does better than 448x448 on 4/5 zero-shot
+classification tasks. There&#x2019;s a significant drop in accuracy for the two
+LC2500 tasks: 72.17 to 47.96 and 94.65 to 70.66.</li>
+</ol>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2012.06946">MiniVLM: A Smaller and
+Faster Vision-Language Model</a> was pre-CLIP, so I haven&#x2019;t read it
+yet.</li>
+<li><a href="https://arxiv.org/abs/2205.14100">GIT: A Generative
+Image-to-text Transformer for Vision and Language</a></li>
+<li><a href="https://arxiv.org/abs/2306.07915">Image Captioners Are
+Scalable Vision Learners Too</a></li>
+<li>[Reproducible scaling laws for contrastive language-image
+learning]</li>
+<li>[Eva-CLIP: Improved training techniques for CLIP at scale]</li>
+<li>[CLIPPO: Image-and-language understanding from pixels only]</li>
+<li>[Language in a bottle: Language model guided concept bottlenecks for
+interpretable image classification]</li>
+<li>[Prompt, generate, then cache: Cascade of foundation models makes
+strong few-shot learners]</li>
+<li>[Finetune like you pretrain: Improved finetuning of zero-shot vision
+models]</li>
+<li>[Sus-x: Training-free name-only transfer of vision-language
+models]</li>
+<li>[Multimodality helps unimodality: Cross-modal few-shot learning with
+multimodal models]</li>
+<li>[Enhancing CLIP with GPT-4: Harnessing Visual Descriptions as
+Prompts]</li>
+<li><a href="https://arxiv.org/abs/2112.03857">Grounded Language-Image
+Pre-training</a></li>
+</ul>
+<h2 id="appendix-vision-inputs-for-language-models">Appendix: Vision
+Inputs for Language Models</h2>
+<p>Recently vision-language model has implied that you have a language
+model that incorporates vision inputs, like GPT-4 or Flamingo. I&#x2019;m more
+interested in training high-quality vision models through image-caption
+supervision. Other noteworthy works on this topic:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2301.12597">BLIP-2: Bootstrapping
+Language-Image Pre-training with Frozen Image Encoders and Large
+Language Models</a></li>
+<li><a href="https://arxiv.org/abs/2308.12966">Qwen-VL: A Frontier Large
+Vision-Language Model with Versatile Abilities</a></li>
+</ul>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

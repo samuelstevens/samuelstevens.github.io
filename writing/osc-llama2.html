@@ -5,9 +5,10 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="" />
-  <meta name="keywords" content="" />
-  <title>Behold: </title>
+  <meta name="description" content="How to run a Llama 2 inference
+server on OSC with llama.cpp" />
+  <meta name="keywords" content="llama2, llama.cpp, osc" />
+  <title>Behold: Running Llama 2 on OSC</title>
   
 </head>
 
@@ -31,38 +32,81 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="samuelstevens.me">samuelstevens.me</h1>
-<p>This is the repo I&#x2019;m using to set up my website, and then <a
-href="https://github.com/samuelstevens/samuelstevens.github.io">this
-repo</a> is the one that GitHub publishes.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./build.sh</span> <span class="co"># builds the website</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./dev.sh</span> <span class="co"># builds the website on file change</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./publish.sh</span> <span class="co"># publishes the website via git commit</span></span></code></pre></div>
-<p>All scripts are based on my personal file structures.</p>
-<h2 id="elm">Elm</h2>
+<h1 id="how-to-run-llama-2-on-osc-with-llamap.cpp">How To Run Llama 2 on
+OSC with Llamap.cpp</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
-<li><code>python -m src.scripts.conferences src/data/conferences.json</code></li>
-<li>Copy the output to <code>src/Conferences.elm</code></li>
-<li><code>elm make src/Conferences.elm --output js/conferences.js</code></li>
+<li><a href="#instructions">Instructions</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#how-it-works">How It Works</a></li>
 </ol>
-<h2 id="to-do">To Do</h2>
+<h2 id="instructions">Instructions</h2>
+<ol type="1">
+<li>Get a copy of <code>server.sh</code> from me via Discord, Teams or
+<a href="mailto:stevens.994@buckeyemail.osu.edu">email</a>.</li>
+<li>Copy <code>server.sh</code> to the OSC Ascend login nodes. I used
+<code>scp server.sh samuelstevens@ascend.osc.edu:~</code> to put it in
+my home directory.</li>
+<li>Edit the <code>model</code> variable: it&#x2019;s <code>llama-2-7b</code>
+by default. It can be any of:
 <ul>
-<li>[] Add a favicon</li>
-<li>[] Add Google SEO, robots.txt, etc.</li>
-<li>[] Convert python script to bash, or bash to python</li>
-<li>[] Preprocess HTML by removing excess whitespace</li>
-</ul>
-<h2 id="images">Images</h2>
-<ol type="1">
-<li>Open in Gimp</li>
-<li><code>Flatten Image</code></li>
-<li>Convert to indexed mode, <code>Generate optimum palette</code> with
-256 colors.</li>
-<li>Save as <code>.png</code> with maximum compression.</li>
+<li>llama2-7b</li>
+<li>llama2-7b-chat</li>
+<li>llama2-13b</li>
+<li>llama2-13b-chat</li>
+<li>llama2-70b</li>
+<li>llama2-70b-chat</li>
+</ul></li>
+<li>Submit <code>server.sh</code> to slurm with
+<code>sbatch server.sh</code></li>
+<li>Wait for the job to run. Check with <code>squeue --me</code> until
+it shows an <code>R</code> (running) under <code>ST</code>
+(status).</li>
+<li>Run <code>head slurm-&lt;JOBID&gt;.out</code> to see the first 7
+lines. The second line will say something like
+<code>Run 'ssh -N -L 8080:a0001.ten.osc.edu:8080 samuelstevens@ascend.osc.edu'</code>.
+Copy the <code>ssh</code> command.</li>
+<li>Run the
+<code>ssh -N -L 8080:a0001.ten.osc.edu:8080 samuelstevens@ascend.osc.edu</code>
+line. It should have your username and a different hostname (instead of
+a0001.text.osc.edu).</li>
+<li>Make http requests to the server.</li>
 </ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--request</span> POST <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--url</span> http://localhost:8080/completion <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--header</span> <span class="st">&quot;Content-Type: application/json&quot;</span> <span class="dt">\</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--data</span> <span class="st">&#39;{&quot;prompt&quot;: &quot;Building a website can be done in 10 simple steps:&quot;,&quot;n_predict&quot;: 128}&#39;</span></span></code></pre></div>
+<p>You should get a JSON response.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>curl: (56) Recv failure: Connection reset by
+peer</strong></p>
+<p><strong>curl: (7) Failed to connect to localhost port 8080 after 11
+ms: Connection refused</strong></p>
+<p>The server might not have started yet. You can run
+<code>tail slurm-&lt;JOBID&gt;.out</code> to see the last couple lines
+of the job log.If you don&#x2019;t see something like
+<code>llama server listening at http://0.0.0.0:8080</code>, then the
+server hasn&#x2019;t started yet. Just wait a little longer.</p>
+<p><strong>Permission errors</strong></p>
+<p>If you <code>cat</code> the job log and it has a permission error of
+some kind, get in touch with me and we can adjust permissions for the
+files.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p><a
+href="https://github.com/ggerganov/llama.cpp/"><code>llama.cpp</code></a>
+is a C++ project that runs Llama models for inference. It supports CUDA
+inference, which we make use of. It also has a built-in HTTP server.</p>
+<p>If you look at <code>server.sh</code> it tries to:</p>
+<ol type="1">
+<li>Conver the model to the <code>llama.cpp</code> format (called ggml
+or gguf).</li>
+<li>Build the <code>llama.cpp</code> project (but it should already be
+built).</li>
+<li>Run the <code>server</code> binary and host it.</li>
+</ol>
+<p>To access an HTTP server running on OSC, you have to either use a SSH
+tunnel from your local machine to the OSC machine or run your HTTP
+client directly from an OSC login node.</p>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2022</p>
