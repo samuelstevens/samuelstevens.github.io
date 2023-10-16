@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Behold: Mixture of Expert Models</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="mixture-of-expert-models">Mixture of Expert Models</h1>
+<p>Mixture of expert (MoE) models increase the number of parameters in
+neural networks without increasing the number of FLOPs per forward
+pass.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> This can lead to improved
+performance on language, vision and multimodal tasks due to increased
+model capacity despite not being more computationally expensive. Recent
+work (<a href="https://arxiv.org/abs/2308.00951">Puigcerver et
+al.&#xA0;2023</a>) introduced soft MoE models for vision and explain that
+they don&#x2019;t naturally work for language. I&#x2019;m interested in applying soft
+MoE models to (multimodal) language models and decided to get up to
+speed on MoE models.</p>
+<h2 id="fundamental-papers">Fundamental Papers</h2>
+<p><em>Note: Noam Shazeer is an author on nearly all of the successful
+early MoE papers; Shazeer invented the transformer and dozens of SOTA
+tricks, so when he starts on a trend, I try to pay attention.</em></p>
+<p><a href="https://arxiv.org/abs/1701.06538">Shazeer et al.&#xA0;2017</a>
+(<em>Outrageously Large Neural Networks: The Sparsely-Gated
+Mixture-of-Experts Layer</em>) propose a sparsely-gated
+mixture-of-experts that scales LSTM-based language models to 4.3B
+parameters (in 2017!). The main insight is enforcing sparsity in the
+expert selection so that gradients don&#x2019;t need to be computed for every
+expert on every time step. A non-sparse expert selection function
+is:</p>
+<p><span class="math display">\[G_{\sigma}(x) = \text{Softmax}(x \cdot
+W_g)\]</span></p>
+<p>where <span class="math inline">\(W_g \in \mathbb{R}^{d_{\text{in}}
+\times n}\)</span> is a trainable weight matrix. <span
+class="math inline">\(G_{\sigma}(x)\)</span> is then a <span
+class="math inline">\(n\)</span>-dimensional vector that scales the
+input <span class="math inline">\(x\)</span> for each of the <span
+class="math inline">\(n\)</span> experts. The authors suggest adding
+tunable Gaussian noise to help with load balancing and only keeping the
+top <span class="math inline">\(k\)</span> values to enforce
+sparsity:</p>
+<p><span class="math display">\[G(x) = \text{Softmax}(\text{KeepTopK}(x
+\cdot W_g + \mathcal{N}(0, 1) \cdot \text{Softplus}(x \cdot
+W_{\text{noise}})))\]</span></p>
+<p><a
+href="https://pytorch.org/docs/stable/generated/torch.nn.Softplus.html">Softplus</a>
+is a smooth approximation of ReLU, <span
+class="math inline">\(W_{\text{noise}}\)</span> is a tunable weight
+matrix and KeepTopK sets all values besides the top <span
+class="math inline">\(k\)</span> to <span
+class="math inline">\(-\infty\)</span> (which will become 0 after the
+Softmax).</p>
+<p>Then the MoE layer&#x2019;s output is a weighted sum of expert outputs:
+<span class="math display">\[y = \sum_{i=1}^{n} G(x)_i
+E_i(x)\]</span></p>
+<p>It&#x2019;s not clear to me why the authors use Softplus or how they prevent
+<span class="math inline">\(W_{\text{noise}}\)</span> from collapsing to
+0. They also add two additional loss terms to help with load balancing,
+each with their own hand-tuned hyperparameters.</p>
+<p>The other main trick is putting the different experts on different
+GPUs, which is a very straightforward model parallelism strategy.</p>
+<p><a href="https://arxiv.org/abs/2101.03961">Fedus et al.&#xA0;2021</a>
+(<em>Switch Transformers: Scaling to Trillion Parameter Models with
+Simple and Efficient Sparsity</em>) replaces a transformer&#x2019;s dense MLP
+with a sparse Switch MLP layer. The authors propose setting <span
+class="math inline">\(k=1\)</span> and only routing to a single expert,
+calling it a &#x201C;Switch&#x201D; layer.</p>
+<p>They demonstrate that sparse models scale exceptionally well and
+argue strongly that we should better understand the difference between
+scaling FLOPs and scaling parameters. Similarly, <a
+href="https://severelytheoretical.wordpress.com/2023/08/14/flops-are-all-you-need-a-conjecture-about-what-really-makes-deep-learning-work/">this
+post</a> by Emin Orhan argues that transformers are effective because
+they have many more FLOPs per forward pass than MLPs, CNNs or Mixer
+models (MLP-only transformers).</p>
+<h2 id="better-routing">Better Routing</h2>
+<p>The fundamental problem in MoE models is choosing which tokens go to
+which experts. The Switch Transformer lets each token pick an expert.
+But this can lead to dropped tokens (if an expert is already full),
+training instability and other issues. Fixing this is the biggest issue
+in MoE models right now.</p>
+<p><a href="https://arxiv.org/abs/2202.09368">Zhou et al.&#xA0;2022</a>
+(<em>Mixture-of-Experts with Expert Choice Routing</em>) propose
+selecting <span class="math inline">\(k\)</span> tokens per expert,
+instead of sending each token to <span class="math inline">\(k\)</span>
+experts. This ensures that each expert always sees the same number of
+tokens and also enables different quantities of compute per token, which
+makes sense.</p>
+<p>My biggest concern is that each expert independently chooses its own
+tokens. What prevents each expert from all choosing the same tokens?</p>
+<h3 id="reading">Reading</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/2106.04426">Roller et al.&#xA0;2021</a>
+(<em>Hash Layers For Large Sparse Models</em>)</li>
+<li><a href="https://arxiv.org/abs/2103.16716">Lewis et al.&#xA0;2021</a>
+(<em>BASE Layers: Simplifying Training of Large, Sparse
+Models</em>)</li>
+</ul>
+<h2 id="soft-mixture-of-experts">Soft Mixture of Experts</h2>
+<p><a href="https://arxiv.org/abs/2308.00951">Puigcerver et al.&#xA0;2023</a>
+(<em>From Sparse to Soft Mixtures of Experts</em>) linearly combine
+tokens into a fixed number of <em>slots</em>, then each expert processes
+a fixed number of slots (generally just one). This avoids many of the
+weaknesses of previous work (TopK, expert capacity, linear programming,
+etc).</p>
+<p>This paper helped me understand the appeal of MoE models. You
+actually don&#x2019;t care how many copies of the MLP you have on a GPU. Even
+if your hidden dimension if 8192 (Llama2 70b) and the weight matrices
+are each 8,192x12,288 for a total of 402 MB (!) of data, you have to
+hold activations and gradients for each token. Who cares if the original
+weights are different numbers instead of a shared weight matrix? It&#x2019;s
+not going to make a big difference in the scheme of things. What matters
+is how many <em>tokens</em> run through an MLP.</p>
+<p>And in nearly every transformer, from dense to sparse
+mixture-of-experts to soft mixture-of-experts, you run as many tokens as
+you can fit into memory. It&#x2019;s just a question of how you choose the
+inputs to those MLPs.</p>
+<p>In soft MoE models, those inputs are linear combinations of the
+tokens. So you can have many more tokens than MLPs! It doesn&#x2019;t
+matter!</p>
+<p>This would let you train on much larger images, much smaller patches,
+or much longer sequences because you don&#x2019;t care about the sequence
+length: you care about the number of MLPs! Of course you would have to
+deal with that terrible quadratic attention, but apparently the MLP
+dominates the memory requirements on language models these days.</p>
+<h2 id="reading-list">Reading List</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2106.05974">Riquelme et al.&#xA0;2021</a>
+(<em>Scaling vision with sparse mixture of experts</em>)</li>
+<li><a href="https://arxiv.org/abs/2110.03360">Allingham et al.&#xA0;2023</a>
+(<em>Sparse MoEs meet Efficient Ensembles</em>)</li>
+<li><a href="https://browse.arxiv.org/abs/2112.10684">Artexte et
+al.&#xA0;2023</a> (<em>Efficient Large Scale Language Modeling with Mixtures
+of Experts</em>)</li>
+</ul>
+<h2 id="ideas">Ideas</h2>
+<p>I think you can simplify undertrained experts by &#x201C;killing&#x201D; experts
+off if they are under-trained, then re-initializing them as a linear
+combination of other, existing experts. This is similar to Yu Su&#x2019;s idea
+of evolutionary experts. This wouldn&#x2019;t fix the training instability of
+sparse MoE but it might simplify the different regularization losses and
+tricks used to load-balance tokens among experts.</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Technically they increase FLOPs per forward pass because
+they need a gating network or expert selection network but the increase
+in FLOPs from the gating network is significantly less than the increase
+in FLOPs if all of the parameters were activated.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</aside>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2022</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

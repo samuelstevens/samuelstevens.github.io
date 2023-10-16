@@ -47,11 +47,9 @@ reliably extract data from the pre-trained model.
 href="https://arxiv.org/abs/2308.06259">Li et al.&#xA0;2023</a>) start by
 tuning two Llama models (not Llama 2) on two small datsets:</p>
 <ol type="1">
-<li>The forward model <span
-class="math inline"><em>M</em><sub>0</sub></span> is tuned on
-(instruction, output) pairs.</li>
-<li>The backward model <span
-class="math inline"><em>M</em><sub><em>y</em><em>x</em></sub></span> is
+<li>The forward model <span class="math inline">\(M_0\)</span> is tuned
+on (instruction, output) pairs.</li>
+<li>The backward model <span class="math inline">\(M_{yx}\)</span> is
 tuned on (output, instruction) pairs.</li>
 </ol>
 <p>Both models are tuned on the same 3200 examples from the Open
@@ -60,19 +58,18 @@ al.&#xA0;2023</a>) with the highest possible rating.<a href="#fn1"
 class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>With a large, unlabeled set of ouputs (scraped from web pages), they
 sample instructions from the backward model <span
-class="math inline"><em>M</em><sub><em>y</em><em>x</em></sub></span>.
-This produces a large dataset of (instruction, output) pairs where the
-outputs are from scraped web data (not necessarily seen in Llama&#x2019;s
-training) and the inputs are sampled from a fine-tuned Llama model.</p>
+class="math inline">\(M_{yx}\)</span>. This produces a large dataset of
+(instruction, output) pairs where the outputs are from scraped web data
+(not necessarily seen in Llama&#x2019;s training) and the inputs are sampled
+from a fine-tuned Llama model.</p>
 <p>The authors then use the forward mode <span
-class="math inline"><em>M</em><sub>0</sub></span> to automatically score
-the (instruction, output) pairs from 1 to 5. Since <span
-class="math inline"><em>M</em><sub>0</sub></span> is trained on a small,
-but high-quality set of instructions, this is feasible. Then they tune
-<span class="math inline"><em>M</em><sub>0</sub></span> on the set of
-(instruction, output) pairs with score 5 to produce <span
-class="math inline"><em>M</em><sub>1</sub></span>. Finally, they
-repeat.</p>
+class="math inline">\(M_0\)</span> to automatically score the
+(instruction, output) pairs from 1 to 5. Since <span
+class="math inline">\(M_0\)</span> is trained on a small, but
+high-quality set of instructions, this is feasible. Then they tune <span
+class="math inline">\(M_0\)</span> on the set of (instruction, output)
+pairs with score 5 to produce <span class="math inline">\(M_1\)</span>.
+Finally, they repeat.</p>
 <p>This works really well and leads to better instruction following
 <em>than any other open-source method that doesn&#x2019;t use GPT-4</em>
 (measured by the win-rate over text-davinci-003 evaluated by GPT-4).</p>

@@ -5,9 +5,11 @@
   <link rel="stylesheet" href="/css/site.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta charset="utf-8" />
-  <meta name="description" content="" />
-  <meta name="keywords" content="" />
-  <title>Behold: Vision Language Models</title>
+  <meta name="description" content="A summary of recent work on vision
+models that learn from natural language supervision." />
+  <meta name="keywords" content="CLIP, vision-language models, vision
+encoders, computer vision, scaling, laion, open clip" />
+  <title>Behold: Learning Vision Representations from Language</title>
   
 </head>
 
@@ -31,12 +33,15 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="vision-language-models">Vision Language Models</h1>
+<h1 id="learning-vision-representations-from-language">Learning Vision
+Representations from Language</h1>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#foundational-works">Foundational Works</a></li>
 <li><a href="#data">Data</a></li>
 <li><a href="#issues">Issues</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li><a href="#training">Training</a></li>
 <li><a href="#fine-tuning">Fine-Tuning</a></li>
 <li><a href="#domain-specific-models">Domain-Specific Models</a></li>
 <li><a href="#further-reading">Further Reading</a></li>
@@ -47,6 +52,7 @@
 Supervision (CLIP)</li>
 <li>Scaling Up Visual and Vision-Language Representation Learning With
 Noisy Text Supervision (ALIGN)</li>
+<li>Combined Scaling for Zero-shot Transfer Learning (BASIC)</li>
 </ul>
 <h2 id="data">Data</h2>
 <ul>
@@ -63,9 +69,78 @@ machine learning]</li>
 (<em>Bootstrapping Language-Image Pre-training for Unified
 Vision-Language Understanding and Generation</em>,
 <strong>BLIP</strong>)</p>
+<p><a href="https://arxiv.org/abs/2202.10261">Pizzi et al.&#xA0;2022</a>
+(<em>A Self-Supervised Descriptor for Image Copy Detection</em>,
+<strong>SSCD</strong>)</p>
+<p><a href="https://arxiv.org/abs/2301.02241">Xu et al.&#xA0;2023</a>
+(<em>CiT: Curation in Training for Effective Vision-Language Data</em>)
+develop an online data curation loop that picks out image-text pairs
+that are most similar to the downstream classnames for whatever
+downstream task you want. They use pre-trained vision encoders, so the
+main goal is to better align text representations with the image
+representations. This doesn&#x2019;t really help with the goal of learning
+better vision models from image-text data.</p>
 <h2 id="issues">Issues</h2>
 <p>When and Why Vision-Language Models Behave Like Bags-of-Words, and
 What to Do About It?</p>
+<ul>
+<li>Note that (Image Captioners Are Scalable Vision Learners Too) shows
+that simply training a language model is enough to do well on ARO, so it
+might not be that useful.</li>
+</ul>
+<h2 id="training">Training</h2>
+<h3 id="objectives">Objectives</h3>
+<p><a href="https://arxiv.org/abs/2205.01917">Yu et al.&#xA0;2022</a>
+(<em>CoCa: Contrastive Captioners are Image-Text Foundation Models</em>)
+train a combination of unimodal vision and text transformers followed by
+a multimodal text decoder with a combination of contrastive loss between
+unimodal representations and a language modeling loss on the multimodal
+text decoder. See the screenshot below for details.</p>
+<figure>
+<a href="/images/vision-models-from-language/CoCa.png"><img src="/images/vision-models-from-language/CoCa.png" alt="Screenshot from CoCa: Contrastive Captioners are Image-Text Foundation Models"></a>
+<figcaption aria-hidden="true">
+Screenshot from Yu et al.&#xA0;2022. Click to see full-size.
+</figcaption>
+</figure>
+<p><a href="http://arxiv.org/abs/2306.07915">Tschannen et al.&#xA0;2023</a>
+(<em>Image Captioners Are Scalable Vision Learners Too</em>) show that
+vision-encoder+ language-decoder transformer models that predict
+captions from images produce high-quality vision models. They add a
+parallel decoding trick, where the decoder must predict all caption
+tokens from just the image representations, similar to BERT predicting
+all language tokens instead of causal masking. They show that captioning
+is better than contrastive learning (1) when word order matters (ARO
+benchmark, see above) (2) in visual question answering (VQAv2 benchmark)
+and (3) on fine-grained classification tasks (improves on Flowers, Cars,
+Birds, Pets and Dogs). However, they note that the text decoder is
+fairly useless; their approach mostly leads to a strong vision model
+that should be used on its own.</p>
+<h3 id="optimizations">Optimizations</h3>
+<p><a href="https://arxiv.org/abs/2212.00794">Li et al.&#xA0;2023</a>
+(<em>Scaling Language-Image Pre-training via Masking</em>,
+<strong>FLIP</strong>) propose dropping image patches from the input
+before the vision encoder sees them. This dramatically speeds up
+training because the sequence length is shorter (50% or even 25% of the
+original length) and doesn&#x2019;t reduce encoder quality; it&#x2019;s basically a
+free win.</p>
+<p>They explore data scaling by moving from LAION-400M to LAION-2B, but
+keeping the total number of samples seen during training the same. They
+find that &#x201C;for the tasks studied here, <em>data scaling</em> is in
+general favored for <em>zero-shot transfer</em>, while <em>model
+scaling</em> is in general favored for <em>transfer learning</em>&#x201D;
+(emphasis mine). See the screenshot below for more details.</p>
+<figure>
+<a href="/images/vision-models-from-language/FLIP.png"><img src="/images/vision-models-from-language/FLIP.png" alt="Screenshot from Li et al. 2023"></a>
+<figcaption aria-hidden="true">
+Screenshot from Li et al.&#xA0;2023. Click to see full-size. If you have
+compute to spend, make your model larger (a). If you do not have GPU
+compute to spend, get a larger dataset (b). Note that training for more
+epochs does not lead to improved performance, despite using more GPU
+compute (c).
+</figcaption>
+</figure>
+<p><a href="https://arxiv.org/abs/2303.15389">Sun et al.&#xA0;2023</a>
+(<em>EVA-CLIP: Improved Training Techniques for CLIP at Scale</em>)</p>
 <h2 id="fine-tuning">Fine-Tuning</h2>
 <p><a href="https://arxiv.org/abs/2307.11315">Lewis et al.&#xA0;2023</a>
 (<em>Generating Image-Specific Text for Fine-grained Object
@@ -105,6 +180,19 @@ pre-trained ViT-B/16 model (Table 6)</li>
 classification tasks. There&#x2019;s a significant drop in accuracy for the two
 LC2500 tasks: 72.17 to 47.96 and 94.65 to 70.66.</li>
 </ol>
+<p><a href="https://arxiv.org/abs/2307.12914">Lu et al.&#xA0;2023</a>
+(<em>Towards a Visual-Language Foundation Model for Computational
+Pathology</em>, <strong>CONCH</strong>) train on 1.17M image-caption
+pairs from educational sources and PubMed&#x2019;s Open Access dataset. They
+tuned and used an object detection model, a language model and an
+image-text matching model to gather 1.79M pairs which were then filtered
+to 1.17M to create the CONCH dataset. They perform unimodal
+self-supervised pre-training on large-scale domain-specific unimodal
+data, then do multimodal pretraining on their CONCH dataset.<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p>CONCH-trained models do better than PLIP, BiomedCLIP and OpenAI&#x2019;s
+CLIP.</p>
 <h2 id="further-reading">Further Reading</h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2012.06946">MiniVLM: A Smaller and
@@ -112,11 +200,8 @@ Faster Vision-Language Model</a> was pre-CLIP, so I haven&#x2019;t read it
 yet.</li>
 <li><a href="https://arxiv.org/abs/2205.14100">GIT: A Generative
 Image-to-text Transformer for Vision and Language</a></li>
-<li><a href="https://arxiv.org/abs/2306.07915">Image Captioners Are
-Scalable Vision Learners Too</a></li>
 <li>[Reproducible scaling laws for contrastive language-image
 learning]</li>
-<li>[Eva-CLIP: Improved training techniques for CLIP at scale]</li>
 <li>[CLIPPO: Image-and-language understanding from pixels only]</li>
 <li>[Language in a bottle: Language model guided concept bottlenecks for
 interpretable image classification]</li>
@@ -132,6 +217,9 @@ multimodal models]</li>
 Prompts]</li>
 <li><a href="https://arxiv.org/abs/2112.03857">Grounded Language-Image
 Pre-training</a></li>
+<li><a href="https://arxiv.org/abs/2306.11207">Ikezogwo et al.&#xA0;2023</a>
+(<em>Quilt-1M: One Million Image-Text Pairs for Histopathology</em>,
+<strong>QUILT</strong>)</li>
 </ul>
 <h2 id="appendix-vision-inputs-for-language-models">Appendix: Vision
 Inputs for Language Models</h2>
@@ -146,6 +234,18 @@ Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2308.12966">Qwen-VL: A Frontier Large
 Vision-Language Model with Versatile Abilities</a></li>
 </ul>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>They train a 24-layer GPT-style causal language model,
+then use the first 12 layers for their unimodal text encoder and the
+last 12 layers for their multimodal decoder. They cite <a
+href="https://arxiv.org/abs/2306.07831">Lu et al.&#xA0;2023</a> for this
+idea.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</aside>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2022</p>

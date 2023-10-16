@@ -38,7 +38,7 @@ flexible than Cython)" />
 <!-- Once you've [profiled your Python](/writing/profiling-python-code-with-cprofile) to highlight bottlenecks, one way to optimize Python is to rewrite slow Python functions in C and call them with `ctypes`. -->
 <blockquote>
 <p>Note: the code in this post is licensed under <a
-href="/license-gnu">GNU AGPLv3</a>.</p>
+href="/misc/license-gnu">GNU AGPLv3</a>.</p>
 </blockquote>
 <p>I wrote this guide when I couldn&#x2019;t find one for using
 <code>ctypes</code> all in one place. Hopefully this makes someone
@@ -83,8 +83,9 @@ another process from the CLI.</p>
 object, and setting up the data structures in your Python code to map to
 C-types.</p>
 <p>In this post, I&#x2019;ll be connecting my Python code to <a
-href="/lcs-source">lcs.c</a>, which finds the longest common subsequence
-of two lists of strings. In the Python code, I want this to happen:</p>
+href="/misc/lcs-source">lcs.c</a>, which finds the longest common
+subsequence of two lists of strings. In the Python code, I want this to
+happen:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>list1 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Sam&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;!&#39;</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>list2 <span class="op">=</span> [<span class="st">&#39;My&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;is&#39;</span>, <span class="st">&#39;Alex&#39;</span>, <span class="st">&#39;Stevens&#39;</span>, <span class="st">&#39;.&#39;</span>]</span>
