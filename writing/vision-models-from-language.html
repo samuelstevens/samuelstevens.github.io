@@ -35,6 +35,11 @@ encoders, computer vision, scaling, laion, open clip" />
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="learning-vision-representations-from-language">Learning Vision
 Representations from Language</h1>
+<p>This page is a literature review, mostly for my own purposes, of how
+to train vision models using language supervision, like OpenAI&#x2019;s CLIP
+model. I update this page as I have time and energy to read and write
+about new papers. If you feel that your work should be mentioned here,
+please email me.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#foundational-works">Foundational Works</a></li>
@@ -51,8 +56,8 @@ Representations from Language</h1>
 <li>Learning Transferable Visual Models From Natural Language
 Supervision (CLIP)</li>
 <li>Scaling Up Visual and Vision-Language Representation Learning With
-Noisy Text Supervision (ALIGN)</li>
-<li>Combined Scaling for Zero-shot Transfer Learning (BASIC)</li>
+Noisy Text Supervision (ALIGN)* Combined Scaling for Zero-shot Transfer
+Learning (BASIC)</li>
 </ul>
 <h2 id="data">Data</h2>
 <ul>
@@ -80,6 +85,15 @@ downstream task you want. They use pre-trained vision encoders, so the
 main goal is to better align text representations with the image
 representations. This doesn&#x2019;t really help with the goal of learning
 better vision models from image-text data.</p>
+<p><a href="https://arxiv.org/abs/2309.16671">Xu et al.&#xA0;2023</a>
+(<em>Demystifying CLIP Data</em>, <a
+href="https://github.com/facebookresearch/MetaCLIP#demystifying-clip-data"><strong>MetaCLIP</strong></a>)
+develop a method for filtering web-scale data without using an existing
+CLIP model (like LAION). They exactly follow OpenAI&#x2019;s CLIP procedure,
+which uses pure string matching. This outperforms LAION and OpenAI CLIP
+models across ImageNet 0-shot and a wide variety of downstream tasks.
+This is the first effort to exactly reproduce OpenAI&#x2019;s WIT-400M without
+using existing CLIP models.</p>
 <h2 id="issues">Issues</h2>
 <p>When and Why Vision-Language Models Behave Like Bags-of-Words, and
 What to Do About It?</p>
@@ -89,7 +103,6 @@ that simply training a language model is enough to do well on ARO, so it
 might not be that useful.</li>
 </ul>
 <h2 id="training">Training</h2>
-<h3 id="objectives">Objectives</h3>
 <p><a href="https://arxiv.org/abs/2205.01917">Yu et al.&#xA0;2022</a>
 (<em>CoCa: Contrastive Captioners are Image-Text Foundation Models</em>)
 train a combination of unimodal vision and text transformers followed by
@@ -115,7 +128,6 @@ and (3) on fine-grained classification tasks (improves on Flowers, Cars,
 Birds, Pets and Dogs). However, they note that the text decoder is
 fairly useless; their approach mostly leads to a strong vision model
 that should be used on its own.</p>
-<h3 id="optimizations">Optimizations</h3>
 <p><a href="https://arxiv.org/abs/2212.00794">Li et al.&#xA0;2023</a>
 (<em>Scaling Language-Image Pre-training via Masking</em>,
 <strong>FLIP</strong>) propose dropping image patches from the input
