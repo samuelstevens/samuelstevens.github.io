@@ -166,6 +166,50 @@ combination of other, existing experts. This is similar to Yu Su&#x2019;s idea
 of evolutionary experts. This wouldn&#x2019;t fix the training instability of
 sparse MoE but it might simplify the different regularization losses and
 tricks used to load-balance tokens among experts.</p>
+<h2 id="multimodal-moe-models">Multimodal MoE Models</h2>
+<p><a href="https://openreview.net/forum?id=bIHyMpzeuI">Peng et
+al.&#xA0;2023</a> (<em>Sparse MoE as a New Treatment: Addressing Forgetting,
+Fitting, Learning Issues in Multi-Modal Multi-Task Learning</em>)
+proposes using sparse MoE models to solve (1) the modality forgetting
+issue, (2) the modality fitting issue and (3) the heterogeneous learning
+pace. I personally don&#x2019;t think any of these issues need MoE
+specifcally.</p>
+<ol type="1">
+<li>The modality <em>forgetting</em> issue is described as &#x201C;Diverse
+modalities may prefer conflicting optimization directions, resulting in
+ineffective learning or knowledge forgetting.&#x201D; But I disagree: with a
+large enough transformer (large hidden dimension), you don&#x2019;t need MoE.
+Each dimension in the hidden representation can specialize in a
+modality.</li>
+<li>The modality <em>fitting</em> issue is described as &#x201C;Current SMoE
+pipelines select a fixed number of experts for all modalities, which can
+end up over-fitting to simpler modalities or under-fitting complex
+modalities.&#x201D; While this may be true, I think that a dense model can
+simply decide to use a different number of dimensions in the hidden
+representation vector for each modality. Why would we let humans teach
+models how to use their capacity, when we can have the model learn it
+from the data?</li>
+<li>The heteregenous learning pace is made out to be a problem: &#x201C;The
+varied modality attributes, task resources (i.e., the number of input
+samples), and task objectives usually lead to varying optimization
+difficulties and convergence situations.&#x201D; I think Adam will handle
+this.</li>
+</ol>
+<p>In general, I find all of these issues fairly minor and would need
+strong additional evidence to believe that these issues actually cause
+problems in multi-modal multi-task learning. Furthermore, the authors
+are using sparse MoE for multi-modal tasks in robotics, HCI and
+&#x201C;affective computing&#x201D; (not sure what that is). I&#x2019;m more interested in
+multi-modal tasks that require non-language modalities to achieve strong
+performance on language-based tasks (like <a
+href="https://mmmu-benchmark.github.io/">MMMU</a>).</p>
+<p>Peng et al.&#xA0;2023 cite <a href="https://arxiv.org/abs/2203.15332">Peng
+et al.&#xA0;2022</a> (<em>Balanced Multimodal Learning via On-the-fly
+Gradient Modulation</em>, different Peng) to support their claim that
+modality <em>fitting</em> is challening for dense (non-MoE) models. But
+again, this is for multi-modal tasks like sentiment classification or
+behavior classification. I care about teaching strong reasoning
+capabilties to models over multi-modal reasoning tasks.</p>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
 <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
 <aside id="footnotes" class="footnotes footnotes-end-of-document"
@@ -181,7 +225,7 @@ class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 </aside>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2022</p>
+      <p>Sam Stevens, 2024</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>

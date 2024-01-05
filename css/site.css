@@ -122,6 +122,7 @@ table {
   border-top: 1.5px solid black;
   border-bottom: 1.5px solid black;
   border-collapse: collapse;
+  margin: auto;
 }
 
 th.active {
@@ -131,7 +132,6 @@ th.active {
 th.inactive {
   color: gray;
 }
-
 
 tr.header {
   border-bottom: 1px solid black;

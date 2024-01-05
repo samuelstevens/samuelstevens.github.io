@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="How I think about AI research." />
+  <meta name="keywords" content="" />
+  <title>Behold: Artifacts vs Insights: Meta-Insights on AI
+Research</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="tldr">TLDR</h1>
+<ul>
+<li>Research papers provide value through artifacts (datasets,
+benchmarks, models) or insights (lessons applicable beyond one
+paper).</li>
+<li>Most papers will have an artifact and one to three insights. The
+insights are much more important; the artifact is typically used as
+evidence that the insights are true.</li>
+<li>Only the top artifacts will have long-term impact; even smaller
+insight papers can have lasting impact.</li>
+<li>You can use the artifact vs insight framework to improve both your
+paper structure and your experimental planning.</li>
+</ul>
+<h1 id="artifacts-vs-insights-meta-insights-on-ai-research">Artifacts vs
+Insights: Meta-Insights on AI Research</h1>
+<p>Papers typically provide two kinds of value: artifacts and
+insights</p>
+<p>Artifacts are datasets, models, codebases, sometimes optimization
+algorithms. Insights are lessons and takeaways that later researchers
+will apply to their work.</p>
+<p>Examples of artifacts:</p>
+<ul>
+<li>GPT-3</li>
+<li>BERT</li>
+<li>CLIP (pre-trained checkpoints)</li>
+<li>RoBERTa</li>
+<li>ELECTRA, DeBERTa</li>
+<li>T5, Flan-T5</li>
+<li>Llama2</li>
+<li>OPT</li>
+<li>Mind2Web</li>
+<li>MMMU</li>
+<li>MagicBrush</li>
+</ul>
+<p>Examples of insights:</p>
+<ul>
+<li>Pangu</li>
+<li>Chinchilla</li>
+<li>Bernal&#x2019;s tokenization work</li>
+<li>Ron&#x2019;s SQL framework</li>
+<li>CLIP (training on image-text pairs)</li>
+<li>RoBERTa (training for longer is better)</li>
+<li>OPT (logbook)</li>
+<li>Emergent abilities paper</li>
+<li>Three Things about Vision Transformers paper</li>
+</ul>
+<p>Thinking about the difference between artifacts and insights can help
+you better organize your research during the research process and within
+a paper, when presenting to outside audiences.</p>
+<h2 id="during-the-research-process">During the Research Process</h2>
+<p>At every step, you should be asking yourself what insights you&#x2019;ve
+accumulated and how you can take advantage of them, typically to produce
+an artifact. You also need to think about what evidence you have for
+your insights, and whether that&#x2019;s enough evidence to convince readers.
+You should only think about artifacts 10-20% of the time.</p>
+<h2 id="when-planning-the-paper-for-readers">When Planning the Paper for
+Readers</h2>
+<p>You should think about what value your paper provides for readers. Is
+it a research artifact? Or research insights?</p>
+<p>For both outcomes, you need to convince readers of the <em>value</em>
+of the artifact or insight. For insights, you also need to convince
+readers that your insight is <em>true</em>, typically with empirical
+evidence.</p>
+<h3 id="artifacts">Artifacts</h3>
+<p>You need to convince readers that your artifact is valuable. This is
+typically straightforward depending on what kind of artifact you
+have.</p>
+<p>For new models, you should demonstrate that your model outperforms
+other existing research artifacts on relevant benchmarks. For new
+benchmarks, you will likely have to do a literature review and explain
+that existing benchmarks fail in some way to accurately measure model
+capabilities accurately.A For new training datasets, you should train
+one model on your dataset and one model on existing datasets <em>with
+the same amount of compute</em> and demonstrate that your dataset leads
+to better model weights (and those model weights will likely be part of
+your research artifact as well).</p>
+<p>In general, convincing readers of your artifact&#x2019;s value is easy,
+assuming that it is in fact valuable. Actually creating the artifact of
+value is typically hard. Often, creating a model artifact requires
+either more compute (the falcon LMs, GPT-3), more (maybe proprietary)
+data (typical of image models like CLIP, google&#x2019;s JFT-3B) or some novel
+insight.</p>
+<h3 id="insights">Insights</h3>
+<p>Convincing readers that your insight is valuable is also typically
+pretty easy. Normally your insight will have some real-world outcome:
+you can train models with less compute, less data, with less human
+supervision, leads to better outcomes, etc. This is typically a compute
+multiplier (link the non_int blog).</p>
+<p>Negative results papers are definitely insight papers, but there the
+value lies in convincing other researchers not to go down the same route
+you tried. This typically means you tried something that intuitively
+should lead to an improvement but you couldn&#x2019;t make it work.</p>
+<p>The challenge for insights lies in convincing readers that your
+insight is actually true.</p>
+<p>Typically, you will do lots of experiments, trying to answer any
+question that a skeptic might ask. Your evidence should be
+convincing.</p>
+<p>The rule of thumb is that the more general your insight, the more
+useful it is. However, the more general your insight, the more evidence
+is required.</p>
+<p>Furthermore, the farther from the accepted standard your insight is,
+the more evidence is required to convince readers.</p>
+<h2 id="what-this-means-for-research-directions-as-an-academic">What
+This Means for Research Directions as an Academic</h2>
+<p>Typically, the best artifacts come from the labs with the most
+compute, because scale is king. If you are a PhD student, you typically
+don&#x2019;t have the most compute. So it will be harder for you to make
+valuable artifacts. You can pick specialty domains (LMs for special
+domains like legal text) or find smaller areas (recent work uses GPT for
+3d mesh decoders). But you shouldn&#x2019;t try to compete with OpenAI or Meta
+on making LLMs, and that&#x2019;s probably already obvious.</p>
+<p>But since industry labs know they can crush the artifact side of
+things (specifically models), that means academic labs can work hard on
+non-model artifacts and insights. (mention specialization, competitive
+advantage from microeconomics) This means academic labs can develop
+benchmarks (MMMU, Mind2Web), new training data (MagicBrush, Joel&#x2019;s Legal
+text benchmark or training data) or insights.</p>
+<h2 id="insights-get-fewer-citations">Insights Get Fewer Citations</h2>
+<p>How can I show this? Does it matter?</p>
+<h2 id="insights-last-longer">Insights Last Longer</h2>
+<ul>
+<li>A paper with good insights is useful for many people.</li>
+<li>Most artifacts are a flash in the pan.</li>
+<li>Some artifacts matter for a very long time (BERT, GPT-2, T5,
+ImageNet, The Pile)</li>
+</ul>
+<h2 id="scale-is-king-is-king">&#x201C;Scale is King&#x201D; is King</h2>
+<p>Perhaps the most consistent insight in AI is that bigger models
+trained on more data with more compute will outperform smaller models
+trained on less data with less compute. This insight is nearly a fact.
+It&#x2019;s been described in the Bitter Lesson by Richard Sutton. It was
+challenged by the unscaling challenge&#x2013;then GPT-4 beat it. Unless scale
+is a core part of your paper&#x2019;s insight (like the emergent abilities
+paper), you should treat &#x201C;scale is king&#x201D; as a fact.</p>
+<p>This should impact your research is two ways:</p>
+<p>First, you should do the majority of your research at small scale. As
+you accumulate empirical evidence to support your insights, you should
+do most experiments at small to medium scales. You should assume that as
+you get bigger, your results will get better. You do need to be wary
+that <em>your</em> insight might not scale as well as the baselines.</p>
+<p>Maybe 50% of your experiments are at small scale, 30% are at medium,
+and 20% are at large scales. These scales depend on your problem: if you
+are an academic lab pretraining language models, you should train 120M
+parameters, then try some stuff at 350M and 750M. Your final model
+should be a 1.3B or even a 7B.</p>
+<p>Second, you should be aware that every reviewer will ask &#x201C;does this
+scale?&#x201D; It will always come up in reviews, and you should always think
+about how to answer this. The emergent abilities paper makes this
+especially challenging for gpu-poor labs because the presence of phase
+changes in LMs means that your tricks You should do your best to think
+about how to answer this question before submitting. I don&#x2019;t have any
+good thoughts on how to deal with this.</p>
+<p>Finally, if you think you are gonig to challenge the idea that scale
+is king, you had better be <em>absolutely certain</em> that you&#x2019;re
+right.</p>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

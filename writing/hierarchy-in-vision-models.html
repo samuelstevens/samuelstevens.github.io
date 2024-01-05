@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="A summary of work on hierarchy in
+vision models." />
+  <meta name="keywords" content="computer
+vision, hierarchy, hierarchical models, cnn, convolutional neural
+network" />
+  <title>Behold: Hierarchy in Vision Models</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="hierarchy-in-vision-models">Hierarchy in Vision Models</h1>
+<p>This page is a mini literature review, mostly for my own purposes,
+used for the BioCLIP work. I update this page as I have time and energy
+to read and write about new papers. If you feel that your work should be
+mentioned here, please email me.</p>
+<p>Our ICLR reviews for BioCLIP included lots of missing work, which
+forms the basis for my literature review.</p>
+<blockquote>
+<p>Unless otherwise noted, ImageNet always refers to the 1K class
+variant from the ILSVRC 2012 challenge.</p>
+</blockquote>
+<p>In general, I find the literature on hierarchy in vision to have two
+main conclusions:</p>
+<ol type="1">
+<li>Computer vision models naturally learn hierarchical structures</li>
+<li>Hierarchical objectives never outperform regular objectives.</li>
+</ol>
+<p>But if you disagree, let me know!</p>
+<h2 id="literature-review">Literature Review</h2>
+<p><em>This page is ordered chronologically rather than by separate
+categories.</em></p>
+<p><a href="https://arxiv.org/abs/1710.06501">Bilal et al.&#xA0;2017</a>
+(<em>Do Convolutional Neural Networks Learn Class Hierarchy?</em>,
+<strong>Block</strong>) develop a novel visual interface for analyzing
+CNN outputs on ImageNet. Honestly, they do a ton of important
+interpretability work and this paper is very full of insights. However,
+I am only interested in section 4.1.3, where they propose a new
+architecture to take advantage of the hierarchy present in ImageNet.
+Features from earlier layers branch into small fully-connected layers
+that predict coarser features. I assume the final loss is a sum of
+cross-entropy losses among all the levels in the hierarchy.</p>
+<p>The authors find that this improved AlexNet leads to better top 1
+error (42.6% to 34.3%). However, they note that this helps the issue of
+vanishing gradients because gradients for earlier layers are computed
+from the coarse-grained loss term. If the majority of the improvement
+comes from fixing vanishing gradients, then ResNets would not benefit
+from this multitask objective because they deal with vanishing gradients
+through the residual connections.</p>
+<figure>
+<a href="/images/hierarchy-in-vision-models/hierarchical-alexnet.png"><img src="/images/hierarchy-in-vision-models/hierarchical-alexnet.png" alt="Screenshot from Bilal et al. 2017"></a>
+<figcaption aria-hidden="true">
+Hierarchical AlexNet from Bilal et al.&#xA0;2017. Click to see full-size. See
+how features after the first convolution are fed into a small fully
+connected network and predict one of 3 classes.
+</figcaption>
+</figure>
+<p><a
+href="https://openaccess.thecvf.com/content_ICCV_2019/html/Taherkhani_A_Weakly_Supervised_Fine_Label_Classifier_Enhanced_by_Coarse_Supervision_ICCV_2019_paper.html">Taherkhani
+et al.&#xA0;2019</a> (<em>A Weakly Supervised Fine Label Classifier Enhanced
+by Coarse Supervision</em>)</p>
+<p><a href="https://arxiv.org/abs/1912.09393">Bertinetto et al.&#xA0;2020</a>
+(<em>Making Better Mistakes: Leveraging Class Hierarchies with Deep
+Networks</em>) propose measure mistake <em>severity</em>, wherein
+pedicting &#x201C;dog&#x201D; instead for the true label &#x201C;cat&#x201D; is a better mistake
+than predicting &#x201C;jet plane&#x201D;. They propose measuring mistake severity
+through tree distance in the hierarchical structure of ImageNet
+categories. While top-1 error decreased on ImageNet from 2012 to 2017
+(and later), mistake severity did not. They propose two different
+training objectives, hierarchical cross entropy (HXE) and a soft
+(probability distribution) label on two hierarchical datasets,
+tieredImageNet and iNat19. They find that their hierarchy-aware training
+objectives lead to better mistake severity (lower tree distance when a
+prediction is wrong) but worse top-1 accuracy.</p>
+<p>In general, I personally think this trade-off of top-1 accuracy vs
+better mistakes to be inescapable. Given that the computer vision
+community has optimized for top-1 accuracy (and specifically top-1
+accuracy on ImageNet-1K), unless we can:</p>
+<ol type="1">
+<li>Find one or more examples of where better mistakes, with lower top-1
+accuracy, lead to better real-world outcomes.</li>
+<li>Set up a strong benchmark that is easy to evaluate and consistently
+correlates with real-world outcomes.</li>
+</ol>
+<p>Then we will never care about &#x201C;making better mistakes&#x201D; over ImageNet
+top-1 accuracy. It&#x2019;s simply too useful to throw away.</p>
+<p><a
+href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13768">Elhamod
+et al.&#xA0;2021</a> (<em>Hierarchy-guided neural network for species
+classification</em>, <strong>HGNN</strong>) train two ResNets, one to
+classify the genus, and one to classify the species. The species ResNet
+gets the features extracted from the genus ResNet added right before the
+final maxpool. Each image has a genus and a species label, and errors
+backpropogate through both networks. The models are pretrained on
+ImageNet. HGNN does better on the harder images (missing, occluded,
+etc.). This work partially motivates BioCLIP because we noted that
+biologists were using old models (ResNet) pretrained on general datsets
+(ImageNet) instead of strong, domain-specific vision models.</p>
+<p><a href="https://arxiv.org/abs/2207.10225">Cole et al.&#xA0;2022</a>
+(<em>On Label Granularity and Object Localization</em>) compare the
+effects of label granularity on weakly supervised object location
+(WSOL). The goal of WSOL is to produce the bounding box for an object in
+an image where the image contains exactly one object and you know the
+class. That is, <span class="math inline">\(f(x, y) \rightarrow
+b\)</span>, where <span class="math inline">\(x \in \mathbb{R}^{h \times
+w \times 3}, y \in \mathcal{C}, b \in \mathbb{R}^{4}\)</span>. However,
+during training, you do not have lots of bounding boxes <span
+class="math inline">\(b\)</span>. Instead, the model must learn from a
+large set of <span class="math inline">\(x, y\)</span> pairs and only a
+few <span class="math inline">\(x, y, b\)</span> triplets. This work
+proposes a new WSOL dataset that is a subset of the iNat21 dataset, and
+shows that using coarser class labels (like order or class instead of
+species or genus) leads to stronger performance on the WSOL task.</p>
+<p><a href="https://arxiv.org/abs/2105.05837">Cole et al.&#xA0;2022</a>
+(<em>When Does Contrastive Visual Representation Learning Work?</em>)
+investigate self-supervised pretraining beyond ImageNet. The most
+relevant section compares the differences between self-supervised
+pretraining on different granularities on both iNat21 and ImageNet. The
+authors find that <a href="https://arxiv.org/abs/2002.05709">SimCLR</a>
+(their chosen self-supervised pretraining method) underperforms
+supervised methods on the finest-grained tasks.</p>
+<figure>
+<a href="/images/hierarchy-in-vision-models/supervised-vs-simclr.png"><img src="/images/hierarchy-in-vision-models/supervised-vs-simclr.png" alt="Screenshot from Cole et al. 2022"></a>
+<figcaption aria-hidden="true">
+Performance as a function of label granularity from Cole et al.&#xA0;2022.
+Click to see full-size. The supervised models are not re-trained at
+coarser granularity levels; they just change the evaluation label set.
+iNat21 is most relevant to BioCLIP.
+</figcaption>
+</figure>
+<p>A relevant question for BioCLIP: does our species-level accuracy
+degrade as quickly? The authors also bring up the idea that contrastive
+learning might have a coarse-grained bias. I think this is very likely.
+I think that contrastive learning, based on its random sampling of
+negatives in the batch, is likely to sample examples that are
+dramatically different from the true positive, so the model doesn&#x2019;t need
+to learn fine-grained instances. In a sense, after learning these
+coarser features, you want to choose examples that are very similar,
+then use those to force fine-grained representations.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+This would also be relevant in BioCLIP, where near the start of
+training, we could sample examples that have the same kingdom but
+different phylum, then at the end of training, sample examples that have
+the same kingdom, phylum, &#x2026;, genus, but different species.</p>
+<p><a href="https://arxiv.org/abs/2204.13207">Zhang et al.&#xA0;2022</a>
+(<em>Use All The Labels: A Hierarchical Multi-Label Contrastive Learning
+Framework</em>) propose a contrastive learning framework where the
+hierarchical distance between labels corresponds to the desired distance
+in the embedding space.</p>
+<figure>
+<a href="/images/hierarchy-in-vision-models/hierarchical-contrastive.png"><img src="/images/hierarchy-in-vision-models/hierarchical-contrastive.png" alt="Screenshot from Zhang et al. 2022"></a>
+<figcaption aria-hidden="true">
+Hierarchical contrastive learning from Zhang et al.&#xA0;2022. Click to see
+full-size.
+</figcaption>
+</figure>
+<p>This actually outperforms cross entropy on both ImageNet and iNat17
+in top-1 accuracy:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>ImageNet</th>
+<th>iNat17</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SimCLR</td>
+<td>69.53</td>
+<td>54.02</td>
+</tr>
+<tr class="even">
+<td>Cross Entropy</td>
+<td>77.6</td>
+<td>56.8</td>
+</tr>
+<tr class="odd">
+<td>HiMulConE (Proposed)</td>
+<td><strong>79.1</strong></td>
+<td><strong>59.4</strong></td>
+</tr>
+</tbody>
+</table>
+<p>On the other hand, 56.8 top-1 accuracy on iNat17 is
+<em>horrifically</em> low. They use a ResNet-50 pretrained on ImageNet
+and only finetune the fourh layer&#x2019;s parameters, which is a pretty weird
+choice.</p>
+<h1 id="reading-list">Reading List</h1>
+<ul>
+<li><a href="https://arxiv.org/abs/2007.03047">Garnot and Landrieu
+2021</a> (<em>Leveraging Class Hierarchies with Metric-Guided Prototype
+Learning</em>)</li>
+</ul>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>This <a
+href="https://arxiv.org/pdf/2108.07183.pdf">paper</a> seems to do just
+that, but I haven&#x2019;t read it yet.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</aside>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

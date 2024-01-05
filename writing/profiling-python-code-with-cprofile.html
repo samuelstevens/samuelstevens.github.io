@@ -77,27 +77,26 @@ here (removing things from loops, using list comprehensions, etc., do so
 now).</p>
 <h2 id="parallel-code">Parallel Code</h2>
 <p>If you profile your serial code, you might eventually add
-multiprocessing. <code>cProfile</code> sucks for multiprocessing code.
-For example, here&#x2019;s the SnakeViz visualization of a long-running python
-program using multiprocessing:</p>
-<figure>
-<img src="/images/python/snakeviz-multiprocessing-icicle.png"
-alt="Icicle graph of multiprocessing code from SnakeViz" />
-<figcaption aria-hidden="true">Icicle graph of multiprocessing code from
-SnakeViz</figcaption>
-</figure>
+multiprocessing. <code>cProfile</code> sucks for multiprocessing
+code.</p>
+<!--
+For example, here's the SnakeViz visualization of a long-running python program using multiprocessing:
+
+![Icicle graph of multiprocessing code from SnakeViz](/images/python/snakeviz-multiprocessing-icicle.png)
+-->
 <p>To profile parallel code, I recommend <a
 href="https://github.com/benfred/py-spy">py-spy</a>. It <a
 href="https://github.com/benfred/py-spy#when-do-you-need-to-run-as-sudo">requires
 sudo</a> on macOS and some Linux systems, however.</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">py-spy</span> record <span class="at">-o</span> profiling/whatever-v1.svg <span class="at">--</span> python <span class="at">-m</span> src.module.whatever arg1 arg2</span></code></pre></div>
-<p>py-spy generates svg files which can typically be opened in an</p>
+<p>py-spy generates svg files which can typically be opened in a browser
+like FireFox.</p>
 <p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a>
 if you have any comments or want to discuss further.</p>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
-      <p>Sam Stevens, 2022</p>
+      <p>Sam Stevens, 2024</p>
     </article>
   </main>
   <script src="/js/instantclick.min.js" data-no-instant></script>
@@ -106,7 +105,7 @@ if you have any comments or want to discuss further.</p>
   </script>
   <style>
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }

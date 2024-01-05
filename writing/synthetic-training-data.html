@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="A review of synthetic data in large
+AI models (language, vision)." />
+  <meta name="keywords" content="" />
+  <title>Behold: Synthetic Data in AI Training</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="synthetic-data">Synthetic Data</h1>
+<p>Instead of scraping large language datasets from the internet, or
+asking annotators to answer questions and label images, there&#x2019;s some
+work that uses existing AI models to label data and develop SOTA systems
+off those datasets. I find this sort of thing very interesting and am
+collecting papers and my thoughts on them here.</p>
+<blockquote>
+<p>Note: I am not interested in synthetic datasets that try to instill
+GPT-4&#x2019;s abilities in smaller language models. I&#x2019;m solely looking for
+examples where synthetic data leads to state-of-the-art systems.</p>
+</blockquote>
+<p>Large language models like Llama can seemingly improve by training on
+data they generate. This is initially surprising because there is no new
+data added to the model. It&#x2019;s less surprising if you think about it as a
+way to push certain capabilities to the front of the model.</p>
+<p><strong>Why is this interesting?</strong> Because it means we might
+not need as much human-labeled data as we previously thought, if we can
+reliably extract data from the pre-trained model.</p>
+<p>The big question is:</p>
+<p><strong>Given a unlabeled set of inputs <span class="math inline">\(x
+\in \mathcal{D}\)</span>, can you sample lots of <span
+class="math inline">\(y\)</span> for each <span
+class="math inline">\(x\)</span>, then filter these <span
+class="math inline">\(x, y\)</span> pairs into a high-quality
+dataset?</strong></p>
+<p>Evidence in favor: <a
+href="https://arxiv.org/abs/2212.09736">Pangu</a>, <a
+href="https://arxiv.org/abs/2201.12086">BLIP</a>, <a
+href="https://arxiv.org/abs/2308.08998">ReST</a>.</p>
+<p>Evidence against: <em>None that I&#x2019;m aware of.</em></p>
+<p>Evidence that such a strategy is possible, but suboptimal: <a
+href="https://arxiv.org/abs/2308.06259">Humpback</a>.</p>
+<h2 id="reading-list">Reading List</h2>
+<ul>
+<li>DALL-E 3 interview, technical report</li>
+<li><a href="https://arxiv.org/abs/2209.11755">Promptagator: Few-shot
+Dense Retrieval From 8 Examples</a></li>
+<li><a href="https://arxiv.org/abs/2305.16635">Impossible Distillation:
+from Low-Quality Model to High-Quality Dataset &amp; Model for
+Summarization and Paraphrasing</a></li>
+<li><a href="https://arxiv.org/abs/2210.11610">Large Language Models Can
+Self-Improve</a></li>
+<li><a href="https://arxiv.org/abs/2301.12597">BLIP-2: Bootstrapping
+Language-Image Pre-training with Frozen Image Encoders and Large
+Language Models</a></li>
+<li><a href="https://arxiv.org/abs/2203.14465">STaR: Bootstrapping
+Reasoning With Reasoning</a></li>
+<li><a href="https://arxiv.org/abs/2304.06767">RAFT: Reward rAnked
+FineTuning for Generative Foundation Model Alignment</a></li>
+<li><a
+href="https://dblalock.substack.com/p/models-generating-training-data-huge">Models
+generating training data: huge win or fake win?</a></li>
+</ul>
+<p><em>If you&#x2019;re like to recommend a paper that is not on my reading
+list, please email me! I&#x2019;m always happy to read more papers!</em></p>
+<h2 id="literature-review">Literature Review</h2>
+<p><a href="https://arxiv.org/abs/2308.06259">Li et al.&#xA0;2023</a>
+(<em>Self-Alignment with Instruction Backtranslation</em>,
+<strong>Humpback</strong>) is a paper from Meta that uses LMs to label
+an instruction following dataset for supervised fine-tuning.They scrape
+a large web corpus, then use a weakly-tuned LM to generate instruction
+prompts for which the documents in the corpus are the output. Then they
+select a high-quality subset using a language model. They repeat this
+process three times and outperform all other instruction tuning methods
+that don&#x2019;t use distillation from other larger models (like Vicuna).</p>
+<p><a href="">DALL-E 3</a>&#x2019;s first author <a
+href="https://nonint.com/">James Betker</a> gave an <a
+href="https://www.youtube.com/watch?v=pgaTOX-RUQ4">interview</a> where
+he discusses some of the techniques used to train DALL-E 3.</p>
+<p><a href="https://arxiv.org/abs/2308.08998">Gulcehre et al.&#xA0;2023</a>
+(<em>Reinforced self-training (rest) for language modeling</em>,
+<strong>ReST</strong>) iteratively grow a dataset of (input, output)
+pairs by sampling outputs from an unlabeled dataset of inputs. These new
+samples are scored by a reward model, and only the high-quality (input,
+output) pairs are used to fine-tune the model, either with supervised
+loss or an offline RL loss. However, ReST is only evaluated on a machine
+translation context: I assume this means that they did not get good
+results for instruction-following, since that&#x2019;s a much hotter topic than
+machine translation right now.</p>
+<figure>
+<img src="/images/synthetic-data/ReST.png"
+alt="ReST samples new data from a model in the Grow step and iteratively tunes the model in the Improve step on the highest quality sampled data." />
+<figcaption aria-hidden="true">ReST samples new data from a model in the
+<code>Grow</code> step and iteratively tunes the model in the
+<code>Improve</code> step on the highest quality sampled
+data.</figcaption>
+</figure>
+<p><a href="https://arxiv.org/abs/2312.06585">Singh et al.&#xA0;2023</a>
+(<em>Beyond Human Data: Scaling Self-Training for Problem-Solving with
+Language Models</em>) is a follow-up work to ReST that simplifies
+several components and applies it to MATH ((Hendrycks et
+al.&#xA0;2021)[https://arxiv.org/abs/2103.03874]) and APPS ((Hendrycks et
+al.&#xA0;2021)[Measuring Coding Challenge Competence With APPS]).</p>
+<p><a href="https://arxiv.org/abs/2201.12086">Li et al.&#xA0;2022</a>
+(<strong>BLIP:</strong> <em>Bootstrapping Language-Image Pre-training
+for Unified Vision-Language Understanding and Generation</em>) noisily
+generates synthetic captions for web images, then filters noisy (bad)
+captions. They pretrain an image-conditioned text-decoder and an
+image-conditioned text-encoder that&#x2019;s initialized from pre-trained ViT
+and BERT models (even the text decoder). The image-conditioned
+text-decoder generates synthetic captions and adds them to the web-scale
+(image, caption) data. The image-conditioned text-encoder predicts
+match/no match for the web-scale and the synthetic (image, caption)
+data, which is then added to the human-annotated (image, caption) data
+to produce the entire dataset. Surprisingly, this works better than just
+training on web-scale and human annotated data.</p>
+<p>They perform some ablations to explain why this works:</p>
+<ol type="1">
+<li>They use nucleus sampling for the synthetic captions instead of beam
+search, which they argue produces more noisy, but more diverse captions.
+The noise doesn&#x2019;t matter since the filter model will remove bad
+captions.</li>
+<li>The filter and captioner do not share parameters. They tried
+parameter sharing during the caption-filter stage and found downstream
+performance of the pre-trained models to be worse. They argue that
+parameter sharing would lead to confirmation bias: the filter is likely
+the think the synthetic captions are correct: 8% filtered with parameter
+sharing vs 25% without.</li>
+</ol>
+<p>They get good results on lots of datasets but nothing absurd.</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

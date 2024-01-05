@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="Central location for development of
+the BioCLIP model series." />
+  <meta name="keywords" content="bioclip, machine learning" />
+  <title>Behold: BioCLIP Dev Log &amp; Resources</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="bioclip-development-resources">BioCLIP Development
+Resources</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<p>(Deliberately omitted)</p>
+<h2 id="datasets">Datasets</h2>
+<h2 id="model">Model</h2>
+<h2 id="training">Training</h2>
+<p><a href="https://arxiv.org/abs/2312.02696">Karras et al.&#xA0;2023</a>
+(<em>Analyzing and Improving the Training Dynamics of Diffusion
+Models</em>) propose a new post-hoc EMA method. Typical EMA requires
+that you update your EMA weights every batch. Since you don&#x2019;t want to
+store a copy of your model weights for every batch, you have to do this
+during training. If you decide you want different EMA hyperparameters,
+then you need to retrain. Karras et al.&#x2019;s contribution is figuring out
+how to model arbitrary EMA profiles after training by taking a series of
+specific snapshots. EMA makes a big difference in image generation
+tasks. Then this paper shows that the optimal EMA hyperparameters can
+make a significant difference in model quality (see the figure
+below).</p>
+<figure>
+<a href="/images/bioclip/ema.png"><img src="/images/bioclip/ema.png" alt="How different EMA strengths affect final performance."></a>
+<figcaption aria-hidden="true">
+Choosing the right EMA strength can make a huge difference in FID (the
+main metric used in image generation).
+</figcaption>
+</figure>
+<p>It&#x2019;s not clear if EMA can lead to similar improvements for
+classification and non-diffusion models, but it might worth a shot.</p>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
