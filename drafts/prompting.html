@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Behold: Prompting LLMs</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="prompting-llms">Prompting LLMs</h1>
+<p>DSPy is amazing for three reasons.</p>
+<ol type="1">
+<li>It cleanly abstracts different prompting strategies using a
+&#x201C;signature&#x201D; API. Programmers can compose different prompting strategies
+(chain of thought, ensembling, ReAct, retrieval-augmented generation)
+the same way we compose neural network modules in PyTorch. This is
+extremely non-trivial and I will discuss this more later.</li>
+<li>It demonstrates that picking few-shot examples for in-context
+learning should be optimized: compilers/optimizers in DSPy almost always
+out-perform the baseline of choosing <span
+class="math inline">\(k\)</span> random examples.<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></li>
+<li>It shows that language-model generated labels for intermediate steps
+can help the same language model perform better (boostrapping
+intermediate labels).</li>
+</ol>
+<p>It&#x2019;s not clear to me which of these ideas are pioneered by DSPy
+(surely #1 is) and which are present in existing literature, but made
+visible to me via DSPy. I have many questions about each of these ideas
+and would like to see comprehensive studies on each of them. It&#x2019;s likely
+that at least some of them have been answered in papers.</p>
+<p>Regarding optimizing few-shot examples for in-context learning: I&#x2019;ve
+seen work that picks the few-shot examples from a training set based on
+retrieval modules. That is, given an input <span
+class="math inline">\(x\)</span> and a reference set of <span
+class="math inline">\(x_i, y_i\)</span>, use a retrieval model (like
+ColBERT) to pick out <span class="math inline">\(k\)</span> <span
+class="math inline">\(x_i, y_i\)</span> pairs from the reference set
+that are most simliar to <span class="math inline">\(x\)</span>. These
+examples are likely more useful for in-context learning than a <span
+class="math inline">\(k\)</span> random <span class="math inline">\(x_i,
+y_i\)</span> pairs.</p>
+<p>My questions:</p>
+<ul>
+<li>How much better is retrieval ICL compared to random ICL?</li>
+<li>Are there classes of tasks that this is more effective for (coding,
+word problems, math, trivia, chat, etc)?</li>
+<li>DSPy chooses <span class="math inline">\(k\)</span> examples that
+maximize performance on a validation set of responses. This is similar,
+but uses the same <span class="math inline">\(k\)</span> examples for
+any future <span class="math inline">\(x\)</span>. Does retrieval ICL
+outperform optimized examples?</li>
+</ul>
+<p>Finally, why doesn&#x2019;t everyone do this? Surely it&#x2019;s very cheap:
+ColBERT seems to be a good retrieval model that&#x2019;s widely available.<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> Most benchmarks have a set of
+training examples (MMLU, for example). Maybe in-context examples are not
+as useful for instruction-tuned models?</p>
+<p>Then, thinking about language models boostrapping answers to
+questions, which are then used as in-context examples for downstream
+tasks (also a DSPy idea, as far as I can tell):</p>
+<ul>
+<li>Given an input <span class="math inline">\(x\)</span>, can I use an
+LM to answer <span class="math inline">\(k\)</span> other inputs <span
+class="math inline">\(x_i\)</span> in a zero-shot fashion, then use
+those <span class="math inline">\(x_i, L(x_i)\)</span> pairs as
+in-context examples for solving <span class="math inline">\(x\)</span>?
+If this works, what is in-context learning really doing? I would
+<em>not</em> be surprised if this works.</li>
+<li>Given an input <span class="math inline">\(x\)</span>, can I use an
+LM to generate <span class="math inline">\(k\)</span> other inputs <span
+class="math inline">\(x_i^L\)</span>, then answer those inputs with the
+LM, then use these entirely synthetic <span class="math inline">\(x_i^L,
+L(x_i^L)\)</span> pairs as in-context examples for solving <span
+class="math inline">\(x\)</span>? If <em>this</em> works, I would be
+surprised.</li>
+</ul>
+<p>As a research question:</p>
+<p>DSPy demonstrates that LMs can generate intermediate labels for
+multi-prompt questions, then use those labels as in-context examples to
+improve performance. I have shown that this works with MMLU and chain of
+thought (TODO). If LMs can generate intermediate labels and improve
+in-context learning, can they generate final labels and improve
+in-context learning?</p>
+<p>And:</p>
+<p>DSPy demonstrates that LMs can generate intermediate labels for
+multi-prompt questions, then use those labels as in-context examples to
+improve performance. I have shown that this works with MMLU and chain of
+thought (TODO). I have also shown that LMs can generate final labels to
+improve in-context learning. Can they generate inputs and labels to
+improve in-context learning?</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>It would be interesting to see if the optimizers in DSPy
+also outperform baselines that retrieve relevant examples to provide as
+ICL examples. However, you can also impement this in DSPy so it might
+not be worth the comparison.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn2"><p>Can we use even cheaper retrieval methods, like TF-IDF
+over tokenized documents (not words, but the underlying tokens)?<a
+href="#fnref2" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</aside>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
