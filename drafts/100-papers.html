@@ -341,7 +341,111 @@ Multi-Agent Autocurricula</a> (multi-agent RL): you can also find
 emergent behaviors in competive multi-agent self-play (team vs team).
 Future work: can you see these emergent behaviors without competition?
 Can single-player games be reframed as competitive games?</li>
+<li><a href="https://ieeexplore.ieee.org/document/8848100/">Win or Learn
+Fast Proximal Policy Optimisation</a> (multi-agent RL): Proposes an
+extension to PPO to find Nash equilibriums efficiently. Future work:
+extend beyond matrix-based games (dead end).</li>
+<li><a href="http://arxiv.org/abs/2307.10088">Android in the Wild: A
+Large-Scale Dataset for Android Device Control</a> (web agent): dataset
+and benchmark for interacting with android devices; different to web
+because it involves swiping and non-click gestures. Future work: train
+models on the training split (doesn&#x2019;t have to be zero-shot).</li>
+<li><a href="http://arxiv.org/abs/2207.01206">WebShop: Towards Scalable
+Real-World Web Interaction with Grounded Language Agents</a> (web
+agent): simulated e-commerce website with train/test splits. Future
+work: better RL algorithms to deal with long horizon and large action
+space, better model to understand web data.</li>
+<li><a href="http://arxiv.org/abs/2205.11029">META-GUI: Towards
+Multi-modal Conversational Agents on Mobile GUI</a> (web agent) Collects
+~1K task-oriented mobile interactions with train/test splits. Future
+work: Larger dataset.</li>
+<li><a href="http://arxiv.org/abs/2104.08560">Mobile App Tasks with
+Iterative Feedback (MoTIF): Addressing Task Feasibility in Interactive
+Visual Environments</a> (web agent): introduces mobile interaction
+dataset where some requests are <em>impossible</em> which makes it much
+harder. Future work: even binary feasibility classification is weak. Not
+clear what SOTA is now.</li>
+<li><a href="http://arxiv.org/abs/2103.16057">Grounding Open-Domain
+Instructions to Automate Web Support Tasks</a> (web agent): dataset
+aimed at automating web support tasks. Future work: do we need a formal
+language representation? or can the model directly perform actions.</li>
+<li><a href="http://arxiv.org/abs/2306.06070">MIND2WEB: Towards a
+Generalist Agent for the Web</a> (web agent): very diverse dataset of
+real-world web tasks focusing on new-website generalization. Future
+work: decide on a specific benchmark task that is easy to
+understand.</li>
+<li><a href="http://arxiv.org/abs/2101.09465">WebSRC: A Dataset for
+Web-Based Structural Reading Comprehension</a> (web QA): 400K
+question-answer pairs with HTML, screenshots and metadata. Future work:
+how do current multimodal models fare on this task?</li>
+<li><a href="http://arxiv.org/abs/2305.20050">Let&#x2019;s Verify Step by
+Step</a> (alignment): Applies step-level reward to language models
+solving the MATH dataset and sees dramatic improvements. Future work:
+how to train step-level reward models efficiently on any task.</li>
+<li><a href="https://openreview.net/forum?id=vhFu1Acb0xb">Transformers
+are Sample-Efficient World Models</a> (RL): Uses transformers as world
+models to predict transition functions and reward functions, which leads
+to real-world sample-efficient policy training on Atari games. Future
+work: <strong>Learn a policy from the world model&#x2019;s embedding space
+instead of the pixel space.</strong></li>
+<li><a href="http://arxiv.org/abs/2401.10020">Self-Rewarding Language
+Models</a> (RL, alignment): Sample diverse responses to prompts with an
+LM, then use the LM to produce preference data for the responses, then
+use DPO, then repeat the process. Future work: does this work with small
+models? Surely it stops working at some point (either too small a model
+or too many iterations).</li>
+<li><a href="http://arxiv.org/abs/2301.04104">Mastering Diverse Domains
+through World Models</a> (RL): Seems like a bag-of-tricks paper to learn
+world models in Minecraft and other games, then applies actor critic.
+Future work: training general world models across games and tasks.</li>
+<li><a href="https://openreview.net/forum?id=3RBY8fKjHeu">DayDreamer:
+World Models for Physical Robot Learning</a> (RL): Applies Dreamer to
+robots, find that it does really well. Future work: apply DreamerV3?
+This is an application of a technique to a new problem.</li>
+<li><a href="https://openreview.net/forum?id=10uNUgI5Kl">Reward Design
+with Language Models</a> (RL): Uses few-shot prompted LLM as reward
+model for RL tasks; finds that this is easier than writing a reward
+function. Future work: This is a weird continuation of the idea that
+&#x201C;It&#x2019;s hard to gather lots of gold (input, output) pairs, but it&#x2019;s easy
+to write a reward function. <em>Actually</em>, it&#x2019;s hard to write a
+reward function, but it&#x2019;s easy to gather a <em>few</em> (input, output)
+pairs and then have a language model give reward to an RL policy. Not
+sure what to make of this for tasks that an LLM cannot provide reward
+for.</li>
+<li><a href="https://arxiv.org/abs/2306.01693v1">Fine-Grained Human
+Feedback Gives Better Rewards for Language Model Training</a>
+(alignment): Provides multiple rewards per segment of text for different
+metrics (factuality, toxicity, fluency) and uses that for RLHF. Future
+work: How does this mesh with &#x201C;Let&#x2019;s Verify Step by Step&#x201D;?</li>
+<li><a href="http://arxiv.org/abs/1912.06088">Learning to Reach Goals
+via Iterated Supervised Learning</a> (RL): Samples trajectories from
+policy, then relabels those policies where the final state was the goal
+state all along, then uses behavior cloning to mimic that trajectory for
+the goal state. They show this converges to an optimal policy
+eventually. Future work: improve exploration because it depends on
+policy stochasticity to explore new options.</li>
+<li><a href="http://arxiv.org/abs/2110.14565">DreamerPro:
+Reconstruction-Free Model-Based Reinforcement Learning with Prototypical
+Representations</a> (RL): Boy I do not understand this paper at all.
+It&#x2019;s really not clear to me what it&#x2019;s doing.</li>
+<li><a href="http://arxiv.org/abs/2106.07156">Temporal Predictive Coding
+For Model-Based Planning In Latent Space</a> (RL): Propose a new
+objective for predicting future states in the embedding space that is
+somehow different to cross entropy? Not super clear to me what it is.
+Future work: Simplify and use transformers.</li>
+<li><a href="http://arxiv.org/abs/2401.10935">SeeClick: Harnessing GUI
+Grounding for Advanced Visual GUI Agents</a> (web agent): Uses
+vision-only to interact with GUI; finds that grounding to textual
+instructions is challenging; proposes grounding pre-training and a
+<em>ScreenSpot</em> benchmark that tests grounding; finds that
+improvements on <em>ScreenSpot</em> correlate well with improvements on
+downstream GUI agent tasks.<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a> Future work: Lacks error
+analysis; not clear what needs to be fixed.</li>
 </ol>
+<!-- 67. [Learning to Model the World with Language](http://arxiv.org/abs/2308.01399) (RL):  -->
+<!-- 68. [ScreenAI: A Vision-Language Model for UI and Infographics Understanding](http://arxiv.org/abs/2402.04615) (web agent): -->
+<!-- 50. [Multi-Robot Learning in a Cooperative Observation Task](http://link.springer.com/10.1007/978-4-431-67919-6_37) -->
 <!-- 32. [LiDAR: Sensing Linear Probing Performance in Joint Embedding SSL Architectures](https://arxiv.org/abs/2312.04000) -->
 <!-- 20. [Mixture of Cluster-conditional LoRA Experts for Vision-language Instruction Tuning](http://arxiv.org/abs/2312.12379) ( -->
 <!-- 21. [Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model](http://arxiv.org/abs/2401.09417) (vision, linear transformer):  -->
@@ -354,6 +458,10 @@ we don&#x2019;t want to chance it with these data selection methods. If random
 selection is a good baseline, then who cares about optimizing it? Just
 train with more data and do cheap alignment afterwards.<a href="#fnref1"
 class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+<li id="fn2"><p>This is one of the best abstracts I&#x2019;ve read in many
+weeks on web agents. If all the claims are true, then this paper is
+fantastic.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 </ol>
 </aside>
       <hr />

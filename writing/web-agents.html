@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="A summary of recent work on web
+agents that use LLMs." />
+  <meta name="keywords" content="web agent, llm, large language
+model, planning" />
+  <title>Behold: Web Agents in the era of LLMs</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="https://github.com/samuelstevens">GitHub</a>]
+        [<a href="mailto:samuel.robert.stevens@gmail.com">Email</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="web-agents">Web Agents</h1>
+<p>This page is a personal literature review for web agents in the age
+of LLMs. I update this page as I have time and energy to read and write
+about new papers. If you feel that your work should be mentioned here,
+please email me.</p>
+<p><a href="http://arxiv.org/abs/2307.12856">A Real-World WebAgent with
+Planning, Long Context Understanding, and Program Synthesis</a> propose
+an LLM-driven agent that decomposes instructions into sub-instructions,
+summarizes long HTML documents and acts via Python programs. It leads to
+SoTA performance on Mind2Web.</p>
+<figure>
+<a href="/images/web-agents/webagent-overview.png"><img src="/images/web-agents/webagent-overview.png" alt="Screenshot from Gur et al. 2023"></a>
+<figcaption aria-hidden="true">
+WebAgent architecture from Gur et al.&#xA0;2023. Click to see full-size.
+While I agree that you likely need modular components to a successful
+web agent, instead of a single LM, I still would prefer a simpler
+architecture. I don&#x2019;t know why I feel this way; I need to think more
+about this.
+</figcaption>
+</figure>
+<p><a href="https://arxiv.org/abs/2305.11854">Multimodal Web Navigation
+with Instruction-Finetuned Foundation Models</a> (<em>WebGUM</em>)</p>
+<p><a href="http://arxiv.org/abs/2401.10935">SeeClick: Harnessing GUI
+Grounding for Advanced Visual GUI Agents</a> uses vision to interact
+with GUI rather than HTML; finds that grounding to textual instructions
+is challenging; proposes grounding pre-training and a
+<em>ScreenSpot</em> benchmark that tests grounding; finds that
+improvements on <em>ScreenSpot</em> correlate well with improvements on
+downstream GUI agent tasks.</p>
+<h2 id="benchmarks">Benchmarks</h2>
+<p><a href="http://arxiv.org/abs/2207.01206">WebShop: Towards Scalable
+Real-World Web Interaction with Grounded Language Agents</a> is a
+simulated e-commerce website with train/test splits of tasks.</p>
+<p><a href="http://arxiv.org/abs/2205.11029">META-GUI: Towards
+Multi-modal Conversational Agents on Mobile GUI</a> collects ~1K
+task-oriented mobile interactions with train/test splits.</p>
+<p><a href="http://arxiv.org/abs/2104.08560">Mobile App Tasks with
+Iterative Feedback (MoTIF): Addressing Task Feasibility in Interactive
+Visual Environments</a> introduces a mobile interaction dataset where
+some requests are <em>impossible</em> which makes it much harder. For
+future work, I would like to see the binary classification for
+&#x201C;feasibility&#x201D; brought way up.</p>
+<p><a href="http://arxiv.org/abs/2103.16057">Grounding Open-Domain
+Instructions to Automate Web Support Tasks</a> releases a dataset aimed
+at automating web <em>support</em> tasks. I&#x2019;m less interested in
+specific tasks like web support and more interested in broad web agent
+skills.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p><a href="http://arxiv.org/abs/2306.06070">Mind2Web: Towards a
+Generalist Agent for the Web</a> releases a very diverse dataset of
+real-world web tasks focusing on new-website generalization and is a
+de-facto benchmark for many web agent tasks.</p>
+<p><a href="http://arxiv.org/abs/2307.10088">Android in the Wild: A
+Large-Scale Dataset for Android Device Control</a> releases a dataset
+and benchmark for interacting with android devices which is different to
+web because it involves swiping and non-click gestures.</p>
+<aside id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Is this a good thing? Maybe developing a natural
+language for all web support tasks, or all flight-booking sites, or all
+hotel-booking sites, is a good first step. Deeply understanding a single
+problem might lead to general insights that are broadly applicable.<a
+href="#fnref1" class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</aside>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
