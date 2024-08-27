@@ -56,6 +56,8 @@ on Twitter.
 <li><a href="#training">Training</a></li>
 <li><a href="#fine-tuning">Fine-Tuning</a></li>
 <li><a href="#domain-specific-models">Domain-Specific Models</a></li>
+<li><a href="#contrastive-vs.-captioning">Contrastive
+vs.&#xA0;Captioning</a></li>
 <li><a href="#further-reading">Further Reading</a></li>
 </ul>
 <h2 id="foundational-works">Foundational Works</h2>
@@ -101,9 +103,19 @@ which uses pure string matching. This outperforms LAION and OpenAI CLIP
 models across ImageNet 0-shot and a wide variety of downstream tasks.
 This is the first effort to exactly reproduce OpenAI&#x2019;s WIT-400M without
 using existing CLIP models.</p>
+<p>Multiple papers propose the use of hard negatives, where they add
+either additional images or additional texts to a batch that
+deliberately do not match any of the images or text in the batch. This
+is supposed to help with fine-grained reasoning. Some examples:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2401.07669">FiGCLIP: Fine-Grained
+CLIP Adaptation via Densely Annotated Videos</a> creates hard negative
+captions by replacing verbs in rule-based captions.</li>
+</ul>
 <h2 id="issues">Issues</h2>
-<p>When and Why Vision-Language Models Behave Like Bags-of-Words, and
-What to Do About It?</p>
+<p><a href="https://arxiv.org/abs/2210.01936">When and Why
+Vision-Language Models Behave Like Bags-of-Words, and What to Do About
+It?</a> suggests that</p>
 <ul>
 <li>Note that (Image Captioners Are Scalable Vision Learners Too) shows
 that simply training a language model is enough to do well on ARO, so it
@@ -212,6 +224,25 @@ href="#fn1" class="footnote-ref" id="fnref1"
 role="doc-noteref"><sup>1</sup></a></p>
 <p>CONCH-trained models do better than PLIP, BiomedCLIP and OpenAI&#x2019;s
 CLIP.</p>
+<h2 id="contrastive-vs.-captioning">Contrastive vs.&#xA0;Captioning</h2>
+<p>An interesting split has emerged in learning vision models from
+language: should you use a contrastive objective, where the fundamental
+goal is image-text matching, or a captioning objective, where the
+fundamental goal is <em>generating</em> the text for a given image? Both
+appear to be quite scalable and lead to strong results. What are the
+tradeoffs?</p>
+<ul>
+<li><a href="http://arxiv.org/abs/2303.17376">A Study of Autoregressive
+Decoders for Multi-Tasking in Computer Vision</a></li>
+<li><a href="http://arxiv.org/abs/2403.19596">LocCa: Visual Pretraining
+with Location-aware Captioners</a></li>
+<li><a href="http://arxiv.org/abs/2210.03347">Pix2Struct: Screenshot
+Parsing as Pretraining for Visual Language Understanding</a></li>
+<li><a href="http://arxiv.org/abs/2306.07915">Image Captioners Are
+Scalable Vision Learners Too</a></li>
+<li><a href="http://arxiv.org/abs/2205.01917">CoCa: Contrastive
+Captioners are Image-Text Foundation Models</a></li>
+</ul>
 <h2 id="further-reading">Further Reading</h2>
 <ul>
 <li><a href="https://arxiv.org/abs/2012.06946">MiniVLM: A Smaller and
@@ -253,7 +284,7 @@ Language Models</a></li>
 <li><a href="https://arxiv.org/abs/2308.12966">Qwen-VL: A Frontier Large
 Vision-Language Model with Versatile Abilities</a></li>
 </ul>
-<aside id="footnotes" class="footnotes footnotes-end-of-document"
+<section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
 <ol>
@@ -264,7 +295,7 @@ href="https://arxiv.org/abs/2306.07831">Lu et al.&#xA0;2023</a> for this
 idea.<a href="#fnref1" class="footnote-back"
 role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
 </ol>
-</aside>
+</section>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2024</p>

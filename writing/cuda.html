@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Behold: </title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="/contact">Contact</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="cuda">CUDA</h1>
+<p>I hate CUDA but it works better than any other hardware
+accelerator.</p>
+<p>Here are live updated notes on how to deal with CUDA version
+mismatches and other various CRAP that stops me from doing interesting
+research.</p>
+<h2 id="overview-of-cuda">Overview of CUDA</h2>
+<blockquote>
+<p>From <a href="https://stackoverflow.com/a/53504578">this
+StackOverflow post</a>.</p>
+</blockquote>
+<p>CUDA has a runtime API and a driver API, each with their own
+version.</p>
+<p>On Linux, the driver API is in <code>libcuda.so</code> and is
+installed by the GPU driver installer. The runtime API is in
+<code>libcudart.so</code> is installed by the CUDA toolkit installer
+(which might also include the driver installer).</p>
+<p><code>nvidia-smi</code> is part of the driver API and so is installed
+by the GPU driver installer. When you run <code>nvidia-smi</code> it
+will include the driver API version, which is not related to the CUDA
+runtime version.</p>
+<p><code>nvcc</code> is installed with the runtime API and only cares
+about the CUDA runtime API, not the driver API.</p>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
