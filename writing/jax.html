@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title>Behold: </title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me2.jpeg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="/contact">Contact</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="jax">Jax</h1>
+<p>I am learning how to use Jax for neural network training. This is a
+collection of the resources and notes that I&#x2019;ve collected while learning
+how to use Jax.</p>
+<h1 id="my-code">My Code</h1>
+<ul>
+<li><a
+href="https://github.com/samuelstevens/mlm-pretraining/tree/main">Simple,
+single-device BERT training using Jax and Equinox</a></li>
+<li><a href="https://github.com/samuelstevens/frx">Simple single- and
+multi-device ViT training using Jax and Equinox</a></li>
+</ul>
+<h1 id="sharding">Sharding</h1>
+<ul>
+<li><a
+href="https://astralord.github.io/posts/exploring-parallel-strategies-with-jax/">AstraBlog&#x2019;s
+&#x2018;Exploring Parallel Strategies with Jax&#x2019;</a></li>
+<li><a
+href="https://www.kaggle.com/code/aakashnain/parallelization-and-distributed-training-in-jax">Kaggle
+notebook &#x2018;Parallelization and Distributed Training in JAX&#x2019;</a></li>
+</ul>
+<blockquote>
+<p>To perform sharding, we need four things:</p>
+<ol type="1">
+<li>The logical mesh (the <code>Mesh</code> class)</li>
+<li>A partition spec describing how to partition an array across a
+device mesg (<code>PartitionSpec</code>)</li>
+<li>A memory layout (<code>NamedSharding</code>, which uses
+<code>Mesh</code> and <code>PartitionSpec</code> as inputs)</li>
+<li>A way to actually make arrays with the defined layout
+(<code>jax.device_put(...)</code>)</li>
+</ol>
+</blockquote>
+<p>It seems like there are a lot of repeated concepts: Mesh,
+PartitionSpec and Shardings.</p>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
