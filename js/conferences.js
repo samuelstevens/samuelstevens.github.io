@@ -5338,6 +5338,28 @@ var $author$project$Conferences$init = function (_v0) {
 					year: 2023
 				},
 					{
+					_abstract: $elm$core$Maybe$Nothing,
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1722052800000)),
+					name: 'ICML',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1721620800000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1706763600000)),
+					year: 2024
+				},
+					{
+					_abstract: $elm$core$Maybe$Nothing,
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1752897600000)),
+					name: 'ICML',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1752379200000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1738299600000)),
+					year: 2025
+				},
+					{
 					_abstract: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1632801600000)),
 					end: $elm$core$Maybe$Just(
