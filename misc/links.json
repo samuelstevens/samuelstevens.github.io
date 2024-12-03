@@ -8,6 +8,11 @@
   ],
   "papers": [
     {
+      "title": "JetFormer: An Autoregressive Generative Model of Raw Images and Text",
+      "link": "https://arxiv.org/pdf/2411.19722",
+      "added": 1733268790024
+    },
+    {
       "title": "Into the Unknown Unknowns: Engaged Human Learning through Participation in Language Model Agent Conversations",
       "link": "https://arxiv.org/pdf/2408.15232",
       "added": 1733258516000
