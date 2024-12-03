@@ -1,0 +1,21 @@
+{
+  "links": [
+    {
+      "title": "rsrch space",
+      "link": "https://rsrch.space/",
+      "added": 1733258516000
+    }
+  ],
+  "papers": [
+    {
+      "title": "Into the Unknown Unknowns: Engaged Human Learning through Participation in Language Model Agent Conversations",
+      "link": "https://arxiv.org/pdf/2408.15232",
+      "added": 1733258516000
+    },
+    {
+      "title": "PokeLLMon: A Human-Parity Agent for Pokemon Battles with Large Language Models",
+      "link": "https://arxiv.org/pdf/2402.01118",
+      "added": 1733258516000
+    }
+  ]
+}
