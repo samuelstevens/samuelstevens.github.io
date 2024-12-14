@@ -1,6 +1,11 @@
 {
   "links": [
     {
+      "title": "The Grug Brained Developer",
+      "link": "https://grugbrain.dev/",
+      "added": 1734023910775
+    },
+    {
       "title": "AI Search: The Bitter-er Lesson",
       "link": "https://yellow-apartment-148.notion.site/AI-Search-The-Bitter-er-Lesson-44c11acd27294f4495c3de778cd09c8d",
       "added": 1733269017971
@@ -12,6 +17,11 @@
     }
   ],
   "papers": [
+    {
+      "title": "Large Concept Models: Language Modeling in a Sentence Representation Space",
+      "link": "https://arxiv.org/pdf/2412.08821",
+      "added": 1734214573294
+    },
     {
       "title": "JetFormer: An Autoregressive Generative Model of Raw Images and Text",
       "link": "https://arxiv.org/pdf/2411.19722",
