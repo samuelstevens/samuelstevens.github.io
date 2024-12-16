@@ -1,6 +1,11 @@
 {
   "links": [
     {
+      "title": "Lessons learned in 35 years of making software",
+      "link": "https://dev.jimgrey.net/2024/07/03/lessons-learned-in-35-years-of-making-software",
+      "added": 1734385698979
+    },
+    {
       "title": "Representation Engineering Mistral-7B an Acid Trip",
       "link": "https://vgel.me/posts/representation-engineering",
       "added": 1734352169129
