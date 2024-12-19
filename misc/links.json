@@ -28,6 +28,16 @@
   ],
   "papers": [
     {
+      "title": "Analyzing and Improving the Training Dynamics of Diffusion Models",
+      "link": "https://arxiv.org/pdf/2312.02696",
+      "added": 1734615179188
+    },
+    {
+      "title": "VinePPO: Unlocking RL Potential For LLM Reasoning Through Refined Credit Assignment",
+      "link": "https://arxiv.org/pdf/2410.01679",
+      "added": 1734407346597
+    },
+    {
       "title": "Large Concept Models: Language Modeling in a Sentence Representation Space",
       "link": "https://arxiv.org/pdf/2412.08821",
       "added": 1734214573294
