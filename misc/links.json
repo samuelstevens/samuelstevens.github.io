@@ -1,6 +1,11 @@
 {
   "links": [
     {
+      "title": "Egoless Engineering",
+      "link": "https://egoless.engineering/",
+      "added": 1734976713454
+    },
+    {
       "title": "Lessons learned in 35 years of making software",
       "link": "https://dev.jimgrey.net/2024/07/03/lessons-learned-in-35-years-of-making-software",
       "added": 1734385698979

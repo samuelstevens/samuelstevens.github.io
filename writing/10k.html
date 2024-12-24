@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+  <meta name="description" content="A small Python utility to track
+personal habits." />
+  <meta name="keywords" content="" />
+  <title>Behold: 10K</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me3.jpg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Behold, My Stuff</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/links" data-no-instant>Links</a>]
+        [<a href="/cv.pdf">CV</a>]
+        [<a href="/contact">Contact</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="ten-thousand">Ten Thousand</h1>
+<p>I wrote a small tool to track progress of whatever you want to 10K of
+<em>something</em> in a year. I plan on using it to try and do 10K
+pullups and 10K minutes of meditation in 2025.</p>
+<p>I was inspired by the realization that 30 pullups a day for 334 days
+is 10,020 pullups. This means that if you do 6 sets of 5 pullups
+throughout the day, and only miss 31 days (an entire month!) you can do
+10K pullups, which is a phenomenal achievement.</p>
+<p>I wanted a small tool to track this for me to see if I was behind or
+not. <a href="/writing/personal-software">I love building one-off tools
+for this sort of thing</a>. Previously I would have used Go for this
+tool, but with <a
+href="https://docs.astral.sh/uv/guides/scripts/#declaring-script-dependencies">inline
+uv dependencies</a> it&#x2019;s really easy to build Python scripts that are
+self-contained without a virtual environment.</p>
+<p>I used <code>#!/usr/bin/env -S uv run --script --quiet</code> as a
+shebang so that it runs with uv without any uv-specific details.</p>
+<p>I also built this entire app with Claude via <a
+href="https://aider.chat">aider</a>. It wrote like 95% of the code, with
+me making mild stylistic changes as we progressed. Especially for CLI
+utilities, aider is really nice because it will run the script, then
+read the output, then update the code to deal with any exceptions. It&#x2019;s
+a phenomenal workflow and I can&#x2019;t get over it.</p>
+      <hr />
+      <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
