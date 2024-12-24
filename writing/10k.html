@@ -47,7 +47,9 @@ for this sort of thing</a>. Previously I would have used Go for this
 tool, but with <a
 href="https://docs.astral.sh/uv/guides/scripts/#declaring-script-dependencies">inline
 uv dependencies</a> it&#x2019;s really easy to build Python scripts that are
-self-contained without a virtual environment.</p>
+self-contained without a virtual environment. I also loved reading <a
+href="https://simonwillison.net/2024/Dec/19/one-shot-python-tools/">Simon
+Willison&#x2019;s description of this kind of workflow</a>.</p>
 <p>I used <code>#!/usr/bin/env -S uv run --script --quiet</code> as a
 shebang so that it runs with uv without any uv-specific details.</p>
 <p>I also built this entire app with Claude via <a
