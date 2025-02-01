@@ -1,6 +1,21 @@
 {
   "links": [
     {
+      "title": "Matryoshka Sparse Autoencoders - HackMD",
+      "link": "https://sparselatents.com/matryoshka.html",
+      "added": 1738438155333
+    },
+    {
+      "title": "The Architecture of Open Source Applications",
+      "link": "https://aosabook.org/en",
+      "added": 1736175686549
+    },
+    {
+      "title": "Cognitive load is what matters",
+      "link": "https://minds.md/zakirullin/cognitive",
+      "added": 1735155600231
+    },
+    {
       "title": "Co-Adapting Human Interfaces and LMs",
       "link": "https://jessylin.com/2024/11/12/co-adapting-human-interfaces",
       "added": 1735071721651
