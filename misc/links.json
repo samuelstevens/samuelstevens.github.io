@@ -1,6 +1,11 @@
 {
   "links": [
     {
+      "title": "Please Stop Talking About AGI - Jack Morris",
+      "link": "https://substack.com/home/post/p-157633768",
+      "added": 1740407053034
+    },
+    {
       "title": "The State of Generative Models | wh",
       "link": "https://nrehiew.github.io/blog/2024",
       "added": 1739830249249
@@ -57,6 +62,11 @@
     }
   ],
   "papers": [
+    {
+      "title": "SigLIP 2: Multilingual Vision-Language Encoders with Improved Semantic Understanding, Localization, and Dense Features",
+      "link": "https://arxiv.org/pdf/2502.14786",
+      "added": 1740166057210
+    },
     {
       "title": "Analyzing and Improving the Training Dynamics of Diffusion Models",
       "link": "https://arxiv.org/pdf/2312.02696",
