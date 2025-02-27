@@ -33,6 +33,7 @@
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="profiling-python-code">Profiling Python Code</h1>
 <p><em>(Updated 10/04/2022 with <code>py-spy</code>)</em></p>
+<p><em>(Updated 02/26/2025 with <code>pyinstrument</code>)</em></p>
 <p>Python is an interpreted language, which typically makes it slower
 than compiled languages like C/C++, Java, Rust, or Go. In order to <a
 href="/writing/optimizing-python-code-with-ctypes">optimize Python
@@ -92,8 +93,11 @@ sudo</a> on macOS and some Linux systems, however.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">py-spy</span> record <span class="at">-o</span> profiling/whatever-v1.svg <span class="at">--</span> python <span class="at">-m</span> src.module.whatever arg1 arg2</span></code></pre></div>
 <p>py-spy generates svg files which can typically be opened in a browser
 like FireFox.</p>
-<p>Please <a href="mailto:samuel.robert.stevens@gmail.com">email me</a>
-if you have any comments or want to discuss further.</p>
+<p>I also have used <a
+href="https://github.com/joerick/pyinstrument">pyinstrument</a> which
+works quite well and does <em>not</em> need sudo. The downside is that
+it doesn&#x2019;t work well with multiprocessing, but it does work well with
+async/await and threading. Tradeoffs, tradeoffs.</p>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2024</p>
