@@ -46,15 +46,71 @@ interactive webapps for my own research, to convince myself of ideas or
 to provide intuition to collaborators. I wanted to share my process for
 developing interactive webapps, with links to specific technologies
 based on how much effort you want to invest, how much control over the
-experience you want and how much public compute you have.</p>
+experience you want and how much public compute you have. Hopefully this
+will help you choose and implement the right type of interactive demo
+based on your specific research needs and technical constraints.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
+<li><a href="#when-to-build-a-demo">When to Build a Demo</a></li>
 <li><a href="#marimo">Marimo</a></li>
 <li><a href="#gradio">Gradio</a></li>
-<li><a href="#interlude---when-to-build-a-demo">When to Build a
-Demo</a></li>
 <li><a href="#javascript">JavaScript</a></li>
+<li><a href="#summary">Summary</a></li>
 </ol>
+<h2 id="when-to-build-a-demo"><a href="#when-to-build-a-demo">When to
+Build a Demo</a></h2>
+<p>Not every research project needs a demo. If you are developing a new
+optimization algorithm whose claim to fame is needing only half the
+optimization steps compared to Adam, a demo is not needed. Or if you
+have a novel attention variant that reduces memory costs by 20%, don&#x2019;t
+bother with a demo.</p>
+<p>Demos, to me, are useful when you introduce a qualitative shift that
+is not well-captured by existing quantitative measures. What are
+examples of this? Consider these three scenarios where interactive demos
+can be particularly impactful:</p>
+<p><strong>Novel capabilities</strong> like zero-shot species
+classification (like BioCLIP), few-shot prompting (like GPT-3) zero-shot
+semantic segmentation (like SAM and SAMv2) or manipulating internal
+representations (like sparse autoencoders) often require a demo to
+properly express just how amazing the capability is. While static
+examples in your hook figure can make a big difference, giving potential
+users the chance to play with your new system on their own without any
+barrier to entry (downloading code, setting up an environment) can
+completely change their perspective.</p>
+<blockquote>
+<p>This was especially apparent to me while doing field work in Hawaii.
+Watching biologists use the BioCLIP and SAMv2 demos to iteratively
+develop their understanding of model capabilities in real time and then
+using that understanding to shape their study design was phenomenal. I
+can only imagine how different their research would have looked without
+a working BioCLIP demo. This was a highly impactful experience for me
+that shifted the way I think about online demos.</p>
+</blockquote>
+<p><strong>Qualitative shifts</strong> in quantitative metrics like
+inference speed or data efficiency often benefit from a demo, where
+possible, to give potential users a concrete feel for how dramatically
+improved your method is. For example, Mistral&#x2019;s recent <a
+href="https://chat.mistral.ai/chat">Le Chat</a> is <a
+href="https://cerebras.ai/blog/mistral-le-chat">powered by Cerebras
+chips</a> and gets over 1.1K tokens/sec, which is 10x faster than other
+assistants. It&#x2019;s shocking to see how quickly Mistral can write code and
+responses and really must be experienced to truly understand.</p>
+<blockquote>
+<p>See my <a href="writing/personal-software#performance">notes on
+performance leading to qualitative shifts in workflows</a> for a litte
+discussion on this.</p>
+</blockquote>
+<p><strong>Hard-to-understand ideas</strong> like <a
+href="/research/encryption#symmetric-encryption">symmetric
+encryption</a> or <a
+href="https://osu-nlp-group.github.io/SAE-V/demos/classification?example=680">manipulating
+ViT internal representations</a> can benefit from demos to help
+potential users <em>build intuition around your new, poorly-understood
+idea</em>. This is often why I build demos, even for myself. I want to
+move things around with my hands and see how the model responds. My
+internal dialogue normally goes &#x201C;What if I do this?&#x201D; followed by &#x201C;What
+if I do that?&#x201D; followed by &#x201C;Ohhhhhh.&#x201D; Demos can help your users do the
+same thing (I think).</p>
 <h2 id="marimo"><a href="#marimo">Marimo</a></h2>
 <p><a href="https://marimo.io/">Marimo</a> is a modern take on Jupyter
 notebooks that are <em>reactive</em>: whenever you change a cell, all
@@ -130,60 +186,6 @@ demos, this is perfect, and frees you from having to think about
 responsive design, CSS styling, etc.
 </figcaption>
 </figure>
-<h2 id="interlude---when-to-build-a-demo"><a
-href="#interlude---when-to-build-a-demo">Interlude - When to Build a
-Demo</a></h2>
-<p>Not every research project needs a demo. If you are developing a new
-optimization algorithm whose claim to fame is needing only half the
-optimization steps compared to Adam, a demo is not needed. Or if you
-have a novel attention variant that reduces memory costs by 20%, don&#x2019;t
-bother with a demo.</p>
-<p>Demos, to me, are useful when you introduce a qualitative shift that
-is not well-captured by existing quantitative measures. What are
-examples of this?</p>
-<p><strong>Novel capabilities</strong> like zero-shot species
-classification (like BioCLIP), few-shot prompting (like GPT-3) zero-shot
-semantic segmentation (like SAM and SAMv2) or manipulating internal
-representations (like sparse autoencoders) often require a demo to
-properly express just how amazing the capability is. While static
-examples in your hook figure can make a big difference, giving potential
-users the chance to play with your new system on their own without any
-barrier to entry (downloading code, setting up an environment) can
-completely change their perspective.</p>
-<blockquote>
-<p>This was especially apparent to me while doing field work in Hawaii.
-Watching biologists use the BioCLIP and SAMv2 demos to iteratively
-develop their understanding of model capabilities in real time and then
-using that understanding to shape their study design was phenomenal. I
-can only imagine how different their research would have looked without
-a working BioCLIP demo. This was a highly impactful experience for me
-that shifted the way I think about online demos.</p>
-</blockquote>
-<p><strong>Qualitative shifts</strong> in quantitative metrics like
-inference speed or data efficiency often benefit from a demo, where
-possible, to give potential users a concrete feel for how dramatically
-improved your method is. For example, Mistral&#x2019;s recent <a
-href="https://chat.mistral.ai/chat">Le Chat</a> is <a
-href="https://cerebras.ai/blog/mistral-le-chat">powered by Cerebras
-chips</a> and gets over 1.1K tokens/sec, which is 10x faster than other
-assistants. It&#x2019;s shocking to see how quickly Mistral can write code and
-responses and really must be experienced to truly understand.</p>
-<blockquote>
-<p>See my <a href="writing/personal-software#performance">notes on
-performance leading to qualitative shifts in workflows</a> for a litte
-discussion on this.</p>
-</blockquote>
-<p><strong>Hard-to-understand ideas</strong> like <a
-href="/research/encryption#symmetric-encryption">symmetric
-encryption</a> or <a
-href="https://osu-nlp-group.github.io/SAE-V/demos/classification?example=680">manipulating
-ViT internal representations</a> can benefit from demos to help
-potential users <em>build intuition around your new, poorly-understood
-idea</em>. This is often why I build demos, even for myself. I want to
-move things around with my hands and see how the model responds. My
-internal dialogue normally goes &#x201C;What if I do this?&#x201D; followed by &#x201C;What
-if I do that?&#x201D; followed by &#x201C;Ohhhhhh.&#x201D; Demos can help your users do the
-same thing (I think).</p>
 <h2 id="javascript"><a href="#javascript">JavaScript</a></h2>
 <p>If you want to build truly custom web-based interactive
 <em>~experiences~</em> then you probably need to write some JavaScript
@@ -217,6 +219,73 @@ Python-based backend using the free hardware and hosting provided by
 HuggingFace Spaces, then host your HTML+CSS+JS app using GitHub Pages,
 and you have an entire stack hosted for free! This is great if you&#x2019;re a
 grad student.</p>
+<h2 id="summary">Summary</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Marimo</th>
+<th>Gradio</th>
+<th>JavaScript</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Setup Difficulty</strong></td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Customizability</strong></td>
+<td>Medium</td>
+<td>Low-Medium</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Requirements</strong></td>
+<td>Python environment, or limited web-only version</td>
+<td>Free on HuggingFace Spaces (1 vCPU)</td>
+<td>Static hosting (GitHub Pages) + optional backend</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>Python</td>
+<td>Python</td>
+<td>JavaScript/web development</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>Quick prototyping, personal research tools, reactive notebooks</td>
+<td>ML model demos with standard input/output patterns</td>
+<td>Custom interactive experiences with complete design freedom</td>
+</tr>
+<tr>
+<td><strong>Limitations</strong></td>
+<td>Web version limited to WebAssembly-compatible packages</td>
+<td>Must fit within Gradio&#x2019;s component system</td>
+<td>Requires web development skills, potentially complex setup</td>
+</tr>
+<tr>
+<td><strong>Use with ML Models</strong></td>
+<td>Direct Python integration</td>
+<td>Built specifically for ML demos</td>
+<td>Requires API to connect to models</td>
+</tr>
+<tr>
+<td><strong>Example Use Case</strong></td>
+<td>Interactive data exploration, feature visualization</td>
+<td>Image classification demo, text generation UI</td>
+<td>Complex multi-step visualization, custom interactions</td>
+</tr>
+<tr>
+<td><strong>Maintenance</strong></td>
+<td>Dependent on Marimo&#x2019;s development</td>
+<td>Dependent on Gradio and HuggingFace</td>
+<td>More stable long-term with standard web technologies</td>
+</tr>
+</tbody>
+</table>
       <hr />
       <p>[<a href="https://www.youtube-nocookie.com/embed/SHbS9tYFpcQ">Relevant link</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2024</p>
