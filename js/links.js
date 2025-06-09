@@ -5383,22 +5383,19 @@ var $elm$browser$Browser$element = _Browser_element;
 var $author$project$Links$AdjustTimeZone = function (a) {
 	return {$: 'AdjustTimeZone', a: a};
 };
+var $author$project$Links$Links = {$: 'Links'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $author$project$Links$GotData = function (a) {
 	return {$: 'GotData', a: a};
 };
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$core$Tuple$pair = F2(
-	function (a, b) {
-		return _Utils_Tuple2(a, b);
-	});
+var $elm$json$Json$Decode$map3 = _Json_map3;
 var $author$project$Links$Resource = F3(
 	function (title, link, added) {
 		return {added: added, link: link, title: title};
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$map3 = _Json_map3;
 var $elm$time$Time$Posix = function (a) {
 	return {$: 'Posix', a: a};
 };
@@ -5413,9 +5410,12 @@ var $author$project$Links$resourceDecoder = A4(
 		$elm$json$Json$Decode$field,
 		'added',
 		A2($elm$json$Json$Decode$map, $elm$time$Time$millisToPosix, $elm$json$Json$Decode$int)));
-var $author$project$Links$allDecoder = A3(
-	$elm$json$Json$Decode$map2,
-	$elm$core$Tuple$pair,
+var $author$project$Links$allDecoder = A4(
+	$elm$json$Json$Decode$map3,
+	F3(
+		function (a, b, c) {
+			return _Utils_Tuple3(a, b, c);
+		}),
 	A2(
 		$elm$json$Json$Decode$field,
 		'links',
@@ -5423,6 +5423,10 @@ var $author$project$Links$allDecoder = A3(
 	A2(
 		$elm$json$Json$Decode$field,
 		'papers',
+		$elm$json$Json$Decode$list($author$project$Links$resourceDecoder)),
+	A2(
+		$elm$json$Json$Decode$field,
+		'friends',
 		$elm$json$Json$Decode$list($author$project$Links$resourceDecoder)));
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
@@ -6231,7 +6235,7 @@ var $elm$time$Time$here = _Time_here(_Utils_Tuple0);
 var $elm$time$Time$utc = A2($elm$time$Time$Zone, 0, _List_Nil);
 var $author$project$Links$init = function (_v0) {
 	return _Utils_Tuple2(
-		{err: $elm$core$Maybe$Nothing, links: _List_Nil, linksFocused: true, papers: _List_Nil, zone: $elm$time$Time$utc},
+		{err: $elm$core$Maybe$Nothing, focused: $author$project$Links$Links, friends: _List_Nil, links: _List_Nil, papers: _List_Nil, zone: $elm$time$Time$utc},
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -6252,17 +6256,12 @@ var $author$project$Links$update = F2(
 						model,
 						{zone: zone}),
 					$elm$core$Platform$Cmd$none);
-			case 'FocusLinks':
+			case 'Focus':
+				var f = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{linksFocused: true}),
-					$elm$core$Platform$Cmd$none);
-			case 'FocusPapers':
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{linksFocused: false}),
+						{focused: f}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var result = msg.a;
@@ -6270,10 +6269,11 @@ var $author$project$Links$update = F2(
 					var _v2 = result.a;
 					var links = _v2.a;
 					var papers = _v2.b;
+					var friends = _v2.c;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{links: links, papers: papers}),
+							{friends: friends, links: links, papers: papers}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					var err = result.a;
@@ -6326,8 +6326,11 @@ var $author$project$Links$update = F2(
 				}
 		}
 	});
-var $author$project$Links$FocusLinks = {$: 'FocusLinks'};
-var $author$project$Links$FocusPapers = {$: 'FocusPapers'};
+var $author$project$Links$Focus = function (a) {
+	return {$: 'Focus', a: a};
+};
+var $author$project$Links$Friends = {$: 'Friends'};
+var $author$project$Links$Papers = {$: 'Papers'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -6339,7 +6342,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$core$Basics$not = _Basics_not;
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6565,7 +6567,17 @@ var $author$project$Links$viewTableRow = F2(
 				]));
 	});
 var $author$project$Links$viewTable = function (model) {
-	var resources = model.linksFocused ? model.links : model.papers;
+	var resources = function () {
+		var _v0 = model.focused;
+		switch (_v0.$) {
+			case 'Papers':
+				return model.papers;
+			case 'Links':
+				return model.links;
+			default:
+				return model.friends;
+		}
+	}();
 	return A2(
 		$elm$html$Html$table,
 		_List_Nil,
@@ -6582,11 +6594,11 @@ var $author$project$Links$viewTable = function (model) {
 };
 var $author$project$Links$view = function (model) {
 	var content = function () {
-		var _v0 = model.err;
-		if (_v0.$ === 'Nothing') {
+		var _v3 = model.err;
+		if (_v3.$ === 'Nothing') {
 			return $author$project$Links$viewTable(model);
 		} else {
-			var err = _v0.a;
+			var err = _v3.a;
 			return $author$project$Links$viewError(err);
 		}
 	}();
@@ -6604,10 +6616,18 @@ var $author$project$Links$view = function (model) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Links$FocusLinks),
+								$elm$html$Html$Events$onClick(
+								$author$project$Links$Focus($author$project$Links$Links)),
 								$elm$html$Html$Attributes$class('fancy'),
 								$elm$html$Html$Attributes$class(
-								model.linksFocused ? 'selected' : '')
+								function () {
+									var _v0 = model.focused;
+									if (_v0.$ === 'Links') {
+										return 'selected';
+									} else {
+										return '';
+									}
+								}())
 							]),
 						_List_fromArray(
 							[
@@ -6617,14 +6637,43 @@ var $author$project$Links$view = function (model) {
 						$elm$html$Html$button,
 						_List_fromArray(
 							[
-								$elm$html$Html$Events$onClick($author$project$Links$FocusPapers),
+								$elm$html$Html$Events$onClick(
+								$author$project$Links$Focus($author$project$Links$Papers)),
 								$elm$html$Html$Attributes$class('fancy'),
 								$elm$html$Html$Attributes$class(
-								(!model.linksFocused) ? 'selected' : '')
+								function () {
+									var _v1 = model.focused;
+									if (_v1.$ === 'Papers') {
+										return 'selected';
+									} else {
+										return '';
+									}
+								}())
 							]),
 						_List_fromArray(
 							[
 								$elm$html$Html$text('Papers')
+							])),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick(
+								$author$project$Links$Focus($author$project$Links$Friends)),
+								$elm$html$Html$Attributes$class('fancy'),
+								$elm$html$Html$Attributes$class(
+								function () {
+									var _v2 = model.focused;
+									if (_v2.$ === 'Friends') {
+										return 'selected';
+									} else {
+										return '';
+									}
+								}())
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Friends')
 							]))
 					])),
 				content
