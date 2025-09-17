@@ -5257,6 +5257,18 @@ var $author$project$Conferences$init = function (_v0) {
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1731042000000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1749960000000)),
+					name: 'CVPR',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1749614400000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1731646800000)),
+					year: 2025
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1620619200000)),
 					end: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1636606800000)),
@@ -5292,6 +5304,18 @@ var $author$project$Conferences$init = function (_v0) {
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1632801600000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1651204800000)),
+					name: 'ICLR',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1650859200000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1633406400000)),
+					year: 2022
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1663732800000)),
 					end: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1683259200000)),
@@ -5313,6 +5337,18 @@ var $author$project$Conferences$init = function (_v0) {
 					submission: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1695873600000)),
 					year: 2024
+				},
+					{
+					_abstract: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1758254400000)),
+					end: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1777262400000)),
+					name: 'ICLR',
+					start: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1776916800000)),
+					submission: $elm$core$Maybe$Just(
+						$elm$time$Time$millisToPosix(1758686400000)),
+					year: 2026
 				},
 					{
 					_abstract: $elm$core$Maybe$Just(
@@ -5358,18 +5394,6 @@ var $author$project$Conferences$init = function (_v0) {
 					submission: $elm$core$Maybe$Just(
 						$elm$time$Time$millisToPosix(1738299600000)),
 					year: 2025
-				},
-					{
-					_abstract: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1632801600000)),
-					end: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1651204800000)),
-					name: 'ICLR',
-					start: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1650859200000)),
-					submission: $elm$core$Maybe$Just(
-						$elm$time$Time$millisToPosix(1633406400000)),
-					year: 2022
 				},
 					{
 					_abstract: $elm$core$Maybe$Nothing,
