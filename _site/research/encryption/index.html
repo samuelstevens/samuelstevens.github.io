@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SELM: Symmetric Encryption with Language Models</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+  <link rel="icon" href="favicon.png">
+  <!-- MathJax -->
+  <script>
+    var MathJax = {};
+  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+  <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+  <!-- RoughJS -->
+  <script src="https://unpkg.com/roughjs@4.5.2/bundled/rough.js" defer></script>
+
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" defer></script>
+  <!-- math.js -->
+  <script src="https://unpkg.com/mathjs@11.8.0/lib/browser/math.js" defer></script>
+
+  <script src="js/helpers.js"></script>
+  <link rel="stylesheet" href="index.css">
+  <script>
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    function caesarCipher(message, key) {
+      let ciphertext = "";
+      for (let i = 0; i < message.length; i++) {
+        if (alphabet.includes(message[i])) {
+          const ch = parseInt(message[i], 36) - 10;
+          ciphertext += alphabet[(ch + key + 26) % 26];
+        } else {
+          ciphertext += message[i];
+        }
+      }
+      return ciphertext;
+    }
+
+    const arrowHandleLength = 20;
+    const arrowHandleAngle = 20 * Math.PI / 180;
+    function drawArrow(rc, x1, y1, x2, y2, params) {
+      rc.line(x1, y1, x2, y2, params);
+
+      let angle = Math.atan((y2 - y1) / (x2 - x1));
+      if (x2 - x1 < 0) { angle += Math.PI; }
+
+      const rightHandleAngle = angle - arrowHandleAngle;
+      const leftHandleAngle = angle + arrowHandleAngle;
+      
+      const rightHandleX = Math.cos(rightHandleAngle) * arrowHandleLength;
+      const rightHandleY = Math.sin(rightHandleAngle) * arrowHandleLength;
+      rc.line(x2 - rightHandleX, y2 - rightHandleY, x2, y2, params);
+
+      const leftHandleX = Math.cos(leftHandleAngle) * arrowHandleLength;
+      const leftHandleY = Math.sin(leftHandleAngle) * arrowHandleLength;
+      rc.line(x2 - leftHandleX, y2 - leftHandleY, x2, y2, params);
+    }
+    
+    // Citations
+    window.addEventListener('load', function () {
+      const citations = document.getElementsByClassName('citation');
+      for (let i = 0; i < citations.length; i++) {
+        // Construct the citation details
+        const title = document.createElement("p");
+        title.appendChild(document.createTextNode(citations[i].getAttribute("data-title")));
+        const authors = document.createElement("p");
+        authors.appendChild(document.createTextNode(citations[i].getAttribute("data-authors")));
+        const extra = document.createElement("p");
+        extra.appendChild(document.createTextNode(citations[i].getAttribute("data-extra")));
+        const detailsNode = document.createElement("div");
+        detailsNode.appendChild(title);
+        detailsNode.appendChild(authors);
+        detailsNode.appendChild(extra);
+        detailsNode.classList.add("citation-details");
+        detailsNode.classList.add("tooltip");
+
+        citations[i].appendChild(detailsNode);
+
+        detailsNode.addEventListener('mouseover', function(event) { 
+          event.stopPropagation();
+        });
+        citations[i].addEventListener('mouseover', function(event) {
+          detailsNode.classList.add("active");
+        });
+        citations[i].addEventListener('mouseleave', function() {
+          detailsNode.classList.remove("active");
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <main>
+    <h1>SELM: Symmetric Encryption with Language Models</h1>
+    <p>
+      Research by <a href="">Samuel Stevens</a> &amp; <a href="https://ysu1989.github.io/">Yu Su</a>
+    </p>
+    <blockquote>
+      <p>
+        We're excited to present our encryption algorithm SELM, a novel symmetric encrytion algorithm based on language models' incredible ability to memorize data.
+        While SELM is not amenable to conventional cryptanalysis, we investigate its security through an empirical variant of the classic IND-CPA game.
+      </p>
+      <p>
+        <a href="https://arxiv.org/abs/2305.10445">Paper</a>
+        <a href="https://github.com/OSU-NLP-Group/SELM">Code</a>
+      </p>
+    </blockquote>
+
+    <figure id="teaser-video">
+      <!-- Generate the poster with:
+        ffmpeg -i teaser-video-cropped.mp4 -qscale:v 4 -frames:v 1 teaser-poster.jpg
+      -->
+      <video controls width="100%" preload="none" poster="images/teaser-poster.jpg">
+        <source src="images/teaser-video-cropped.mp4" type="video/mp4">
+      </video>
+      <figcaption style="text-align: center;">Animated overview of SELM (545 KB). Read on for more deatils!</figcaption>
+    </figure>
+
+    <h2 id="hundred-mile-overview">Hundred-Mile Overview <a href="#hundred-mile-overview">[permalink]</a></h2>
+    <blockquote>
+      <p>
+        This overview assumes at least a passing familiarity with autoregressive language models, machine learning, symmetric encryption, and the IND-CPA game. The later sections present everything without any assumed background.
+      </p>
+    </blockquote>
+    <p>
+      Large language models (LMs) pre-trained on large text corpora often memorize data seen during pretraining, which compromises language quality <span class="citation" data-authors="Katherine Lee, Daphne Ippolito, Andrew Nystrom, Chiyuan Zhang, Douglas Eck, Chris Callison-Burch, and Nicholas Carlini." data-title="Deduplicating training data makes language models better." data-extra="In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (ACL 2022), Dublin, Ireland, 2022">[Lee et al., 2022]</span> and can reveal private data in the pretraining corpora <span class="citation" data-authors="Nicholas Carlini, Florian Tramer, Eric Wallace, Matthew Jagielski, Ariel Herbert-Voss, Katherine Lee, Adam Roberts, Tom Brown, Dawn Song, Ulfar Erlingsson, et al." data-title="Extracting training data from large language models." data-extra="In 30th USENIX Security Symposium (USENIX Security 21), pages 2633–2650, 2021.">[Carlini et al., 2021]</span>.
+      Because of this, we typically consider LM memorization a problem to be solved <span class="citation" data-authors="Rishi Bommasani, Drew A Hudson, Ehsan Adeli, Russ Altman, Simran Arora, Sydney von Arx, Michael S Bernstein, Jeannette Bohg, Antoine Bosselut, Emma Brunskill, et al." data-title="On the opportunities and risks of foundation models." data-extra="arXiv preprint arXiv:2108.07258, 2021.">[Bommasani et al., 2021]</span>.
+    </p>
+    <p>
+      We frame LM memorization as a under-explored <i>skill</i> and develop SELM, a <span class="acronym">s</span>ymmetric <span class="acronym">e</span>ncryption algorithm with autoregressive <span class="acronym">l</span>anguge <span class="acronym">m</span>odels.
+    </p>
+    <p>
+    Alice sends a message to Bob by fine-tuning a public language model in a secret subspace (parameterized by the secret key <i>k</i>) of the original parameter space to memorize her message <i>m</i>.
+    She sends the change in parameters in the secret subspace to Bob, who converts them from the secret subspace to the original parameter space using the secret key <i>k</i>, and decodes the original message.
+      Eve can't read the message because she can't convert from the secret subspace to the original parameter space.
+    </p>
+    <p>
+      We empirically investigate (1) whether LMs can encrypt all arbitrary data while constrained to subspace optimization and (2) SELM's security by training binary classifiers to play the IND-CPA game. 
+      We find that LMs (surprisingly) can memorize any abritrary data, even constrained to only thousands of free parameters, and that regularization is necessary to prevent simple classifiers from winning the IND-CPA game.
+    </p>
+    <blockquote>
+      <p>
+        The rest of this blog post is less dense and has examples, pictures and interactive widgets to develop intuition around our work.
+      </p>
+    </blockquote>
+
+    <h2>Table of Contents</h2>
+    <ol>
+      <li><a href="#hundred-mile-overview">Hundred-Mile Overview</a></li>
+      <li><a href="#intro-to-selm">Introduction to SELM</a></li>
+      <li><a href="#what-can-we-encrypt">Can LMs Memorize Everything?</a></li>
+      <li><a href="#semantic-security">Interlude: Semantic Security</a></li>
+      <li><a href="#selm-security">SELM's Security</a></li>
+      <li><a href="#who-cares">Why Does This Matter?</a></li>
+      <li><a href="#what-is-encryption">(Optional) Beginner Introduction to Symmetric Encryption</a></li>
+    </ol>
+    <h2>Demos, Figures &amp; Tables</h2>
+    <ol>
+      <li><a href="#teaser-video">Animated Overview</a></li>
+      <li><a href="#plot-3d">Intrinsic Dimension Intuition (Demo)</a></li>
+      <li><a href="#fig-what-can-we-encrypt">What Affects LM Memorization (Figure)</a></li>
+      <li><a href="#indcpa-demo">Caesar Cipher Semantic Security (Demo)</a></li>
+      <li><a href="#original-l2-norm-distribution">SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#l2-reg-l2-norm-distribution">L2-normalized SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#dist-reg-l2-norm-distribution">Distribution-Regularized SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#original-l2-norm-distribution">SELM L2 Norm. Distribution (Figure)</a></li>
+      <li><a href="#security-results-feat-fn">Security Results with Summary Statistics (Table)</a></li>
+      <li><a href="#security-results-cipher">Security Results with the Cipher (Table)</a></li>
+      <li><a href="#caesar-cipher-demo">Caesar Cipher (Demo)</a></li>
+      <li><a href="#bday-gift-demo">Learning From Ciphertext Intuition (Demo)</a></li>
+    </ol>
+
+    <h2 id="intro-to-selm">Introduction to SELM <a href="#intro-to-selm">[permalink]</a></h2>
+    <p>
+      SELM is our novel symmetric encryption algorithm that uses large language models (like GPT) to encrypt arbitrary data.
+    </p>
+    <p>
+      In a <i>naive</i> formulation of SELM, when Alice wants to send Bob a message, she would directly fine-tune a public pre-trained language model with \(D\) pre-trained parameters \(\theta^D_0\) to memorize her message \(m\):
+    </p>
+    <figure>
+      <p>$$\mathcal{L}(\theta^D) = \sum_i p(t_i|t_1 \dots t_{i-1};\theta^D) $$</p>
+      <figcaption style="text-align: center;">Standard language modeling loss.</figcaption>
+    </figure>
+    <p>
+      After fine-tuning, she would have a parameter update vector \(\Delta \theta^D\):
+      $$\Delta \theta^D = \theta^D_* - \theta^D_0$$
+      Then she could send Bob the update vector \(\Delta \theta^D\).
+      Bob would simply add the vector to the public pre-trained model:
+      $$\theta^D_0 + \Delta \theta^D = \theta^D_*$$
+      Then Bob could autoregressively generate text from the tuned language model, and he is <b>guaranteed to generate Alice's original message</b>.
+    </p>
+    <p>
+      There are two problems:
+    </p>
+    <ol>
+      <li>The vector \(\Delta \theta^D\) is very large (it's the same size as the original language model).</li>
+      <li>More importantly, Eve can also add \(\Delta \theta^d\) to the public pre-trained language model and <b>read Alice's message</b>.</li>
+    </ol>
+    <div style="border: 2px solid var(--accent-1-dark); padding: 12px 6px; text-align: center; font-weight: bold; color: var(--accent-1-dark);">    
+      <p style="margin: 0;">
+        In our work, we propose solving <b>both</b> issues at once through the use of <i>secret subspace optimization</i>.
+      </p>
+    </div>
+    <p>
+      Instead of minimizing loss with respect to \(\theta^D\), we project a much smaller vector \(\theta^d\) into the \(D\)-dimensional space via a <i>secret projection</i> \(P_k : \mathbb{R}^d \rightarrow \mathbb{R}^D\), then minimize loss with respect to this smaller vector \(\theta^d\).
+      Then Alice sends the optimized \(\theta^d_*\) to Bob, who uses the secret projection \(P_k\) to project \(\theta^d_*\) back to original parameter space, which he adds to the public pre-trained LM parameters:
+      $$P_k(\theta^d_*) + \theta^D_0 = \theta^D_*$$
+    </p>
+    <p>
+      This elegantly solves both problems at once:
+    </p>
+    <ol>
+      <li>The vector \(\theta^d_*\) is much smaller (upwards of 100,000x) than the original vector \(\theta^D_*\).</li>
+      <li>Eve can't project the smaller vector \(\theta^d_*\) into the LM's parameter space because the projection \(P\) is parameterized by the secret key \(k\) that only Alice and Bob share.</li>
+    </ol>
+    <p>
+      If this idea of secret subspace optimization is unclear, don't worry!
+      We have a toy example where you can play with all the different variables in 2- and 3-D until you have a better feel for what SELM is all about.
+    </p>
+    <p>
+      Suppose that \(D = 3\) and \(d = 2\).
+      So our full model has three parameters (like a quadratic equation \(ax^2 + bx + c\)) and our secret subspace has two parameters.
+      In the plot below, the 3-dimensional space is restricted to a 2-dimensional plane by the projection matrix \(P \in \mathbb{R}^{3 \times 2}\).
+      Then you can choose \(\theta^d \in \mathbb{R}^2\) and see what \(\theta^D \in \mathbb{R}^3 \) ends up as.
+      You can also re-generate the key to generate a new secret subspace.
+    </p>
+    <div id="plot-3d"></div>
+    <div id="sidebar-3d"></div>
+    <script defer src="js/plots.js"></script>
+    <p style="clear: both;">
+      You can see that without the projection matrix \(P\), \(theta^d\) doesn't tell you anything about \(\theta^D\).
+    </p>
+    <p>
+      Let me repeat that.
+      <b>You cannot figure out what \(\theta^D\) is from \(\theta^d\) if you do not know \(P\).</b>
+      If you're not convinced, try to find \(\theta^D\) from a given \(\theta^d\) without using \(P\)!
+    </p>
+    <p>
+      This is the key idea of SELM: we can represent our message with \(\theta^D\), but restrain it to lie on the secret hyperplane defined by \(P\), then only send \(\theta^d\) as our ciphertext!
+    </p>
+    <blockquote>
+      <p>
+        <b>Aside:</b>
+        If you had enough pairs of \(\theta^d\) and \(\theta^D\) that came from the same matrix \(P\), you could eventually solve for \(P\) using Gaussian elimination.
+        However, we use a standard cryptographic construction<a href="#footnote-hybrid-construction"><sup>1</sup></a> to ensure that we use a different matrix \(P\) for every message sent, so you can't reconstruct \(P\) in this way.
+      </p>
+    </blockquote>
+    <h2 id="what-can-we-encrypt">Can Language Models Memorize Everything? <a href="#what-can-we-encrypt">[permalink]</a></h2>
+    <p>
+      A key question we're asked when explaining SELM is whether large language models, when restricted in their optimization to a secret subspace, can memorize all arbitrary data.
+      While only being able to encrypt specific subsets of data is potentially useful in high-stakes situations, the more data an encryption algorithm can encrypt, the more broadly useful it is.
+    </p>
+    <p>
+      To find out, we encrypted lots and lots of messages from lots of different sources.
+    </p>
+    <p>
+    We started with <a href="https://huggingface.co/docs/transformers/main/en/model_doc/gpt2">GPT-2</a> (the 124M parameter version) from OpenAI (but Huggingface's implementation) and tried to encrypt English text that was similar to the general-domain English text GPT-2 was trained on.
+      Specifically, we used news articles from the <a href="https://paperswithcode.com/dataset/xsum">XSum</a> dataset (which is not used in GPT-2's pre-training), set \(d = 10,000\) and minimized the language modeling objective until the model perfectly memorized an example with 100 tokens.
+    </p>
+    <p>
+      After we discovered that LMs <i>could</i> memorize unseen text while restricted to a subspace of the original parameter space, we investigated what factors affected the memorization speed (the number of updates to \(\theta^d\) before an example is perfectly memorized).
+      You can (and should) read the full paper for all the details, but we tried data from different domains, data with different lengths, and different pre-trained language models.
+    </p>
+    <figure class="multifig" id="fig-what-can-we-encrypt">
+      <a href="images/domain-full.png">
+        <img 
+          srcset="images/domain-full.png 2493w, images/domain-half.png 1247w, images/domain-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/domain-full.png" 
+          alt="Chart comparing data domain against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <a href="images/length-full.png">
+        <img 
+          srcset="images/length-full.png 2493w, images/length-half.png 1247w, images/length-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/length-full.png" 
+          alt="Chart comparing data length against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <a href="images/model-full.png">
+        <img 
+          srcset="images/model-full.png 2493w, images/model-half.png 1247w, images/model-small.png 625w"
+          sizes="(max-width: 600px) 625px
+                 (max-width: 1200) 1247px
+                 2493px"
+          src="images/model-full.png" 
+          alt="Chart comparing language model against memorization speed." 
+          loading="lazy" 
+        />
+      </a>
+      <figcaption aria-hidden="true">Comparisons of different factors on encryption speed. The x-axis is always the intrinsic dimension \(d\) and the y-axis is always the number of updates to memorize a message. If not specified, we used GPT-2 (124M) on 100-token chunks of news articles from XSum. Click on each image for full resolution.</figcaption>
+    </figure>
+    <p>
+      We found that:
+    </p>
+    <ol>
+      <li>Messages more similar to GPT-2's training distribution are faster to memorize.</li>
+      <li>Shorter messages are faster to memorize.</li>
+      <li>Larger values of \(D\) (more dimensions in the secret subspace) make it faster to memorize.</li>
+      <li>Larger pre-trained language models are faster memorizers than small, randomly initialized language models.</li>
+    </ol>
+    <p>
+      Amazingly, we find that language models can memorize <b>completely random noise</b>, even severely constrained to only a 1000 free parameters.
+      This is a major insight into the incredible memorization capabilities learned through pre-training.
+      Even though there is no linguistic structured in the data, a pre-trained language model can memorize data significantly faster than a randomly initialized model.
+      This implies that pre-training teaches the model some general-purpose sequence modeling.
+    </p>
+    <h2 id="semantic-security">Semantic Security &amp; the IND-CPA Game <a href="#semantic-security">[permalink]</a></h2>
+    <p>
+      We're going to take a slight detour into a security concept: security games; specifically, the IND-CPA game.
+    </p>
+    <p>
+      <b>Shafi Goldwasser and Silvio Micali <span class="citation" data-authors="Shafi Goldwasser and Silvio Micali" data-title="Probabilistic encryption." data-extra="Journal of Computer and System Sciences, 28(2):270–299, 1984. ISSN 0022-0000. doi: https://doi.org/10.1016/0022-0000(84)90070-9.">proved</span> that Alice &amp; Bob winning the IND-CPA game means Eve cannot learn anything about the message!</b>
+      This makes it much easier for cryptographers. 
+      If we can just show that Eve never wins the IND-CPA game, then we don't have to worry about showing that she can't learn anything from the ciphertext.
+    </p>
+    <p>
+      Security games are useful strategies for cryptographers to reason about algorithm security because they enable us to focus on the absolute hardest task for an encryption algorithm.
+      If our algorithm passes this test, it passes all the tests!
+    </p>
+    <p>
+      But what is the IND-CPA game?
+      Just a series of steps.
+    </p>
+    <ol>
+      <li>Eve sends any message she likes to Alice.</li>
+      <li>Alice encrypts the message and sends it back to Eve.</li>
+      <li>Eve and Alice repeat steps 1 &amp; 2 as many times as Eve wants to.</li>
+      <li>Eve sends 2 messages \(m_1\) and \(m_2\) to Alice (with the same length).</li>
+      <li>Alice chooses a message randomly (50/50), encrypts it and sends it to Eve.</li>
+      <li>Eve guesses which message was encrypted.</li>
+    </ol>
+    <p>
+      <b>If Eve can guess which message was encrypted, she wins!</b>
+    </p>
+    <p>
+      But even if Eve always chooses \(m_1\), she'll win half the time.
+      So we say that Eve wins only if she gets it right more than 50% of the time.
+    </p>
+    <p>
+      Below, you can play as Eve against Alice with the <a href="#symmetric-encryption">Caesar cipher</a>.
+      Send messages to Alice until you think you know her key.
+      Then send pairs of messages to Alice and guess which message she encrypted.
+      Try to get 5 wins in a row!
+    </p>
+    <p>
+      Alice's key will be different every game. You can only use lowercase letters&mdash;no spaces, punctuation, numbers allowed!
+    </p>
+    <div id="indcpa-demo">
+      <div class="stacked-canvas">
+        <canvas id="indcpa-canvas-1-anim"></canvas>
+        <canvas id="indcpa-canvas-1-ui"></canvas>
+      </div>
+      <div style="text-align: center;">
+      <table cellpadding="0" cellspacing="0" style="display: table;">
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Ciphertext</th>
+          </tr>
+        </thead>
+        <tbody id="indcpa-table-body"></tbody>
+      </table>
+      </div>
+      <br />
+      <div class="stacked-canvas">
+        <canvas id="indcpa-canvas-2-anim"></canvas>
+        <canvas id="indcpa-canvas-2-ui"></canvas>
+      </div>
+    </div>
+    <script>
+      const indcpa1key = Math.floor(Math.random() * 26);
+    </script>
+    <script src="js/indcpa-part1.js" defer></script>
+    <script src="js/indcpa-part2.js" defer></script>
+    <p>
+      Hopefully you played the game a couple times.
+      You might have noticed that there are a couple trivial ways to win the game, where you don't need to gather any message-ciphertext pairs.
+    </p>
+    <ol>
+      <li>You give Alice two messages with different lengths. Then you can use the ciphertext's length.</li>
+      <li>You give Alice two messages that you already encrypted in the upper half. Then you know the exact ciphertexts for the messages you're going to submit in the lower half.</li> 
+      <li>You use a word with two of the same letter in a row: for example, "hello" will always have the same letter in the 3rd and 4th positions.</li>
+    </ol>
+    <p>
+      If you didn't try any of these strategies, refresh the page and try to win without sending any messages in the top half.
+    </p>
+    <p>
+      These three challenges are all well-known in cryptography:
+    </p>
+    <ol>
+      <li>The IND-CPA game rules specify that Eve sends Alice two messages with the same number of characters. Cryptographers get around this challenge by outlawing it.</li>
+      <li>There is a well-known cryptographic construction that lets Alice choose a pseudo-random key for every message she encrypts. We use this cryptographic construction in our work.</li>
+      <li>This is the challenge of creating a secure cipher! This is another reason the Caesar cipher isn't <b>semantically secure</b>.</li>
+    </ol>
+    <h2 id="selm-security">Is SELM Secure? <a href="#selm-security">[permalink]</a></h2>
+<style>
+</style>
+    <p>
+      Intuitively, we showed that without the secret projection matrix \(P\), Eve can't learn Alice's message \(\theta^D\) from the ciphertext \(\theta^d\).
+      But can Eve learn anything?
+      What would happen if Eve plays the semantic security game with SELM as the encryption algorithm?
+    </p>
+    <p>
+      Eve would:
+    </p>
+    <ol>
+      <li>Send a message \(m_i\) to Alice.</li>
+      <li>Receive a ciphertext \(c_i\) back.</li>
+      <li>Repeat steps 1. and 2. many times.</li>
+      <li>Send two messages \(m_1\) and \(m_2\) to Alice.</li>
+      <li>Receive a ciphertext \(c_?\) back.</li>
+      <li>Guess which message Alice encrypted (\(m_1\) or \(m_2\)).</li>
+    </ol>
+    <p>
+      Because the ciphertexts from SELM are high-dimensional vectors, it would be very challenging for Eve to look directly at a ciphertext and guess which message produced it.
+      Instead, Eve could use summary statistics like the L2 norm of the ciphertext to make predictions.
+    </p>
+    <p>
+      Suppose Eve sends Alice the same message 500 times.
+      Alice uses a standard cryptographic construction<sup><a id="footnote-hybrid-construction-backref" href="#footnote-hybrid-construction">1</a></sup> to encrypt the message with SELM with a different secret projection matrix \(P\) each time to produce a <b>ciphertext distribution</b>.
+      That is, Eve has a single message \(m\) that produced many ciphertexts.
+      <b>In a perfect encryption algorithm, every message's ciphertext distribution is identical.</b>
+      Let's see if that's true in practice.
+    </p>
+    <p>
+      We used 100 tokens of a news article as \(m_1\)...
+    </p>
+    <blockquote>
+      <p>
+        Goals from Zlatko Junuzovic, Florian Grillitsch and Florian Kainz condemned second-placed Leipzig to their second successive league defeat.
+        Bayern can extend their 10-point lead when they travel to Borussia Monchengladbach on Sunday.
+        Borussia Dortmund closed the gap on Leipzig to three points with Friday's 1-0 win at Ingolstadt.
+        Hoffenheim are a point further back, and boosted their chances
+      </p>
+    </blockquote>
+    <p>
+      ...and 100 tokens of random bytes as \(m_2\)...
+    </p>
+    <blockquote>
+      <pre style="font-size: 0.6em;">96c2 abc2 a8c2 85c3 c257 7ea5 3313 3d1f
+c25e c3be c2ba c2a2 07ab 91c3 3d51 5515
+a5c2 c326 478e 402f 84c3 9cc3 c306 17bb
+4a24 98c2 8ac2 3e5a adc3 bec3 abc2 c365
+c2bd 67be a9c3 bac2 c27e c28c 26ba a6c2
+c26d c3ba c292 c3bf 109e 8cc3 7413 c222
+c394 c392 c3b7 c29d 2184 8cc2 87c2 ef3e
+bdbf</pre>
+      <p><i>(Displayed here as hexadecimal)</i></p>
+    </blockquote>
+    <p>
+      ...and encrypted them each 400 times with SELM.
+      Then we plotted some summary statistics of the ciphertexts.
+      For example, for each ciphertext \(c\) we measured the L2 norm \(||c||_2\), then plotted the distributions:
+    </p>
+    <figure style="display: block;">
+      <div id="original-l2-norm-distribution"></div>
+      <figcaption>
+        L2 norms for ciphertexts from 100 tokens of a news article and 100 tokes of random bytes. 
+        Notice how consistently separable they are, despite the scale.
+      </figcaption>
+    </figure>
+    <p>
+      The two distributions of ciphertext are extremely separable!
+      Suppose Eve sends Alice the news article and the random bytes for step #4.
+      If Alice encrypts the news article, the ciphertext will probably have an L2 norm that's less than 1.7e-5.
+      If she encrypts the random bytes, the ciphertext will probably have an L2 norm that's more than 1.7e-5.
+      <b>This is a major security flaw that needs to be addressed.</b>
+    </p>
+    <p>
+      <b>Why does this happen?</b>
+      We start at the 0-vector with an L2 norm of 0, which represents GPT-2's pre-trained parameters. 
+      We hypothesize that a larger change in parameters is required to memorize messages that are dissimilar to GPT-2's pre-training corpus.
+      That is, we have to change the parameters <i>more</i> to memorize random bytes compared to memorizing a news article.
+      Because we change the parameters more, \(\theta^d\) has a larger L2 norm!
+    </p>
+    <p>
+      <b>How can we fix it?</b>
+      We introduce a regularization term into the secret subspace optimization to reduce differences in ciphertexts.
+      First, we add a <i>target L2 norm</i>: ciphertexts (\(d\)-dimensionsal vectors) need to have a target L2 norm, where the target is not zero.
+      $$\mathcal{L}(\theta^d) = \sum_i p(t_i|t_1 \dots t_{i-1};\theta^d) + \lambda \left|||\theta^d ||_2 - \alpha\right|$$
+      All we did was add \(\lambda \left|||\theta^d ||_2 - \alpha\right|\), where \(\lambda\) is a hyperparameter controlling the regularization term's weight and \(\alpha\) is the target L2 norm.
+    </p>
+    <p>
+      We also use a regularization term that tries to minimize the difference between a ciphertext \(c\) and a \(d\)-dimensional vector \(x\) drawn from a normal distribution \(\mathcal{N}(0, \sigma^2)\):
+      $$\mathcal{L}(\theta^d) = \sum_i p(t_i|t_1 \dots t_{i-1};\theta^d) + \lambda \int | \theta^{(d)} - x | dx $$
+      \(\lambda\) is a hyperparameter controlling the regularization term's weight and \(\sigma\) is the normal distribution's variance.
+    </p>
+    <p>
+      For each of these SELM variants (<i>original</i>, <i>L2-regularization</i> and <i>distribution-regularization</i>), we play the semantic security game (as humans) using the above technique with L2 norm, L1 norm, and other summary statistics.
+      We find that both regularization techniques make it impossible to reliably win as humans.
+      Just look at the graphs below for L2 normalization and distribution-based regularization.
+    </p>
+    <figure style="display: block;">
+      <div id="l2-reg-l2-norm-distribution"></div>
+      <figcaption>
+        L2 norms for ciphertexts from 100 tokens of a news article and 100 tokes of random bytes, with a <i>target L2 regularization term</i> during encryption.
+      </figcaption>
+    </figure>
+    <figure style="display: block;">
+      <div id="dist-reg-l2-norm-distribution"></div>
+      <figcaption>
+        L2 norms for ciphertexts from 100 tokens of a news article and 100 tokes of random bytes, with <i>distribution-based regularization term</i> during encryption.
+      </figcaption>
+    </figure>
+    <script src="js/histograms.js" defer></script>
+    
+    <p>
+      We conclude that distribution-based regularization makes it very hard for Eve to win the semantic security game based on L2 norms.
+    </p>
+    <p>
+      <b>But what about machines?</b>
+      This semantic security game is very similar to a binary classification problem:
+    </p>
+    <ol>
+      <li>Gather a training set of 800 ciphertexts, 400 with class 1 and 400 with class 2.</li>
+      <li>Train a model to predict a binary class attribute from a ciphertext.</li>
+      <li>Evaluate the trained model on some unseen test ciphertexts.</li>
+    </ol>
+    <p>
+      If L2 regularization or distribution regularization actually improve SELM's security, then we should see machine classification accuracy decrease!
+    </p>
+    <p>
+      That's exactly what we do.
+      We use five different machine learning binary classification models, each trained on 800 examples.
+      We evaluate their accuracy on 200 unseen examples.
+      We model the classification models' accuracies as binomial distributions and evaluate the null hypothesis that a model is simply guessing (\(p = \frac{1}{2}\)).
+      We reject the null hypothesis that a model is guessing for p-values less than 0.05.
+    </p>
+    <h3>A Concrete Example</h3>
+    <p>
+      For example, we train a K-nearest neighbors (KNN) classifier to predict class 1 or 2 for a 10,000-dimensional vector (the ciphertext) with 800 training examples.
+      Then we evaluate the model's accuracy on 200 unseen examples.
+    </p>
+    <p>
+      Suppose it's 54% accurate.
+      Then we check how likely it is, if we were to flip a fair coin 200 times, that we would get 54% or more heads.
+      54% heads out of 200 clips is 108 or more heads, which happens 14% of the time, <b>even with a fair coin.</b>
+      That's common enough that we can't outright say the KNN model isn't just flipping a coin for its predictions.
+    </p>
+    <p>
+      If it were less than 5% likely that the KNN model is just flipping a coin for its predictions, we would <b>reject the idea that the model is guessing</b> and say that the only way the model could guess correctly that often is if it <b>wasn't flipping a coin, but actually making good predictions.</b>
+    </p>
+    <h3>Binary Classification Results</h3>
+    <p>
+      For each of the three SELM variants, we use four binary classification tasks, where each task is a new pair of messages.
+      Message 1 is always a news article.
+      Message 2 is either:
+    </p>
+    <ol>
+      <li>Another news article</li>
+      <li>A PubMed abstract</li>
+      <li>Random words from English Wikipedia</li>
+      <li>Random bytes</li>
+    </ol>
+    <p>
+      ALl of the messages are exactly 100 tokens long. 
+      We encrypt each message 400 times each for training and 100 times each for testing.
+      For each ciphertext, we convert it into a vector of summary statistics to mimic the human game we played earlier.
+      Our results are below.
+    </p>
+    <div style="position: relative;">
+      <table id="security-results-feat-fn" cellpadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th>SELM Variant</th>
+            <th>\(m_1\)</th>
+            <th>\(m_2\)</th>
+            <th>KNN</th>
+            <th>LDA</th>
+            <th>SVM</th>
+            <th>GradBoost</th>
+            <th>FFNN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="4" class="border-bottom" id="original-feat-fn">Original</td>
+            <td rowspan="4" class="border-bottom">News</td>
+            <td>News</td>
+            <td data-rej>0.77</td>
+            <td data-rej>0.76</td>
+            <td data-rej>0.77</td>
+            <td data-rej>0.75</td>
+            <td data-rej>0.77</td>
+          </tr>
+          <tr>
+            <td>PubMed</td>
+            <td data-rej>0.59</td>
+            <td data-rej>0.84</td>
+            <td data-rej>0.87</td>
+            <td data-rej>0.82</td>
+            <td data-rej>0.86</td>
+          </tr>
+          <tr>
+            <td>Random Words</td>
+            <td data-rej>0.69</td>
+            <td data-rej>0.85</td>
+            <td data-rej>0.86</td>
+            <td data-rej>0.82</td>
+            <td data-rej>0.83</td>
+          </tr>
+          <tr>
+            <td class="border-bottom">Random Bytes</td>
+            <td data-rej class="border-bottom">1.00</td>
+            <td data-rej class="border-bottom">1.00</td>
+            <td data-rej class="border-bottom">1.00</td>
+            <td data-rej class="border-bottom">1.00</td>
+            <td data-rej class="border-bottom">1.00</td>
+          </tr>
+          <tr>
+            <td rowspan="4" class="border-bottom">L2 Regularization</td>
+            <td rowspan="4" class="border-bottom">News</td>
+            <td id="l2-reg-news-feat-fn">News</td>
+            <td data-win>0.49</td>
+            <td data-rej>0.60</td>
+            <td data-rej>0.59</td>
+            <td data-rej>0.58</td>
+            <td data-rej>0.61</td>
+          </tr>
+          <tr>
+            <td>PubMed</td>
+            <td data-win>0.41</td>
+            <td data-win>0.55</td>
+            <td data-win>0.48</td>
+            <td data-win>0.47</td>
+            <td data-win>0.52</td>
+          </tr>
+          <tr>
+            <td>Random Words</td>
+            <td data-rej>0.79</td>
+            <td data-rej>0.85</td>
+            <td data-rej>0.84</td>
+            <td data-rej>0.83</td>
+            <td data-rej>0.75</td>
+          </tr>
+          <tr>
+            <td class="border-bottom">Random Bytes</td>
+            <td class="border-bottom" data-rej>0.92</td>
+            <td class="border-bottom" data-rej>0.99</td>
+            <td class="border-bottom" data-rej>0.99</td>
+            <td class="border-bottom" data-rej>0.99</td>
+            <td class="border-bottom" data-rej>0.87</td>
+          </tr>
+          <tr>
+            <td rowspan="4" class="border-bottom" style="border-width: 2px;" id="dist-reg-feat-fn">Distribution Regularization</td>
+            <td rowspan="4" class="border-bottom" style="border-width: 2px;">News</td>
+            <td>News</td>
+            <td data-win>0.46</td>
+            <td data-win>0.49</td>
+            <td data-win>0.52</td>
+            <td data-win>0.51</td>
+            <td data-win>0.46</td>
+          </tr>
+          <tr>
+            <td>PubMed</td>
+            <td data-win>0.50</td>
+            <td data-win>0.49</td>
+            <td data-win>0.49</td>
+            <td data-win>0.47</td>
+            <td data-win>0.41</td>
+          </tr>
+          <tr>
+            <td>Random Words</td>
+            <td data-win>0.48</td>
+            <td data-win>0.47</td>
+            <td data-win>0.49</td>
+            <td data-win>0.45</td>
+            <td data-win>0.47</td>
+          </tr>
+          <tr>
+            <td>Random Bytes</td>
+            <td data-win>0.47</td>
+            <td data-win>0.45</td>
+            <td data-win>0.47</td>
+            <td data-rej>0.58</td>
+            <td data-win>0.55</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="tooltip strong-reg-pattern" id="strong-reg-pattern-1"><span>Look how many cells are bold! That means that the classification model is learning something about the message from the ciphertext, which means SELM isn't working.</span></div>
+    <div class="tooltip strong-reg-pattern" id="strong-reg-pattern-2"><span>Look how few cells are bold! That means that very few classification models are learning anything from the ciphertext; SELM with distribution regularization is much more secure!</span></div>
+      <div class="tooltip different-messages-pattern" id="different-messages-pattern-1"><span>Look how KNN accuracy increases from 49% (doesn't win) to 92% (wins) as \(m_2\) goes from a news article (very similar to \(m_1\)) to random bytes (very different to \(m_1\))</span></div>
+    <div>
+    <p>
+    <b>Bold</b> indicates that we reject the null hypothesis that the binary classification model is flipping a coin and assume that the model is learning <i>something</i> from the ciphertext, implying that SELM is <i>not</i> semantically secure.
+    </p>
+    <p>
+    Notice that <span id="strong-reg-pattern">stronger regularization leads to better security</span>, and that <span id="different-messages-pattern">more different message pairs are easier to distinguish</span>.
+      Despite the success of distribution-based regularization, the news article and random bytes are so dissimilar that gradient-boosted decision trees can still reliably distinguish the two classes.
+    </p>
+    <script>
+      (function() {
+        function addEventListeners(name) {
+          const elems = document.getElementsByClassName(name);
+          const hover = document.getElementById(name);
+          hover.addEventListener("mouseenter", function(event) {
+            for (let i = 0; i < elems.length; i++) {
+              elems[i].classList.add("active");
+            }
+          });
+          hover.addEventListener("mouseleave", function(event) {
+            for (let i = 0; i < elems.length; i++) {
+              elems[i].classList.remove("active");
+            }
+          });
+        }
+
+        addEventListeners("strong-reg-pattern");
+        addEventListeners("different-messages-pattern");
+
+        function resize() {
+          /* strong reg pattern */
+          const strong1 = document.getElementById("strong-reg-pattern-1");
+          const original = document.getElementById("original-feat-fn");
+          strong1.style.top = `${original.offsetTop + 12}px`;
+
+          const strong2 = document.getElementById("strong-reg-pattern-2");
+          const distReg = document.getElementById("dist-reg-feat-fn");
+          strong2.style.top = `${distReg.offsetTop + 12}px`;
+
+          const diff = document.getElementById("different-messages-pattern-1");
+          const news = document.getElementById("l2-reg-news-feat-fn");
+          diff.style.top = `${news.offsetTop - 12}px`;
+        }
+
+        resize();
+
+        window.addEventListener('resize', resize);
+      })();
+    </script>
+    <style>
+    </style>
+    <p>
+      What if we use the entire ciphertext directly, rather than using summary statistics?
+    </p>
+    <table id="security-results-cipher" cellpadding="0" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Algorithm</th>
+          <th>\(m_1\)</th>
+          <th>\(m_2\)</th>
+          <th>KNN</th>
+          <th>LDA</th>
+          <th>SVM</th>
+          <th>GradBoost</th>
+          <th>FFNN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="4" class="border-bottom">Original</td>
+          <td rowspan="4" class="border-bottom">News</td>
+          <td>News</td>
+          <td data-win>0.50</td>
+          <td data-win>0.44</td>
+          <td data-rej>0.78</td>
+          <td data-win>0.52</td>
+          <td data-win>0.48</td>
+        </tr>
+        <tr>
+          <td>PubMed</td>
+          <td data-win>0.50</td>
+          <td data-win>0.49</td>
+          <td data-rej>0.81</td>
+          <td data-win>0.54</td>
+          <td data-rej>0.57</td>
+        </tr>
+        <tr>
+          <td>Random Words</td>
+          <td data-win>0.50</td>
+          <td data-win>0.54</td>
+          <td data-rej>0.73</td>
+          <td data-win>0.45</td>
+          <td data-win>0.50</td>
+        </tr>
+        <tr>
+          <td class="border-bottom">Random Bytes</td>
+          <td data-win class="border-bottom">0.50</td>
+          <td data-rej class="border-bottom">0.58</td>
+          <td data-rej class="border-bottom">1.00</td>
+          <td data-rej class="border-bottom">0.70</td>
+          <td data-rej class="border-bottom">1.00</td>
+        </tr>
+        <tr>
+          <td rowspan="4" class="border-bottom">L2 Regularization</td>
+          <td rowspan="4" class="border-bottom">News</td>
+          <td>News</td>
+          <td data-win>0.54</td>
+          <td data-win>0.48</td>
+          <td data-win>0.54</td>
+          <td data-win>0.53</td>
+          <td data-win>0.51</td>
+        </tr>
+        <tr>
+          <td>PubMed</td>
+          <td data-win>0.48</td>
+          <td data-rej>0.58</td>
+          <td data-win>0.50</td>
+          <td data-win>0.49</td>
+          <td data-win>0.49</td>
+        </tr>
+        <tr>
+          <td>Random Words</td>
+          <td data-win>0.50</td>
+          <td data-win>0.48</td>
+          <td data-rej>0.65</td>
+          <td data-win>0.55</td>
+          <td data-win>0.51</td>
+        </tr>
+        <tr>
+          <td class="border-bottom">Random Bytes</td>
+          <td class="border-bottom" data-win>0.49</td>
+          <td class="border-bottom" data-win>0.55</td>
+          <td class="border-bottom" data-rej>0.79</td>
+          <td class="border-bottom" data-win>0.48</td>
+          <td class="border-bottom" data-win>0.51</td>
+        </tr>
+        <tr>
+          <td rowspan="4" class="border-bottom" style="border-width: 2px;">Distribution Regularization</td>
+          <td rowspan="4" class="border-bottom" style="border-width: 2px;">News</td>
+          <td>News</td>
+          <td data-win>0.47</td>
+          <td data-win>0.49</td>
+          <td data-win>0.48</td>
+          <td data-win>0.46</td>
+          <td data-win>0.48</td>
+        </tr>
+        <tr>
+          <td>PubMed</td>
+          <td data-win>0.55</td>
+          <td data-win>0.49</td>
+          <td data-win>0.54</td>
+          <td data-win>0.54</td>
+          <td data-win>0.54</td>
+        </tr>
+        <tr>
+          <td>Random Words</td>
+          <td data-win>0.47</td>
+          <td data-win>0.55</td>
+          <td data-win>0.49</td>
+          <td data-win>0.45</td>
+          <td data-win>0.47</td>
+        </tr>
+        <tr>
+          <td>Random Bytes</td>
+          <td data-win>0.50</td>
+          <td data-win>0.52</td>
+          <td data-win>0.50</td>
+          <td data-win>0.48</td>
+          <td data-win>0.49</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      We see similar trends as before: regularization helps, but larger differences in messages lead to higher classification accuracy.
+    </p>
+    <p>
+      It's important to note that semantic security under chosen plaintext is one of the strongest guarantees a symmetric encryption algorithm can make.
+      It's useful precisely because of its strictness; succeeding at this game leads to semantic security, the strongest definition of security below perfect security (which only the One-Time Pad can achieve).
+      But failing at the semantic security game is not a death blow for symmetric encryption algorithms.
+      Because SELM is so unlike previous encryption algorithms, there is no work explaining how to exploit a lack of semantic security to recover the key or the message.
+      In a practical scenario, where the message space is much larger than two messages, SELM is still likely secure for many applications.
+      <i>But until we continue to analyze SELM, it's irresponsible to use SELM in day-to-day situations.</i>
+    </p>
+    <h2 id="who-cares">Why Does This Matter? <a href="#who-cares">[permalink]</a></h2> 
+    <p>
+      Why does any of this matter?
+      Why bother trying to use LMs for encryption?
+      SELM is slower than algorithms like AES and much harder to analyze.
+      What's the advantage over AES?
+    </p>
+    <p>
+      <b>The outstanding performance of recent LLMs (e.g., ChatGPT/GPT-4) on traditional NLP tasks is calling for serious re-thinking of the scope and future of NLP research.</b>
+      We hope to break the mold by proposing a completely new idea for LM applications.
+      SELM is the first work that frames LM memorization as a capability to explore, and concretly explores it under subspace optimization with the goal of developing secure symmetric encryption.
+    </p>
+    <p>
+      Because SELM is the very first step in this completely new direction, our results are inevitably limited in some ways.
+      However, we believe that the cross-disciplinary nature of our work is a strength that opens up new avenues for research. 
+      With SELM, we hope to inspire further cross-disciplinary NLP works and creative applications of LMs and other NLP technologies in novel and unforeseen areas.
+    </p>
+    <p>
+      <b>SELM also has important implications for the field of cryptography.</b>
+      Because it's based on matrix multiplication rather than Feistel networks (like DES) or substitution permutation networks (like AES), breakthroughs in cryptanalysis of DES or AES is unlikely to generalize to SELM.
+      In fact, part of our work's novelty is trying to analyze an encryption algorithm that's isn't amenable to modern cryptanalysis like <span class="citation" data-authors="Eli Biham and Adi Shamir" data-title="Differential cryptanalysis of the data encryption standard" data-extra="In Springer: New York, 1993.">differential</span> or <span class="citation" data-authors="Mitsuru Matsui and Atsuhiro Yamagishi" data-title="A new method for known plaintext attack of feal cipher" data-extra="In Workshop on the Theory and Application of of Cryptographic Techniques, pages 81–91. Springer, 1992.">linear</span> cryptanalysis.
+      This is especially relevant as quantum computers continue to improve.
+      A quantum algorithm for substitution permutation networks (which would affect AES) will likely not generalize to SELM.
+    </p>
+    <br />
+    <p>
+      Thanks so much for reading!
+      Please feel free to reach out (<a href="mailto:stevens.994@buckeyemail.osu.edu">stevens.994@buckeyemail.osu.edu</a>) if you have questions or comments!
+    </p>
+    
+    <p>
+      Cite our work:
+    </p>
+    <pre>@misc{stevens2023memorization,
+    title={Memorization for Good: Encryption with Autoregressive Language Models},
+    author={Samuel Stevens and Yu Su},
+    year={2023},
+    eprint={2305.10445},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL}
+}</pre>
+    <hr />
+    <p id="footnote-hybrid-construction">
+    1: See Bourne and Stroup's <a href="https://toc.cryptobook.us/">A Graduate Course in Cryptography</a>, Section 5.4.1: A generic hybrid construction. 
+    <!-- <a href="#footnote-hybrid-construction-backref">Back</a> -->
+    </p>
+    <br />
+    <h2 id="what-is-encryption">(Optional) Beginner Introduction to Symmetric Encryption <a href="#what-is-encryption">[permalink]</a></h2>
+    <blockquote>
+      <p>
+        This section covers some basics of cryptography, including symmetric encryption algorithms, basic properties and how we measure security.
+        You can skip it if you're familiar with the IND-CPA game.
+      </p>
+    </blockquote>
+    <p>
+      Encryption is the outcome of cryptography, a field of math that tries to convert some readable message to an ciphertext that only the owners can read.
+      Suppose Alice and Bob want to pass notes to each other in class about Eve's birthday gift.
+      Alice has to pass the note to Eve, who will pass it to Bob, but only after she reads it.
+      How can Alice and Bob communicate during class without Eve reading about their gift ideas?
+      This is one of the many problems cryptography tries to solve with encryption.
+      When you log in to your online banking account, for example, you only want you and your bank to see your password, not anyone else on the internet.
+    </p>
+    <figure>
+      <a href="images/passing-notes-hd.jpeg">
+        <img 
+          srcset="images/passing-notes-hd.jpeg 1024w, images/passing-notes-sd.jpeg 512w"
+          sizes="(max-width: 600px) 512px
+                 1024px"
+          src="images/passing-notes-hd.jpeg" 
+          alt="Alice and Bob pass notes in class." 
+          style="max-width: 400px;" 
+          loading="lazy" 
+        />
+      </a>
+      <figcaption aria-hidden="true" style="text-align: center;">Alice and Bob pass notes. Generated by Stable Diffusion.</figcaption>
+    </figure>
+    <h3 id="symmetric-encryption">Symmetric Encryption <a href="#symmetric-encryption">[permalink]</a></h3>
+    <p>
+      Symmetric encryption assumes that Alice and Bob share a secret key that <b>Eve doesn't know.</b>
+      In our example, Alice and Bob shared a secret key&mdash;like a password&mdash;during lunch, when Eve couldn't hear them.
+      The symmetric encryption algorithm is actually a pair of algorithms:
+    </p>
+    <ol>
+      <li>The first algorithm (encryption) tells Alice how to turn her message into something Eve can't read: a ciphertext.</li>
+      <li>The second algorithm (decryption) tells Bob how to turn Alice's ciphertext (the encrypted message) back into her original message.</li>
+    </ol>
+    <p>
+      Both algorithms use the key as input.
+      In a mathematical notation, encryption is a function \(E\) from messages \(M\) and keys \(K\) to ciphertexts \(C\), and decryption \(D\) is a function from ciphertexts \(C\) and keys \(K\) to messages \(M\):
+      $$E : M \times K \rightarrow C$$
+      $$D : C \times K \rightarrow M$$
+    </p>
+    <p>
+      Decryption should be the inverse of encryption: anytime message Alice encrypts, Bob should always be able to decrypt it (assuming they have the same key).
+      Again, formally:
+      $$\forall m, k : D(E(m, k), k) = m$$
+    </p>
+    <p>
+      Caesar's cipher is a famous symmetric encryption algorithm. 
+      Alice would take every letter in her message and shift it forward by \(k\) letters.
+      Then Bob would shift the letters back.
+      You can play with the Caesar cipher here.
+      Try typing in "the moon is made of cheese" with a key of 0, then a key of 1, then a key of 2.
+    </p>
+    <form id="caesar-form">
+      <p>
+        <label>Message:</label>
+        <input id="caesar-message" value="hello world"/>
+      </p>
+      <p>
+        <label id="caesar-key-label">Key: 3</label>
+        <input type="range" min="-26" max="26" step="1" value="3" id="caesar-key" style="width: 100%;"/>
+      </p>
+    </form>
+    <canvas id="caesar-cipher-demo"></canvas>
+    <script>
+      window.addEventListener("load", function() {
+        const height = 50;
+        const width = 30;
+
+        const canvas = document.getElementById("caesar-cipher-demo");
+        const ctx = canvas.getContext("2d");
+        // Likely 800, but could be less for mobile devices
+        canvas.width = document.querySelector("main").clientWidth;
+        canvas.height = height * 5;
+        const rc = rough.canvas(canvas);
+        ctx.font = "30px xkcd";
+
+        const keyLabel = document.getElementById("caesar-key-label");
+
+        let cvMargin = (canvas.width - (26 * width)) / 2
+        if (cvMargin < 0) { cvMargin = 0; }
+
+
+        function render(key, message) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const ciphertext = caesarCipher(message, key);
+          keyLabel.innerHTML = `Key: ${key}`;
+
+          const y1 = height * 0;
+          for (let i = 0; i < alphabet.length; i ++) {
+            const ch = alphabet[i];
+            const chWidth = ctx.measureText(ch).width;
+            let margin = (width - chWidth) / 2;
+            if (margin < 0) { margin = 0; }
+
+            if (ch === message[0]) {
+              rc.rectangle(cvMargin + i * width, y1, width, height, { fill: "green" });
+            } else {
+              rc.rectangle(cvMargin + i * width, y1, width, height);
+            }
+            ctx.fillText(ch, cvMargin + i * width + margin, y1 + 35);
+          }
+
+          const y2 = height * 2;
+          for (let i = 0; i < alphabet.length; i ++) {
+            const ch = alphabet[i];
+            const chWidth = ctx.measureText(ch).width;
+            let margin = (width - chWidth) / 2;
+            if (margin < 0) { margin = 0; }
+
+            if (ch === ciphertext[0]) {
+              rc.rectangle(cvMargin + i * width, y2, width, height, { fill: "green" });
+            } else {
+              rc.rectangle(cvMargin + i * width, y2, width, height);
+            }
+            ctx.fillText(ch, cvMargin + i * width + margin, y2 + 35);
+          }
+
+          ctx.fillText(`Ciphertext: ${ciphertext}`, cvMargin, height * 4 + 35, canvas.width - 2 * cvMargin);
+        
+          let start = 0 - Math.abs(key);
+          let end = 26 + Math.abs(key);
+          for (let i = start; i < end; i++) {
+            drawArrow(rc, cvMargin + (i + 0.5) * width, y1 + height, cvMargin + (i + key + 0.5) * width, y2);
+          }
+        }
+        
+        // Initial key and message
+        render(3, "hello world");
+
+        const keyElem = document.getElementById("caesar-key");
+        const messageElem = document.getElementById("caesar-message");
+
+        function onChange(event) {
+          const key = parseInt(keyElem.value, 10);
+          const message = messageElem.value.toLowerCase();
+          render(key, message);
+        }
+
+        keyElem.addEventListener("input", onChange);
+        messageElem.addEventListener("input", onChange);
+      });
+    </script>
+    <p>
+      Did you see what happened when you changed the key to 26?
+      The ciphertext was the same as when the key was 0!
+    </p>
+    <p>
+      This is an important property of an encryption aglgorithm: the <b>keyspace</b>.
+      Caesar's cipher has a keyspace of 26: there are only 26 possible keys to try.
+      If Eve knows Alice and Bob are using a Caesar cipher, then she only has to try 26 different keys to read their message.
+      In a long math class, there's plenty of time to try them all!
+    </p>
+    <p>
+      You could argue that Eve has to know that Alice and Bob are using a Caesar cipher first.
+      If she doesn't know what the encryption algorithm is, then she won't try 26 keys.
+      Cryptographers call this <b>security through obscurity</b> and it's generally regarded as a weak argument.
+      Instead, cryptography is in favor of <a href="https://en.wikipedia.org/wiki/Kerckhoffs's_principle">Kerchoff's principle</a>: the <b>security</b> of an algorithm should depend <b>only</b> on the <b>secrecy of the key</b> and nothing else.
+      That means Alice and Bob's messages should still be completely unreadable by Eve even if Eve knows the algorithm, the time of day, the weather&mdash;anything and everything except the key and the original message.
+    </p>
+    <p>
+      The big question is: <b>How do we measure the security of an algorithm?</b>
+    </p>
+
+    <h3>Security</h3>
+    <p>
+      Remember, Alice and Bob want to send each other messages without Eve being able to read them.
+      More than that, Alice and Bob want to send messages without Eve learning <b>anything at all</b> about them.
+    </p>
+    <p>
+      Why does it matter if Eve can learn anything, if she can't read the whole message?
+      Suppose that Eve knows that Alice and Bob are choosing between getting Eve a bunny, a goose, a horse or a snake for her birthday (Eve really likes animals!).
+      If Alice and Bob are using a Caesar cipher with an unknown key, can Eve figure out which animal they're getting?
+    </p>
+    <p>
+      Suppose Eve knows that Alice and Bob are going to get her a snake 1 in 20 times, a horse 1 in 10 times, a goose 1 in 5 times and a bunny the rest of the time.
+      Then Eve can plot those probabilities as a pie chart (on the left).
+    </p>
+    <p>
+      If Alice sends the word "goose" with a key of 3, then the ciphertext is "jrrvh" (try it on the Caesar cipher demo above!).
+      Even though Eve doesn't know the key, since "goose" is the only word where the second and third letters are the same, she knows that "jrrvh" must be "goose"!
+    </p>
+    <p>
+      If Alice sends the word "snake" with a key of 4, the ciphertext is "wreoi", which doesn't have any repeating letters in it.
+      So Eve isn't sure if it's "snake" or "horse", but <b>she does know she's not getting a goose or bunny for her birthday!</b>
+      Once she removes the goose and the bunny from the pie chart, she gets the chart on the right (After Ciphertext).
+      <b>Even though Eve can't understand the ciphertext, she's learned something!</b>
+      In a perfect encryption algorithm, the two pie charts would always be the same.
+    </p>
+    <p>
+      You can play with the different keys and messages in the demo below and see what Eve can learn.
+    </p>
+    <form id="bday-gift-form">
+      <fieldset>
+        <legend>Choose a message:</legend>
+
+        <input type="radio" id="snake" name="bday-gift" value="snake" checked>
+        <label for="snake">snake</label>
+
+        <input type="radio" id="horse" name="bday-gift" value="horse">
+        <label for="horse">horse</label>
+
+        <input type="radio" id="goose" name="bday-gift" value="goose">
+        <label for="goose">goose</label>
+
+        <input type="radio" id="bunny" name="bday-gift" value="bunny">
+        <label for="bunny">bunny</label>
+      </fieldset>
+      <label id="bday-gift-key-label">Key: 3</label>
+      <input type="range" min="0" max="26" step="1" value="3" id="bday-gift-key-input" style="width: 100%;"/>
+    </form>
+    <canvas id="bday-gift-demo"></canvas>
+    <script>
+      // Use the demo from the talk at Alison's club
+      window.addEventListener("load", function() {
+        const canvas = new RoughCanvas("bday-gift-demo", 360);
+        if (canvas.width < 600) {
+          canvas.centeredText("This demo requires a", canvas.center.x, 10);
+          canvas.centeredText("wider view. Try on a", canvas.center.x, 40);
+          canvas.centeredText("larger device, or rotate", canvas.center.x, 70);
+          canvas.centeredText("your phone, then refresh", canvas.center.x, 100);
+          canvas.centeredText("the page.", canvas.center.x, 130);
+          return
+        }
+
+        const radius = 100;
+        const inputs = [
+          { label: "snake", value: 1/20, color: "red" },
+          { label: "horse", value: 1/10, color: "green" },
+          { label: "goose", value: 1/5, color: "blue" },
+          { label: "bunny", value: 1 - 1/20 - 1/10 - 1/5, color: "orange" },
+        ]
+        
+        function pie(x, y, slices, caption) {
+          canvas.centeredText(caption, x, y + radius + 20);
+
+          const total = slices.reduce((sum, slice) => slice.value + sum, 0);
+
+          // Outline  
+          canvas.rc.circle(x, y, radius * 2);
+          
+          // Only one slice? Just fill the circle
+          if (slices.length == 1) {
+            canvas.rc.circle(x, y, radius * 2, { fill: slices[0].color });
+            return;
+          }
+
+          let start = 0;
+          for (let i = 0; i < slices.length; i++) {
+            const { value, color } = slices[i];
+            const end = start + value / total * 2 * Math.PI; 
+            
+            // Some flag needed to make big arcs
+            let arcFlag = 0;
+            if (end - start > Math.PI) { arcFlag = 1; }
+
+            const svg = `M ${x} ${y} L ${x + Math.cos(start) * radius} ${y + Math.sin(start) * radius} A ${radius} ${radius} 0 ${arcFlag} 1 ${x + Math.cos(end) * radius} ${y + Math.sin(end) * radius} Z`;
+            canvas.rc.path(svg, { fill: color });
+            start = end;
+          }
+        }
+
+        // Legend
+        const labelW = 130;
+        const boxW = 30;
+        const margin = (canvas.width - labelW * inputs.length) / 2;
+        for (let i = 0; i < inputs.length; i++) {
+          canvas.ctx.fillText(inputs[i].label, margin + 20 + i * labelW, 30);
+          canvas.rc.rectangle(margin - 20 + i * labelW, 5, boxW, boxW, { fill: inputs[i].color });
+        }
+
+        function possibleAnimals(animal, key) {
+          if (key % 26 == 0) { return [animal]; }
+          switch (animal) {
+            case "snake":
+            case "horse":
+              return ["snake", "horse"];
+            case "goose":
+              return ["goose"];
+            case "bunny":
+              return ["bunny"];
+            default:
+              throw Exception();
+          }
+        }
+
+        function render(animal, key) {
+          // Don't clear the legend
+          canvas.ctx.clearRect(0, 60, canvas.width, canvas.height);
+
+          document.getElementById("bday-gift-key-label").innerHTML = `Key: ${key}`;
+          const outputLabels = possibleAnimals(animal, key);
+          const outputs = inputs.filter(input => outputLabels.includes(input.label));
+          const ciphertext = `encrypt(${animal}, ${key}) => ${caesarCipher(animal, key)}`
+          canvas.centeredText(ciphertext, canvas.center.x, 90);
+
+          pie(200, 220, inputs, "Before Ciphertext");
+          pie(500, 220, outputs, "After Ciphertext");
+        }
+        
+        function onChange() {
+          const animal = document.querySelector('input[name="bday-gift"]:checked').value;
+          const key = parseInt(document.getElementById("bday-gift-key-input").value, 10);
+          render(animal, key);
+        }
+        document.getElementById("bday-gift-form").addEventListener("input", onChange);
+
+        onChange();
+      });
+    </script>
+    <p>
+      You can see that the Caesar cipher isn't helping Alice and Bob much because <b>Eve can learn from the ciphertext.</b>
+      Then how do we make sure our algorithms don't leak any information to Eve?
+      That's covered above, in the <a href="#semantic-security">semantic security section</a>. 
+      Go read the rest of this post to find out about semantic security and SELM!
+    </p>
+  </main>
+</body>
+</html>

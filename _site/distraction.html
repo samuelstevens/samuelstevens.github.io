@@ -1,0 +1,50 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <title>Do something to make you proud.</title>
+</head>
+
+<body>
+  <aside></aside>
+  <main>
+    <p id="quote" style="text-align: center;"></p>
+  </main>
+
+  <script>
+    function choice(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function getPoison() {
+      const poisonMap = {
+        "youtube": "YouTube",
+        "reddit": "Reddit",
+        "ycombinator": "Hacker News",
+      };
+
+      const poison = new URL(window.location.href).searchParams.get("site").toLowerCase();
+
+      if (poison in poisonMap) {
+        return poisonMap[poison];
+      }
+
+      return "it";
+    }
+
+    const superheros = [
+      "Tony Stark",
+      "Iron Man",
+      "Spider-Man",
+      "Peter Parker",
+      "Steve Rogers"
+    ];
+
+    quote = document.getElementById('quote').innerText = choice(superheros) + " doesn't need " + getPoison() + ". Do you?";
+  </script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,316 @@
+/* colors 
+   https://coolors.co/5fad56-f2c14e-f78154-70d6ff-261447
+*/
+@font-face {
+  font-family: xkcd;
+  src: url("https://cdn.rawgit.com/ipython/xkcd-font/master/xkcd-script/font/xkcd-script.woff") format("woff");
+}
+:root {
+  --accent-1: #fcbf49;
+  --accent-1-dark: #B87B03;
+  --accent-2: #003049;
+  --accent-2-dark: #00070A;
+  --nice-gray: rgb(236, 240, 243);
+}
+* {
+  box-sizing: border-box;
+}
+main {
+  max-width: 800px;
+  margin: auto;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+hr {
+  border: none;
+  border-bottom: 1px solid var(--nice-gray);
+}
+
+h2 > a,
+h3 > a,
+h4 > a {
+  margin-left: 4px;
+  font-size: 0.5em;
+}
+blockquote {
+  padding-left: 1em;
+  border-left: 0.4em solid var(--accent-1);
+}
+
+/* Figures */
+figure {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0;
+}
+/* Makes <a> behave like it doesn't exist with regards to flexbox */
+figure > a {
+  display: contents;
+}
+figure > a > img {
+  flex: 1;
+  min-width: 200px;
+}
+figure > figcaption {
+  flex: 100%;
+}
+figcaption {
+  font-style: italic;
+  text-align: left;
+}
+
+
+.acronym {
+  text-decoration-line: underline;
+}
+#caesar-form,#caesar-message {
+  font: 30px xkcd;
+}
+#caesar-key {
+  width: 100%;
+}
+
+/* Juicy Buttons */
+button {
+  border: 1px solid black;
+  background-color: var(--nice-gray);
+  padding: 2px 12px;
+  margin: 4px;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.1s ease-in-out;
+}
+button:hover {
+  background-color: #ffffff;
+  transform: translate(0px, -1px);
+}
+button:active {
+  background-color: #cee4ce;
+  transform: translate(0px, 1px);
+}
+button::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  box-shadow: 0px 1px 2px 1px black;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+}
+button:hover::after {
+  opacity: 1;
+}
+button:active::after {
+  opacity: 0;
+}
+/* For layering multiple canvas */
+.stacked-canvas {
+  position: relative;
+}
+.stacked-canvas > canvas:not(:first-child) {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+/* Tables */
+td,th {
+  padding: 4px 12px;
+  margin: 0;
+}
+th {
+  text-align: center;
+}
+table {
+  max-width: 100%;
+  display: inline-block;
+  overflow-x: scroll;
+  white-space: nowrap;
+
+  padding: 0;
+  margin: auto;
+}
+@media screen and (min-width: 42rem) {
+  /* otherwise there's a weird border at the bottom of tables. */
+  table {
+    display: table;
+  }
+}
+th {
+  border-top: 2px solid black;
+  border-bottom: 1px solid black;
+}
+tbody > tr:last-child > td {
+  border-bottom: 2px solid black;
+}
+.border-bottom {
+  border-bottom: 1px solid black;
+}
+
+/* Results Tables */
+td[data-rej],td[data-win] { 
+  text-align: center;
+}
+td[data-rej] { 
+  font-weight: bold;
+}
+td[data-win]:hover { 
+  color: rgb(95, 173, 86);
+}
+td[data-rej]:hover { 
+  color: rgba(147, 22, 33);
+}
+/* When you hover over a table row, highlight its children table data elements without a rowspan element. */
+tr:hover > td:not([rowspan]) { 
+  background-color: var(--nice-gray);
+}
+td[rowspan="4"] { 
+  white-space: normal;
+}
+
+/* Make MathJax equations scroll */
+mjx-container[display="true"] {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+/* 3D plotly CSS */
+#plot-3d,#sidebar-3d  {
+  width: 100%;
+  float: left;
+}
+#sidebar-3d {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 12px;
+}
+@media screen and (min-width: 50rem) {
+  #plot-3d  {
+    width: 70%;
+  }
+  #sidebar-3d  {
+    width: 30%;
+  }
+}
+
+#matrix-input-container {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#matrix-input {
+  display: inline-block;
+}
+#matrix-input > input {
+  display: block;
+  width: 3em;
+  text-align: center;
+}
+
+/* Citations */
+.citation {
+  color: var(--accent-2);
+  cursor: default;
+  position: relative;
+  text-decoration: underline;
+}
+.citation-details.tooltip {
+  /* Position */
+  position: absolute;
+  left: 0;
+  top: 1.1em;
+  
+  /* Size */
+  padding: 8px;
+  min-width: 300px;
+  max-width: 90%;
+  border-radius: 6px;
+  
+  /* Appearance */
+  cursor: auto;
+  color: black;
+  white-space: pre-wrap;
+  background-color: rgba(248, 248, 250, 0.98);
+  box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+.citation-details.tooltip > p {
+  margin: 4px 0px;
+  font-weight: normal;
+}
+.citation-details.tooltip > p:first-child {
+  font-weight: bold;
+}
+.citation-details.tooltip > p:last-child {
+  font-style: italic;
+}
+
+/* Table Tooltips */
+span#strong-reg-pattern {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent-1);
+  color: var(--accent-1);
+  cursor: default;
+}
+span#strong-reg-pattern:hover {
+  text-decoration-line: none;
+}
+
+span#different-messages-pattern {
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent-2);
+  color: var(--accent-2);
+  cursor: default;
+}
+span#different-messages-pattern:hover {
+  text-decoration-line: none;
+}
+
+.strong-reg-pattern {
+  position: absolute;
+  width: 50%;
+  left: 1em;
+
+  background-color: var(--accent-1);
+  color: black;
+
+  padding: 4px;
+  border-radius: 8px;
+  border: 4px solid var(--accent-1-dark);
+}
+
+.different-messages-pattern {
+  position: absolute;
+  width: 30%;
+  left: 0em;
+
+  background-color: var(--accent-2);
+  color: white;
+
+  padding: 4px;
+  border-radius: 8px;
+  border: 4px solid var(--accent-2-dark);
+}
+
+/* Tooltips */
+.tooltip {
+  opacity: 0.0;
+  transition: all 0.1s ease-in-out;
+  z-index: -1;
+}
+
+.tooltip.active {
+  opacity: 1.0;
+  z-index: 1;
+}
