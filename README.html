@@ -39,16 +39,44 @@
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
 <h1 id="samuelstevens.me">samuelstevens.me</h1>
-<p>This is the repo I&#x2019;m using to set up my website, and then <a
-href="https://github.com/samuelstevens/samuelstevens.github.io">this
-repo</a> is the one that GitHub publishes.</p>
+<p>This is the repo I use to build my website. The published site lives
+in <a
+href="https://github.com/samuelstevens/samuelstevens.github.io">samuelstevens/samuelstevens.github.io</a>.</p>
+<h2 id="buildserve-with-go">Build/Serve with Go</h2>
+<p>The fish scripts were replaced by a small Go CLI that uses
+<code>github.com/bitfield/script</code> to orchestrate shell
+commands.</p>
+<p>Prereqs - Go 1.23+ - pandoc - uv (optional; used for the dev server;
+falls back to python3/python)</p>
+<p>Default output directory -
+<code>$HOME/Development/samuelstevens.github.io</code> (override with
+<code>-output PATH</code>)</p>
+<p>Common commands</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./build.sh</span> <span class="co"># builds the website</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./dev.sh</span> <span class="co"># builds the website on file change</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./publish.sh</span> <span class="co"># publishes the website via git commit</span></span></code></pre></div>
-<p>All scripts are based on my personal file structures.</p>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build everything into the output directory</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build build-all</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Serve the built site at http://localhost:8042</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build serve</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Watch the repo and rebuild the newest Markdown page on change</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build watch            <span class="co"># use -interval 300ms to change poll rate</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Publish: clean output, build-all, then git add/commit/push in the output repo</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build <span class="at">-v</span> publish</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Build just one file</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build htmlify microblog/index.md</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a different output location</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build <span class="at">-output</span> /tmp/site build-all</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ex">go</span> run ./cmd/build <span class="at">-output</span> /tmp/site serve</span></code></pre></div>
+<p>Tip: run <code>serve</code> and <code>watch</code> in separate
+terminals.</p>
+<p>Notes - <code>publish</code> requires the output directory to be a
+git repo with a configured remote. - The server prefers
+<code>uv run python -m http.server</code>; if <code>uv</code> is not
+found it falls back to <code>python3</code> or <code>python</code>.</p>
 <h2 id="elm">Elm</h2>
 <ol type="1">
 <li><code>python -m src.scripts.conferences src/data/conferences.json</code></li>

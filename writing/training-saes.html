@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <meta name="description" content="Design your AI systems for your
+current level of compute." />
+  <meta name="keywords" content="sae, sparse
+autoencoder, optimization, hyperparameters, machine
+learning, efficiency, performance" />
+  <title>Training Sparse Autoencoders</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me3.jpg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Sam Stevens</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/research">Research</a>]
+        [<a href="/microblog">Blog</a>]
+        [<a href="/contact">Contact</a>]
+        [<a href="/cv.pdf">CV</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="training-saes">Training SAEs</h1>
+<p>Some empirical tips and tricks for training sparse autoencoders
+(SAEs).</p>
+<p><em>Last Updated: 11/17/2025</em></p>
+<ol type="1">
+<li><a href="#background">Background</a></li>
+<li><a href="#initialization">Initialization</a></li>
+<li><a href="#activation">Activation</a></li>
+<li><a href="#objective">Objective</a></li>
+<li><a href="#data">Data</a></li>
+<li><a href="#optimization">Optimization</a></li>
+</ol>
+<p>The best references, in my experience, are <a
+href="https://arxiv.org/pdf/2406.04093">Scaling and Evaluating Sparse
+Autoencoders</a> by OpenAI and <a
+href="https://arxiv.org/pdf/2408.05147">Gemma Scope</a> by Google.</p>
+<h2 id="background">Background</h2>
+<p>I assume an encoder-decoder SAE with input vectors <span
+class="math inline">\(x \in \mathbb{R}^{d}\)</span>, a sparse
+representation <span class="math inline">\(f(x) \in
+\mathbb{R}^{n}\)</span> and a reconstructed input <span
+class="math inline">\(\hat{x} \in \mathbb{R}^d\)</span>. The SAE
+contains a linear encoder <span class="math inline">\(W_\text{enc} \in
+\mathbb{R}^{n \times d}\)</span> and <span
+class="math inline">\(b_\text{enc} \in \mathbb{R}^n\)</span>, a linear
+decoder <span class="math inline">\(W_\text{dec} \in \mathbb{R}^{d
+\times n}\)</span> and <span class="math inline">\(b_\text{dec} \in
+\mathbb{R}^d\)</span> and a nonlinear activation function <span
+class="math inline">\(a : \mathbb{R}^n \rightarrow
+\mathbb{R}^n\)</span>. The sparse representation is <span
+class="math inline">\(f(x) = a(W_\text{enc} \cdot (x - b_\text{dec}) +
+b_\text{enc})\)</span> and the reconstructed input is <span
+class="math inline">\(\hat{x} = W_\text{dec} \cdot f(x) +
+b_\text{dec}\)</span>. Subtracting <span
+class="math inline">\(b_\text{dec}\)</span> is called pre-encoder
+bias.</p>
+<h2 id="initialization">Initialization</h2>
+<p><a
+href="https://transformer-circuits.pub/2025/october-update/index.html#data-point-init">Anthropic</a>
+and <a
+href="https://www.lesswrong.com/posts/YJpMgi7HJuHwXTkjk/taking-features-out-of-superposition-with-sparse">Pierre
+Peigne</a> suggest using data-point initialization.</p>
+<ol type="1">
+<li>Select <span class="math inline">\(n\)</span> random data points
+from your training data.</li>
+<li>Compute the mean <span class="math inline">\(\mu\)</span> and
+zero-center the data: <span class="math inline">\(x_0 = x -
+\mu\)</span>.</li>
+<li>Linearly blend each zero-centered datapoint with Kaiming
+initialization: <span class="math inline">\(w = p \cdot (x - \mu) + (1 -
+p) \cdot r\)</span> where <span class="math inline">\(p\)</span> is your
+blend probability and <span class="math inline">\(r\)</span> is a
+randomly sampled Kaiming initalization vector.</li>
+<li>Initialize <span class="math inline">\(W_\text{enc}\)</span> as a
+concatenation of <span class="math inline">\(n\)</span> blended
+vectors.</li>
+<li>Initialize <span class="math inline">\(W_\text{dec}\)</span> as
+<span class="math inline">\(W_\text{enc}^T\)</span>.</li>
+</ol>
+<p>Anthropic suggests <span class="math inline">\(p = 0.8\)</span> for
+SAEs and 0.4 for &#x201C;weakly causal crosscoders&#x201D;. I interpret this that
+there is no universally appropriate <span
+class="math inline">\(p\)</span>.</p>
+<blockquote>
+<p>The intuition behind why this is an effective way to seed
+dictionaries is that model activations are not isotropic, so we
+initialize the parameters to be in the higher density region of model
+activations. This might lead to an initial boost in both sparsity and
+reconstruction. More importantly, this works empirically.</p>
+</blockquote>
+<p><a href="https://arxiv.org/pdf/2406.04093">Gao et al.</a> also
+suggests initializing <span class="math inline">\(W_\text{enc}\)</span>
+to the transpose of <span class="math inline">\(W_\text{dec}\)</span> to
+solve dead latents.</p>
+<p>Initialize <span class="math inline">\(b_\text{dec}\)</span> to all
+zeros.</p>
+<p>Anthropic recommends initializing <span
+class="math inline">\(b_\text{enc}\)</span> to &#x201C;a constant per feature
+such that each feature activates <span
+class="math inline">\(\frac{10K}{m}\)</span> of the time.&#x201D; This means
+that &#x201C;in aggregate roughly 10,000 features will fire per datapoint&#x201D; and
+they &#x201C;think this initialization is important for avoiding dead
+features.&#x201D; I just use Kaiming initialization.</p>
+<h2 id="activation">Activation</h2>
+<p>The choice of activation function <span
+class="math inline">\(a\)</span> is a hot area. It seems that TopK
+(introduced by <a href="https://arxiv.org/pdf/2406.04093">Gao et
+al.</a>) and its variants are very strong and posess useful properties:
+<span class="math display">\[f(x) = \text{TopK}(W_\text{enc} \cdot x +
+b_\text{enc})\]</span> where TopK zeroes out all but the largest <span
+class="math inline">\(k\)</span> largest activations in the input. This
+is nice: you get to pick your L<span class="math inline">\(_0\)</span>
+sparsity directly by choosing <span class="math inline">\(k\)</span>
+instead of tuning some <span class="math inline">\(\lambda\)</span>
+hyperparameter.</p>
+<p>There is an important variant, <a
+href="https://arxiv.org/pdf/2412.06410">BatchTopK</a>, which picks the
+top <span class="math inline">\(k \times \text{bsz}\)</span> values
+across the entire batch. This enables more flexibility: &#x201C;BatchTopK
+adaptively allocates more or fewer latents depending on the sample,
+improving reconstruction without sacrificing average sparsity&#x201D; but you
+must learn a threshold value for inference to prevent within-batch
+effects.
+<!-- - [AbsTopK](https://arxiv.org/pdf/2510.00404), which picks the largest magnitude $k$ values, instead of only positive activations. --></p>
+<p>Here is some example code in PyTorch. Gradients are trivial.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TopK(nn.Module):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, k: <span class="bu">int</span>):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k <span class="op">=</span> k</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x ):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        bsz, d_sae <span class="op">=</span> x.shape</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.k, d_sae)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        _, idxs <span class="op">=</span> torch.topk(x, k, dim<span class="op">=-</span><span class="dv">1</span>, <span class="bu">sorted</span><span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> torch.zeros_like(x).scatter(<span class="op">-</span><span class="dv">1</span>, idxs, <span class="fl">1.0</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> torch.mul(mask, x)</span></code></pre></div>
+<p>Here&#x2019;s some code for BatchTopK, which includes the learned inference
+threshold buffer.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BatchTopK(nn.Module):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, k, momentum):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.k <span class="op">=</span> k</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.momentum <span class="op">=</span> momentum</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.register_buffer(<span class="st">&quot;threshold&quot;</span>, torch.tensor(<span class="fl">0.0</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.training:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Fallback: if &#x3B8; is still 0 (e.g. never trained), just do ReLU.</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="va">self</span>.threshold <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> torch.where(x <span class="op">&gt;</span> <span class="dv">0</span>, x, torch.zeros_like(x))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> torch.where(x <span class="op">&gt;</span> <span class="va">self</span>.threshold, x, torch.zeros_like(x))</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        bsz, d_sae <span class="op">=</span> x.shape</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        x_flat <span class="op">=</span> x.flatten()</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        bsz, d_sae <span class="op">=</span> x.shape</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> <span class="bu">min</span>(<span class="va">self</span>.k <span class="op">*</span> bsz, d_sae <span class="op">*</span> bsz)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        _, idxs <span class="op">=</span> torch.topk(x_flat, k, <span class="bu">sorted</span><span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> torch.zeros_like(x_flat).scatter(<span class="op">-</span><span class="dv">1</span>, idxs, <span class="fl">1.0</span>).reshape(x.shape)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> torch.mul(mask, x)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            <span class="co"># smallest positive activation in this batch (i.e. the effective threshold)</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            pos <span class="op">=</span> x[x <span class="op">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pos.numel() <span class="op">&gt;=</span> <span class="dv">0</span>:</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                <span class="co"># EMA update, like BatchNorm</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.threshold.mul_(<span class="dv">1</span> <span class="op">-</span> <span class="va">self</span>.momentum).add_(<span class="va">self</span>.momentum <span class="op">*</span> pos.<span class="bu">min</span>())</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code></pre></div>
+<h2 id="objective">Objective</h2>
+<p>With TopK, the main objective is just reconstruction and is quite
+straightforward: <span class="math display">\[\mathcal{L} = ||x -
+\hat{x}||_2^2\]</span> You do not need to minimize L<span
+class="math inline">\(_1\)</span> sparsity.</p>
+<p>However, you should probably use the <a
+href="https://arxiv.org/pdf/2503.17547">Matryoshka objective</a>, which
+learns much better features in <a
+href="https://github.com/OSU-NLP-Group/saev">my experience</a>.</p>
+<p>There are also many different auxiliary losses that try to minimize
+dead features and dense features. I haven&#x2019;t used any of them, so I
+cannot speak to them.</p>
+<h2 id="data">Data</h2>
+<!-- I have always trained SAEs on activations $x$ after a LayerNorm. -->
+<p>Scale your data so that the average L2 norm is <span
+class="math inline">\(\sqrt{d}\)</span>.</p>
+<blockquote>
+<p>The goal of this change is for the same value of <span
+class="math inline">\(k\)</span> to mean the same thing across datasets
+generated by different size transformers.</p>
+</blockquote>
+<p>Don&#x2019;t worry about subtracting the mean; subtracting <span
+class="math inline">\(b_\text{dec}\)</span> lets the model learn
+that.</p>
+<h2 id="optimization">Optimization</h2>
+<p>Basically everyone uses Adam (no weight decay). Anthropic linearly
+decays learning rate to 0 over the last 20% of training, OpenAI didn&#x2019;t
+use learning rate decay. Google used cosine learning rate warmup over 1K
+training steps. I use linear learning rate warmup and cosine decay to 0
+for the rest of training.</p>
+<p>Use gradient clipping. Anthropic recommends 1. I use that without any
+issues.</p>
+<p>There are a couple SAE-specific tricks to help with training</p>
+<p><strong>Constraining <span
+class="math inline">\(W_\text{dec}\)</span> to have unit norm
+columns.</strong> At every step, simply rescale <span
+class="math inline">\(W_\text{dec}\)</span>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    W_dec.data <span class="op">/=</span> torch.norm(W_dec.data, dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>This makes the values of <span class="math inline">\(f(x)\)</span>
+comparable. If a particular column <span
+class="math inline">\(i\)</span> of <span
+class="math inline">\(W_\text{dec}\)</span> had a much smaller norm,
+<span class="math inline">\(f_i(x)\)</span> would have to be much
+larger.</p>
+<p><strong>Removing parallel gradients.</strong> Because we normalize
+the columns of <span class="math inline">\(W_\text{dec}\)</span>, we
+want to remove the parallel component of the gradient so that Adam
+doesn&#x2019;t do anything funny with moments. This was originally described in
+<a
+href="https://transformer-circuits.pub/2023/monosemantic-features">Towards
+Monosemanticity</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode py"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    parallel <span class="op">=</span> W_dec.grad <span class="op">@</span> W_dec.data</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    norm_sq <span class="op">=</span> torch.<span class="bu">sum</span>(W_dec.data <span class="op">*</span> W_dec.data, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    scales <span class="op">=</span> torch.zeros_like(parallel)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    nonzero <span class="op">=</span> norm_sq <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    scales[nonzero] <span class="op">=</span> parallel[nonzero] <span class="op">/</span> norm_sq[nonzero]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    W_dec.grad <span class="op">-=</span> scales <span class="op">*</span> W_dec.data</span></code></pre></div>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+      <hr />
+      <p>[<a href="/links" data-no-instant>Links</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</body>
+
+</html>
