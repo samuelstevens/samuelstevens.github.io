@@ -11,9 +11,9 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
 
-  <meta name="description" content="" />
+  <meta name="description" content="Short thoughts and snippets." />
   <meta name="keywords" content="" />
-  <title></title>
+  <title>Blog</title>
   
 </head>
 
@@ -38,14 +38,36 @@
     </header>
     <article>
       <!-- Must be unindented to prevent code indentation being broken -->
-<h1 id="nov-15-2025">Nov 15, 2025</h1>
+<h1 id="blog">Blog</h1>
+<h2 id="positive-and-negative-features-in-saes."><a
+href="#positive-and-negative-features-in-saes.">#</a> Positive and
+Negative Features in SAEs.</h2>
+<p><em>Nov 18, 2025</em> Two recent papers (<a
+href="https://arxiv.org/pdf/2510.08638">Fel et al.</a> and <a
+href="https://arxiv.org/pdf/2510.00404">Zhu et al.</a>) imply that
+models represent &#x201C;opposite&#x201D; features (like vertical vs horizontal or
+male vs female) as opposite directions. From Fel et al.: &#x201C;Despite their
+opposition, the vectors are nearly colinear with opposite signs,
+suggesting the model uses polarity to encode meaning.&#x201D; Zhu et
+al.&#xA0;deliberately build this into their SAE architecture by keeping high
+magnitude features instead of strictly positive features.</p>
+<p>Anthropic discussed this a little bit in their <a
+href="https://transformer-circuits.pub/2022/toy_model">Toy Models of
+Superposition</a> but not empirically. I think it&#x2019;s also hard to build a
+toy model of this phenomenon because the &#x201C;opposite-ness&#x201D; is more
+qualitative than quantitative. &#x201C;Horizontal&#x201D; and &#x201C;vertical&#x201D; are used in
+many of the same contexts, but they represent different ideas
+<em>within</em> that context. So in some sense they are the same, and in
+another sense they are opposites.</p>
 <h2 id="personal-computing-with-ai."><a
-href="#personal-computing-with-ai.">Personal Computing with AI.</a></h2>
-<p><a href="https://tinygrad.org">Tiny Corp</a> sells a computer called
-the <a href="https://tinygrad.org/#tinybox">tinybox</a> to &#x201C;commoditize
-the petaflop and enable AI for everyone.&#x201D; I love the idea of tinygrad
-and the tinybox, but I don&#x2019;t think the tinybox will ever be able to run
-the best LLMs. I think it will be infeasible for me to afford sufficient
+href="#personal-computing-with-ai.">#</a> Personal Computing with
+AI.</h2>
+<p><em>Nov 15, 2025</em> <a href="https://tinygrad.org">Tiny Corp</a>
+sells a computer called the <a
+href="https://tinygrad.org/#tinybox">tinybox</a> to &#x201C;commoditize the
+petaflop and enable AI for everyone.&#x201D; I love the idea of tinygrad and
+the tinybox, but I don&#x2019;t think the tinybox will ever be able to run the
+best LLMs. I think it will be infeasible for me to afford sufficient
 compute (VRAM and FLOP/s) to run the best LLMs for many years. Thus, I
 have to outsource that to model providers (OpenAI and Anthropic, but
 also third parties like Groq or Cerebras).</p>
