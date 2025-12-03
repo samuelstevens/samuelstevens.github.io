@@ -52,6 +52,7 @@ learning, efficiency, performance" />
 <li><a href="#objective">Objective</a></li>
 <li><a href="#data">Data</a></li>
 <li><a href="#optimization">Optimization</a></li>
+<li><a href="#hardware">Hardware</a></li>
 </ol>
 <p>The best references, in my experience, are <a
 href="https://arxiv.org/pdf/2406.04093">Scaling and Evaluating Sparse
@@ -258,6 +259,17 @@ Monosemanticity</a>.</p>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    W_dec.grad <span class="op">-=</span> scales <span class="op">*</span> W_dec.data</span></code></pre></div>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6" defer></script>
 <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+<h2 id="hardware">Hardware</h2>
+<blockquote>
+<p>This section is mostly taken from <a
+href="https://jax-ml.github.io/scaling-book/">How to Scale Your
+Model</a>.</p>
+</blockquote>
+<p>While SAEs are smaller than the foundation model, training faster is
+always an advantage. Furthermore, SAEs have <a
+href="http://localhost:8042/microblog/#why-saev">different
+compute-bandwidth tradeoffs compared to most neural network
+training</a>. So it&#x2019;s worth thinking training efficiently.</p>
       <hr />
       <p>[<a href="/links" data-no-instant>Links</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
       <p>Sam Stevens, 2024</p>
