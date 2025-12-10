@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <meta name="description" content="How I would start a new project with
+<code>saev</code>." />
+  <meta name="keywords" content="sae, sparse autoencoder, machine
+learning, saev, github, projects" />
+  <title>How to Start New Projects with saev</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me3.jpg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Sam Stevens</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/research">Research</a>]
+        [<a href="/microblog">Blog</a>]
+        [<a href="/contact">Contact</a>]
+        [<a href="/cv.pdf">CV</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="how-to-start-new-projects-with-saev">How to Start New Projects
+with saev</h1>
+<p><a href="https://github.com/OSU-NLP-Group/saev">saev</a> (<a
+href="https://osu-nlp-group.github.io/saev/api/">docs</a>) is a
+combination of a library and a framework that I co-developed with <a
+href="https://jakesmbeattie.github.io/">Jake Beattie</a> and others to
+do research with sparse autoencoders (SAEs).</p>
+<p>It&#x2019;s structured like <a
+href="https://github.com/google-research/big_vision">big_vision</a>,
+Google&#x2019;s ViT codebase. To get the most use out of saev, you should not
+use it as a requirement in your project; rather, you should build inside
+of the source code of saev. This post is a guide to that process.</p>
+<p><strong>TL;DR:</strong></p>
+<ol type="1">
+<li>Fork saev.</li>
+<li>Clone your fork.</li>
+<li>Create a new directory in <code>contrib/</code>.</li>
+<li>Update both <code>src/saev</code> and your new contrib directory as
+necessary.</li>
+<li>(Hopefully) publish.</li>
+<li>If your changes to <code>src/saev</code> are broadly useful and not
+overly restrictive, open a PR with your changes to
+<code>src/saev</code>.</li>
+</ol>
+<p>Now, I&#x2019;ll cover this process in depth. I am currently applying SAEs
+to audio of <a
+href="https://en.wikipedia.org/wiki/Bird_vocalization">birdsong</a>, so
+this is how I&#x2019;ll develop it.</p>
+<p>First, fork and clone saev. Do this however you want, but <a
+href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo">GitHub
+has a guide on it</a>.</p>
+<p>Second, you probably want to store code related to your project in
+this repo. Make a new directory in <code>contrib/</code>. I&#x2019;m calling my
+new subproject &#x201C;birdsong.&#x201D;</p>
+<pre><code>[I] samuelstevens@host ~/p/saev (main)&gt; tree -L 1 contrib/
+contrib/
+&#x251C;&#x2500;&#x2500; birdsong
+&#x251C;&#x2500;&#x2500; interactive_interp
+&#x2514;&#x2500;&#x2500; trait_discovery</code></pre>
+<p>Use <code>uv</code> to make a new package inside your new
+project:</p>
+<pre><code>[I] samuelstevens@host ~/p/s/c/birdsong (main)&gt; uv init --package .
+Adding `birdsong` as member of workspace `~/projects/saev`
+Initialized project `birdsong` at `~/projects/saev/contrib/birdsong`</code></pre>
+<p>Now you have some additional files.</p>
+<pre><code>[I] samuelstevens@ascend-login02 ~/p/s/c/birdsong (main)&gt; tree
+.
+&#x251C;&#x2500;&#x2500; pyproject.toml
+&#x251C;&#x2500;&#x2500; README.md
+&#x2514;&#x2500;&#x2500; src
+    &#x2514;&#x2500;&#x2500; birdsong
+        &#x2514;&#x2500;&#x2500; __init__.py</code></pre>
+<p>Now I can write scripts and source code for birdsong-specific stuff
+in here. I&#x2019;ll probably add a notebook for looking at instances of
+birdsongs before and after using SAEs to identify patterns under a new
+<code>birdsong/notebooks</code> directory, and will add
+<code>birdsong/logbook.md</code> to store ongoing TODO items, and so
+on.</p>
+<p>To train SAEs on audio files, I&#x2019;ll need to add a new dataset type to
+save activations. In order to do this, I&#x2019;ll edit
+<code>src/saev/data/datasets.py</code>.</p>
+<p>I&#x2019;ll also need to add another model to the dataset, one that expects
+audio files. Since I don&#x2019;t think that DINOv3, OpenCLIP, or the other
+existing model families will be suitable, I&#x2019;ll need to add a new model
+family. Again, this will need to go somewhere in
+<code>src/saev/data</code>.</p>
+<p>If I&#x2019;m smart about it, these changes will be nice and
+non-destructive, and other users of saev can benefit from them. After I
+publish some results, to share this code with others, I&#x2019;ll open a PR
+from my fork/branch to main with the new datasets/models. But I won&#x2019;t
+open a PR with <code>birdsong</code> because that&#x2019;s specific to me,
+rather than to the library.<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Technically, <code>birdsong</code> will be in saev
+because I&#x2019;m a sort of privileged user because I&#x2019;m the main developer.
+But other folks probably want their project-specific code attached to
+their GitHub page, rather than OSU-NLP&#x2019;s.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</section>
+      <hr />
+      <p>[<a href="/links" data-no-instant>Links</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

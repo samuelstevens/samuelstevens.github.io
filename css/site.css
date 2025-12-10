@@ -82,12 +82,15 @@ hr {
 }
 
 code {
-  padding-left: 0.5px;
+  padding: 0px 2px;
   font-family: "JetBrains Mono", monospace;
+  background-color: var(--nice-gray);
+  border-radius: 3px;
 }
 
-p > code {
-  background-color: var(--nice-gray);
+pre code {
+  background-color: transparent;
+  padding: 0;
 }
 
 ul,
