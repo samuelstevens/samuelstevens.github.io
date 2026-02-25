@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <meta name="description" content="My thoughts around MLLM benchmarking
+based on my experience making
+https://samuelstevens.me/mllm-benchmarking/." />
+  <meta name="keywords" content="" />
+  <title>On Benchmarking Multimodal Large Language Models
+(MLLMs)</title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me3.jpg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Sam Stevens</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/research">Research</a>]
+        [<a href="/microblog">Blog</a>]
+        [<a href="/contact">Contact</a>]
+        [<a href="/cv.pdf">CV</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1 id="on-benchmarking-multimodal-large-language-models">On
+Benchmarking Multimodal Large Language Models</h1>
+<p>I recently went some small effort to consolidate a bunch of reported
+benchmark scores for multimodal large language models (MLLMs),
+specifically focusing on smaller models in the 8B and lower range, like
+SmolVLM2 2.2B, Qwen3-VL 8B (actually 8.8B), and InternVL3.5 8B (8.7B). I
+am especially interested in a couple startups in this space with models
+like Isaac 0.2 2B (2.6B, from Perceptron), Moondream 3 (19B MoE from
+Moondream) and LFM2-VL 3B (actually 3.0B, from Liquid). The results are
+at <a
+href="https://samuelstevens.me/mllm-benchmarking/">samuelstevens.me/mllm-benchmarking</a>.</p>
+<p>After looking at these reported scores, and getting back up to speed
+on the latest in MLLM evaluation (I worked on <a
+href="https://mmmu-benchmark.github.io">MMMU</a> at the end of 2023), I
+came to a couple conclusions:</p>
+<ol type="1">
+<li>MLLM developers do not agree on which benchmarks are most
+meaningful. In LLMs, most new SOTA model releases focus on economic work
+(GDPval), agentic coding (SWE-bench, Terminal-Bench 2.0),
+reasoning/knowledge (Humanity&#x2019;s Last Exam, GPQA), abstract reasoning
+(ARC AGI 2), multimodal/multilingual knowledge (MMMU, MMMLU) and math
+(AIME 2025, FrontierMath). In contrast, MLLM evaluation uses
+short-answer question-answering tasks like VQAv2, ChartQA, TextVQA,
+DocVQA, InfoVWA), some smaller curated datasets (RealWorldQA), OCR tasks
+(OCRBench), and a variety of hallucination/perception benchmarks (MME,
+POPE, BLINK). Some reasoning-based tasks exist (MMMU, MMMU-Pro,
+MathVista) but most developers are still solving perception, rather than
+visual reasoning.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> I think there is room for a better
+benchmark, but <a href="https://xkcd.com/927">there is an XKCD</a>. I
+really like RealWorldQA and Reka&#x2019;s <a
+href="https://publications.reka.ai/reka-vibe-eval.pdf">Vibe-Eval</a>
+because they were written by hand, rather than scraped from existing
+sources.</li>
+<li>Serious post-training is not yet required. Molmo2 scores very well
+without any RL-based post-training. Many of the big Chinese labs apply
+RL (Qwen3-VL, InternVL3.5 and Step3-VL all do RL-based post-training)
+but open-weight American labs do not (Molmo2 and SmolVLM2; it&#x2019;s unclear
+to me if Liquid uses the RL-tuned LLM decoder backbone or not). This is
+especially surprising to me because many of the labeled computer vision
+datasets could be used as verifiable rewards (bounding boxes,
+segmentations, counting/point-placing, etc).</li>
+<li>Small models are not end-to-end trained with multimodal data.
+Qwen3.5 is the first model that incorporate multimodal data in the text
+backbone training phase, and their smallest model is 27B (dense) or
+35B-A3B (MoE).</li>
+<li>Only Isaac, Molmo2 and Moondream natively support counting outputs,
+and only Isaac and Moondream support bounding boxes and segmentations.
+These seem like wildly useful capabilities and I&#x2019;m surprised that it&#x2019;s
+not a more widely described skill.</li>
+</ol>
+<p>I hope to get to work on some fo these topics soon.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I discuss this later on, but reasoning tokens do
+reliably improve scores on most tasks, despite no &#x201C;native multimodal
+reasoning&#x201D; where the models reason in pixel space.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">&#x21A9;&#xFE0E;</a></p></li>
+</ol>
+</section>
+      <hr />
+      <p>[<a href="/links" data-no-instant>Links</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>

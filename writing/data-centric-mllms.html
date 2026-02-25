@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="/css/site.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta charset="utf-8" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <title></title>
+  
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div id="sidebar">
+      <img src="/images/me3.jpg" />
+      <p>Sam Stevens</p>
+    </div>
+  </aside>
+  <main>
+    <header>
+      <h1>Sam Stevens</h1>
+      <p>
+        [<a href="/">Home</a>]
+        [<a href="/writing">Writing</a>]
+        [<a href="/research">Research</a>]
+        [<a href="/microblog">Blog</a>]
+        [<a href="/contact">Contact</a>]
+        [<a href="/cv.pdf">CV</a>]
+      </p>
+    </header>
+    <article>
+      <!-- Must be unindented to prevent code indentation being broken -->
+<h1
+id="data-centric-approach-to-training-multimodal-large-language-models">Data-Centric
+Approach to Training Multimodal Large Language Models</h1>
+<p>How do frontier labes train multimodal large language models
+(specifically, LLMs with vision input)?</p>
+<p>Honestly, the AI2 group is amazing for this sort of thing. All kinds
+of details are included.</p>
+<h2 id="a-minimal-training-playbook">A Minimal Training Playbook</h2>
+<h2 id="architecture-notes">Architecture Notes</h2>
+<p>Qwen2.5-VL uses a pool size of 2x2 (so ViT patches are cut by a
+factor of 4).</p>
+<h2 id="data-curation-filtering">Data Curation &amp; Filtering</h2>
+<ul>
+<li>LLaVA-OneVision-1.5 uses MetaCLIP ViT-H/14 concept empeddings and
+then samples the top-k examples for each concept embedding based on
+concept-image matching.</li>
+</ul>
+<h2 id="data-generation">Data Generation</h2>
+<ul>
+<li>Molmo2 promposes many new datasets (which I assume are free to use
+in commercial products; we&#x2019;ll have to see).</li>
+<li>LLaVA-OneVision-1.5 uses &#x201C;a powerful captioner&#x201D; to produce English
+and Chinese captions for the images. This feels like such a cheating
+move; what is the powerful captioner?? Molmo2 specifically discusses the
+limitation of using an existing MLLM to train a new MLLM.</li>
+</ul>
+<h2 id="data-mixing">Data Mixing</h2>
+<h2 id="raw-notes">Raw Notes</h2>
+<p>LLaVA-OneVision-1.5</p>
+<p>558K multimodal pretraining (multimodal alignment), 85M midtraining
+(20M in Chinese, 65M in English), 22M instruction tuning</p>
+<p>There are so any benchmarks. So, so many benchmarks. Perhaps I need
+to review the benchmarks again, with a variety of different axes of
+comparison. Then I need to get some scores from both the traditional
+MLLMs like InternVL, Qwen, GLM, etc as well as the specialized models
+like MoonDream and Isaac (Perceptron).</p>
+<h2 id="future-reading">Future Reading</h2>
+<ul>
+<li>RICE-ViT (Xie et al., 2025): used as the ViT in
+LLaVA-OneVision-1.5</li>
+</ul>
+      <hr />
+      <p>[<a href="/links" data-no-instant>Links</a>] [<a href="https://github.com/samuelstevens/personal-website">Source</a>]</p>
+      <p>Sam Stevens, 2024</p>
+    </article>
+  </main>
+  <script src="/js/instantclick.min.js" data-no-instant></script>
+  <script data-no-instant>
+    InstantClick.init();
+  </script>
+  <style>
+    
+  </style>
+</body>
+
+</html>
